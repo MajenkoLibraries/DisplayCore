@@ -1,0 +1,12 @@
+BMPFile.cpp libraries/Display/chipkit/BMPFile/
+BMPFile.h libraries/Display/chipkit/BMPFile/
+LICENSE usr/share/doc/libbmpfile-chipkit/
+README.md usr/share/doc/libbmpfile-chipkit/
+examples/Slideshow/Slideshow.ino libraries/Display/chipkit/BMPFile/examples/Slideshow
+examples/Slideshow/files/slides/meth.bmp libraries/Display/chipkit/BMPFile/examples/Slideshow/files/slides
+examples/Slideshow/files/slides/camdennj.bmp libraries/Display/chipkit/BMPFile/examples/Slideshow/files/slides
+examples/Slideshow/files/slides/venice.bmp libraries/Display/chipkit/BMPFile/examples/Slideshow/files/slides
+examples/Slideshow/files/slides/oro.bmp libraries/Display/chipkit/BMPFile/examples/Slideshow/files/slides
+examples/Slideshow/files/slides/bilbao.bmp libraries/Display/chipkit/BMPFile/examples/Slideshow/files/slides
+examples/Slideshow/files/slides/ucill.bmp libraries/Display/chipkit/BMPFile/examples/Slideshow/files/slides
+examples/Slideshow/files/slides/basil.bmp libraries/Display/chipkit/BMPFile/examples/Slideshow/files/slides
