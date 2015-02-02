@@ -1434,3 +1434,16 @@ void DisplayCore::translateCoordinates(int16_t *x, int16_t *y) {
     }
 }
 
+uint32_t DisplayCore::color2rgb(uint16_t rgb) {
+    uint8_t red = rgb >> 11;
+    uint8_t green = rgb >> 5 & 0b111111;
+    uint8_t blue = rgb & 0b11111;
+
+    point3d xyz;
+
+    red = red << 3;
+    green = green << 2;
+    blue = blue << 3;
+
+    return (red << 16) | (green << 8) | (blue);
+}

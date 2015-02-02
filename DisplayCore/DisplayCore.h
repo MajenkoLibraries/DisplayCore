@@ -235,6 +235,9 @@ class DisplayCore : public Print
         void setFontScaleX(uint8_t sx);
         void setFontScaleY(uint8_t sy);
 
+        uint32_t color2rgb(uint16_t c);
+
+
         int16_t _clip_x0;
         int16_t _clip_x1;
         int16_t _clip_y0;

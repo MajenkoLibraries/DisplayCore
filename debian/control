@@ -28,6 +28,12 @@ Depends: chipkit, libdisplaycore-core, libdisplaycore-driver-analogtouch
 Description: Picadillo-35T driver for DisplayCore
  The DisplayCore driver for the Picadillo-35T board
 
+Package: libdisplaycore-driver-vlcd
+Architecture: all
+Depends: chipkit, libdisplaycore-core
+Description: VirtualLCD Driver for DisplayCore
+ Use UECIDE's VirtualLCD plugin as a display device for DisplayCore
+
 Package: libdisplaycore-driver-analogtouch
 Architecture: all
 Depends: chipkit, libdisplaycore-core
