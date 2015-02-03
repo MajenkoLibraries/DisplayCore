@@ -249,14 +249,37 @@ inline uint16_t swapcolor(uint16_t x) {
 }
 
 void ST7735::initializeDevice() {
+    if (_cs >= NUM_DIGITAL_PINS_EXTENDED) {
+        return;
+    }
+    if (_dc >= NUM_DIGITAL_PINS_EXTENDED) {
+        return;
+    }
     _spi->begin();
     _spi->setSpeed(20000000UL);
+
+    pinMode(_cs, OUTPUT);
+    pinMode(_dc, OUTPUT);
+
+    uint32_t port = digitalPinToPort(_cs);
+    if (port == NOT_A_PIN) {
+        return;
+    }
+    _csp = (p32_ioport *)portRegisters(port);
+    _csb = digitalPinToBitMask(_cs);
+
+    port = digitalPinToPort(_dc);
+    if (port == NOT_A_PIN) {
+        return;
+    }
+    _dcp = (p32_ioport *)portRegisters(port);
+    _dcb = digitalPinToBitMask(_dc);
+
+    _csp->lat.set = _csb;
+
     colstart = rowstart = 0;
     _width  = ST7735::Width;
     _height = ST7735::Height;
-    pinMode(_dc, OUTPUT);
-    pinMode(_cs, OUTPUT);
-    digitalWrite(_cs, HIGH);
 
     switch (_variant) {
         case GreenTab:
@@ -281,17 +304,17 @@ void ST7735::initializeDevice() {
 }
 
 void ST7735::command(uint8_t cmd) {
-    digitalWrite(_dc, LOW);
-    digitalWrite(_cs, LOW);
+    _dcp->lat.clr = _dcb;
+    _csp->lat.clr = _csb;
     _spi->transfer(cmd);
-    digitalWrite(_cs, HIGH);
+    _csp->lat.set = _csb;
 }
 
 void ST7735::data(uint8_t dat) {
-    digitalWrite(_dc, HIGH);
-    digitalWrite(_cs, LOW);
+    _dcp->lat.set = _dcb;
+    _csp->lat.clr = _csb;
     _spi->transfer(dat);
-    digitalWrite(_cs, HIGH);
+    _csp->lat.set = _csb;
 }
 
 void ST7735::streamCommands(uint8_t *cmdlist) {

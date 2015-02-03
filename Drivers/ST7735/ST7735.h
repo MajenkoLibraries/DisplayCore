@@ -48,6 +48,10 @@ class ST7735 : public DisplayCore {
         uint8_t _cs;
         uint8_t _dc;
         uint8_t _variant;
+        p32_ioport *_csp;
+        p32_ioport *_dcp;
+        uint32_t _csb;
+        uint32_t _dcb;
 
 };
 

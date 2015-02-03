@@ -9,6 +9,10 @@ class ILI9340 : public DisplayCore {
         DSPI *_spi;
         uint8_t _cs;
         uint8_t _dc;
+        p32_ioport *_csp;
+        p32_ioport *_dcp;
+        uint32_t _csb;
+        uint32_t _dcb;
 
 	public:
         static const uint16_t Width      = 240;
