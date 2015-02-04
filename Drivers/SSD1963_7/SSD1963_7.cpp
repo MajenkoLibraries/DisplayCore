@@ -419,12 +419,14 @@ void SSD1963_7::displayOn() {
     command(SSD1963_ExitIdleMode);
     command(SSD1963_SetDisplayOn);
     command(SSD1963_EnterSleepMode);
+    enableBacklight();
 }
 
 void SSD1963_7::displayOff() {
     command(SSD1963_ExitSleepMode);
     command(SSD1963_SetDisplayOff);
     command(SSD1963_EnterIdleMode);
+    disableBacklight();
 }
 
 
