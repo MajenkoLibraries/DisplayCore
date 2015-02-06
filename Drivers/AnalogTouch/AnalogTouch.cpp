@@ -144,24 +144,8 @@ void AnalogTouch::sample() {
     _pressure = max(abs(x1 - x2), abs(y1 - y2));
 }
 
-void AnalogTouch::scaleX(float v) {
-    _scale_x = v;
-}
-
-void AnalogTouch::scaleY(float v) {
-    _scale_y = v;
-}
-
 uint16_t AnalogTouch::pressure() {
     return _pressure;
-}
-
-void AnalogTouch::offsetX(int16_t v) {
-    _offset_x = v;
-}
-
-void AnalogTouch::offsetY(int16_t v) {
-    _offset_y = v;
 }
 
 void AnalogTouch::setRotation(uint8_t r) {

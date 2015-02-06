@@ -312,11 +312,22 @@ class Touch {
          */
         virtual void sample() = 0;
 
+        virtual void scaleX(float x) { _scale_x = x; }
+        virtual void scaleY(float y) { _scale_y = y; }
+        virtual void offsetX(float x) { _offset_x = x; }
+        virtual void offsetY(float y) { _offset_y = y; }
+
+        float _scale_x;
+        float _scale_y;
+        int16_t _offset_x;
+        int16_t _offset_y;
+
     protected:
         /*! The width of the toush screen in pixels */
         uint16_t _width;  
         /*! The height of the touch screen in pixels */
         uint16_t _height; 
+
 };
 
 class Filter;

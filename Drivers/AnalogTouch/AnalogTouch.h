@@ -16,11 +16,6 @@ class AnalogTouch : public Touch {
 
         void initializeDevice();
 
-        void scaleX(float v);
-        void scaleY(float v);
-        void offsetX(int16_t v);
-        void offsetY(int16_t v);
-
         uint16_t pressure();
 
         void setRotation(uint8_t r);
