@@ -1,6 +1,7 @@
 #include <Topaz.h>
 #include <LM6800.h>
 
+// Pins in this order: D0 - D8, CSA, CSB, CSC, E, RS, RW, RESET
 LM6800 tft(70, 71, 72, 73, 74, 75, 76, 77, 81, 82, 83,	80, 78, 79, 84);
 
 
