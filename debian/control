@@ -43,6 +43,14 @@ Depends: chipkit, libdisplaycore-core
 Description: VirtualLCD Driver for DisplayCore
  Use UECIDE's VirtualLCD plugin as a display device for DisplayCore
 
+Package: libdisplaycore-driver-lm6800
+Architecture: all
+Depends: chipkit, libdisplaycore-core
+Description: LM6800 driver for DisplayCore
+ The LM6800 is a four-chip KS0108 based LCD with 2-to-4
+ decoder for the chip select lines. A third chip select line
+ acts as a global enable/disable line for the entire display.
+
 Package: libdisplaycore-driver-st7735
 Architecture: all
 Depends: chipkit, libdisplaycore-core
