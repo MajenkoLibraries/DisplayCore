@@ -9,6 +9,7 @@ Standards-Version: 3.9.4
 
 Package: libdisplaycore-core
 Architecture: all
+Provides: DisplayCore.h
 Depends: chipkit
 Description: DisplayCore core files
  These are the main core files for the DisplayCore system. 
@@ -16,6 +17,7 @@ Description: DisplayCore core files
 
 Package: libdisplaycore-driver-framebuffer332
 Architecture: all
+Provides: Framebuffer332.h
 Depends: chipkit, libdisplaycore-core
 Description: DisplayCore RGB332 Framebuffer
  The RGB332 Framebuffer is a virtual display / image driver
@@ -25,6 +27,7 @@ Description: DisplayCore RGB332 Framebuffer
 
 Package: libdisplaycore-driver-framebuffer565
 Architecture: all
+Provides: Framebuffer565.h
 Depends: chipkit, libdisplaycore-core
 Description: DisplayCore RGB565 Framebuffer
  The RGB565 Framebuffer is a virtual display / image driver
@@ -33,12 +36,14 @@ Description: DisplayCore RGB565 Framebuffer
 
 Package: libdisplaycore-driver-picadillo
 Architecture: all
+Provides: Picadillo.h
 Depends: chipkit, libdisplaycore-core, libdisplaycore-driver-analogtouch
 Description: Picadillo-35T driver for DisplayCore
  The DisplayCore driver for the Picadillo-35T board
 
 Package: libdisplaycore-driver-vlcd
 Architecture: all
+Provides: VLCD.h
 Depends: chipkit, libdisplaycore-core
 Description: VirtualLCD Driver for DisplayCore
  Use UECIDE's VirtualLCD plugin as a display device for DisplayCore
@@ -53,24 +58,28 @@ Description: LM6800 driver for DisplayCore
 
 Package: libdisplaycore-driver-st7735
 Architecture: all
+Provides: ST7735.h
 Depends: chipkit, libdisplaycore-core
 Description: ST7735 driver for DisplayCore
  The ST7735 is used by the Adafruit 1.8" TFT shields.
 
 Package: libdisplaycore-driver-ssd1963-7
 Architecture: all
+Provides: SSD1963_7.h
 Depends: chipkit, libdisplaycore-core
 Description: SSD1963 7" TFT
  Generic Chinese SSD1963 based TFT screen (800x480)
 
 Package: libdisplaycore-driver-ili9340
 Architecture: all
+Provides: ILI9340.h
 Depends: chipkit, libdisplaycore-core
 Description: ILI9340 driver for DisplayCore
  The ILI9340 is used by the Adafruit 2.2" TFT shields.
 
 Package: libdisplaycore-driver-analogtouch
 Architecture: all
+Provides: AnalogTouch.h
 Depends: chipkit, libdisplaycore-core
 Description: Analog Resistive Touchscreen driver for DisplayCore
  Utilizes the internal ADC of the PIC32 to interface with a standard
@@ -78,48 +87,56 @@ Description: Analog Resistive Touchscreen driver for DisplayCore
 
 Package: libdisplaycore-image-bmp
 Architecture: all
+Provides: BMP.h
 Depends: chipkit, libdisplaycore-core
 Description: DisplayCore BMP Flash renderer
  Display a BMP file stored in internal Flash
 
 Package: libdisplaycore-image-bmpfile
 Architecture: all
+Provides: BMPFile.h
 Depends: chipkit, libdisplaycore-core
 Description: DisplayCore BMP File renderer
  Display a BMP file stored on SD card
 
 Package: libdisplaycore-image-raw565
 Architecture: all
+Provides: Raw565.h
 Depends: chipkit, libdisplaycore-core
 Description: DisplayCore RGB565 Flash renderer
  Display a raw RGB565 file stored in internal Flash
 
 Package: libdisplaycore-filters
 Architecture: all
+Provides: Filters.h
 Depends: chipkit, libdisplaycore-core
 Description: DisplayCore Image Filters
  A selection of Image Filters
 
 Package: libdisplaycore-font-arial
 Architecture: all
+Provides: Arial.h
 Depends: chipkit, libdisplaycore-core
 Description: Arial font for DisplayCore
  The classic Arial font
 
 Package: libdisplaycore-font-dejavusans
 Architecture: all
+Provides: DejaVuSans.h
 Depends: chipkit, libdisplaycore-core
 Description: DejaVuSans font for DisplayCore
  DejaVuSans font from Linux
 
 Package: libdisplaycore-font-dejavusansmono
 Architecture: all
+Provides: DejaVuSansMono.h
 Depends: chipkit, libdisplaycore-core
 Description: Monospaced DejaVuSans font for DisplayCore
  DejaVuSans-Mono font from Linux
 
 Package: libdisplaycore-font-englibesh
 Architecture: all
+Provides: EngliBesh.h
 Depends: chipkit, libdisplaycore-core
 Description: EngliBesh font for DisplayCore
  This font is an English version of the Star Wars alphabet known as
@@ -132,48 +149,56 @@ Description: EngliBesh font for DisplayCore
 
 Package: libdisplaycore-font-hazard
 Architecture: all
+Provides: Hazard.h
 Depends: chipkit, libdisplaycore-core
 Description: Hazard symbols font for DisplayCore
  A selection of hazard and other symbols for DisplayCore
 
 Package: libdisplaycore-font-kimberley
 Architecture: all
+Provides: Kimberley.h
 Depends: chipkit, libdisplaycore-core
 Description: Kimberley font for DisplayCore
  Kimberley font for DisplayCore
 
 Package: libdisplaycore-font-liberation
 Architecture: all
+Provides: Liberation.h
 Depends: chipkit, libdisplaycore-core
 Description: Liberation font for DisplayCore
  Liberation is a 2 bit-per-pixel font for DisplayCore
 
 Package: libdisplaycore-font-ocraextended
 Architecture: all
+Provides: OCRAExtended.h
 Depends: chipkit, libdisplaycore-core
 Description: OCR A Extended font for DisplayCore
  The classic OCR A Optical Character Recognition font for DisplayCore
 
 Package: libdisplaycore-font-oldstandard
 Architecture: all
+Provides: OldStandard.h
 Depends: chipkit, libdisplaycore-core
 Description: OldStandard font for DisplayCore
  OldStandard is a serif typeface for DisplayCore
 
 Package: libdisplaycore-font-open24display
 Architecture: all
+Provides: Open24Display.h
 Depends: chipkit, libdisplaycore-core
 Description: Open24Display font for DisplayCore
  Simple 7-segment display font for DisplayCore
 
 Package: libdisplaycore-font-sheepsans
 Architecture: all
+Provides: SheepSans.h
 Depends: chipkit, libdisplaycore-core
 Description: SheepSans font for DisplayCore
  SheepSans font for DisplayCore
 
 Package: libdisplaycore-font-topaz
 Architecture: all
+Provides: Topaz.h
 Depends: chipkit, libdisplaycore-core
 Description: Topaz font for DisplayCore
  Topaz is famous for being the main default font on the Commodore
@@ -181,6 +206,7 @@ Description: Topaz font for DisplayCore
 
 Package: libdisplaycore-toolkit-widgets
 Architecture: all
+Provides: Widgets.h
 Depends: chipkit, libdisplaycore-core
 Description: Simple Widget toolkit library for DisplayCore
  Allows direct drawing of simple buttons and horizontal scales.
