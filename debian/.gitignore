@@ -29,3 +29,4 @@ libdisplaycore-driver-ili9340
 libdisplaycore-driver-st7735
 libdisplaycore-driver-framebuffer332
 libdisplaycore-driver-ssd1963-7
+debian/libdisplaycore-driver-lm6800/

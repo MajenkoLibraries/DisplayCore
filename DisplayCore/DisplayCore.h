@@ -76,6 +76,14 @@ class DisplayCore : public Print
         virtual uint16_t color565(uint8_t r, uint8_t g, uint8_t b);
         virtual void setFont(const uint8_t *f);
         virtual void translateCoordinates(int16_t *x, int16_t *y);
+        virtual void bezier(
+            int16_t x0, int16_t y0,
+            int16_t x1, int16_t y1,
+            int16_t x2, int16_t y2,
+            int16_t x3, int16_t y3,
+            int resolution,
+            uint16_t color
+        );
 
         virtual void fillScreen(uint16_t color);
         virtual void fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
