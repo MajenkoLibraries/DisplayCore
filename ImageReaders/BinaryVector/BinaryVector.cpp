@@ -50,7 +50,7 @@ void BinaryVector::draw(DisplayCore *dc, int16_t x, int16_t y) {
                 y3 = (int16_t)*pc++;
                 c0 = *pc++;
                 c1 = *pc++;
-                dc->bezier(x0, y0, x1, y1, x2, y2, x3, y3, c0, c1);
+                dc->drawBezier(x0, y0, x1, y1, x2, y2, x3, y3, c0, c1);
                 break;
                 
         }

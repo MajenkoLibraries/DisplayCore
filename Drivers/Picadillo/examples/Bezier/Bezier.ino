@@ -84,7 +84,7 @@ void loop() {
     // a curve.  The 9th parameter (50 here) is the number of
     // points to render on the line.  The higher the number the
     // slower the drawing, but the smoother the line.
-    tft.bezier(
+    tft.drawBezier(
         x0, y0,
         x1, y1,
         x2, y2,

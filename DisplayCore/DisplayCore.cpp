@@ -350,9 +350,7 @@ void DisplayCore::fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1,
         dx02 = x2 - x0,
         dy02 = y2 - y0,
         dx12 = x2 - x1,
-        dy12 = y2 - y1,
-        sa   = 0,
-        sb   = 0;
+        dy12 = y2 - y1;
 
     // For upper part of triangle, find scanline crossings for segments
     // 0-1 and 0-2.  If y1=y2 (flat-bottomed triangle), the scanline y1
@@ -364,31 +362,17 @@ void DisplayCore::fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1,
     else         last = y1-1; // Skip it
 
     for(y=y0; y<=last; y++) {
-        a   = x0 + sa / dy01;
-        b   = x0 + sb / dy02;
-        sa += dx01;
-        sb += dx02;
-        /* longhand:
         a = x0 + (x1 - x0) * (y - y0) / (y1 - y0);
         b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
-        */
         if(a > b) swap(a,b);
         drawHorizontalLine(a, y, b-a+1, color);
     }
 
     // For lower part of triangle, find scanline crossings for segments
     // 0-2 and 1-2.  This loop is skipped if y1=y2.
-    sa = dx12 * (y - y1);
-    sb = dx02 * (y - y0);
     for(; y<=y2; y++) {
-        a   = x1 + sa / dy12;
-        b   = x0 + sb / dy02;
-        sa += dx12;
-        sb += dx02;
-        /* longhand:
         a = x1 + (x2 - x1) * (y - y1) / (y2 - y1);
         b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
-        */
         if(a > b) swap(a,b);
         drawHorizontalLine(a, y, b-a+1, color);
     }
@@ -1448,7 +1432,7 @@ uint32_t DisplayCore::color2rgb(uint16_t rgb) {
     return (red << 16) | (green << 8) | (blue);
 }
 
-void DisplayCore::bezier(
+void DisplayCore::drawBezier(
     int16_t x0, int16_t y0,
     int16_t x1, int16_t y1,
     int16_t x2, int16_t y2,
@@ -1479,4 +1463,37 @@ void DisplayCore::bezier(
         sy = ey;
     }
     drawLine(sx, sy, x3, y3, color);
+}
+
+void DisplayCore::fillBezier(
+    int16_t x0, int16_t y0,
+    int16_t x1, int16_t y1,
+    int16_t x2, int16_t y2,
+    int16_t x3, int16_t y3,
+    int resolution,
+    uint16_t color
+) {
+
+    boolean first = true;
+    float points = 1.0/(float)resolution;
+    float t = 0.0, sx, sy, v1, v2, v3, v4;
+    float ex, ey;
+
+
+    for (t = 0.0; t < 1.0; t += points)
+    {
+        ex = pow (1-t, 3) * x0 + 3 * t * pow (1-t, 2) * x1 +
+                   3 * pow (t, 2) * (1-t) * x2 + pow (t, 3) * x3;
+ 
+        ey = pow (1-t, 3) * y0 + 3 * t * pow (1-t, 2) * y1 +
+                   3 * pow (t, 2) * (1-t) * y2 + pow (t, 3) * y3;
+
+        if (!first) {
+            fillTriangle(sx, sy, ex, ey, x0, y0, color);
+        }
+        first = false;
+        sx = ex;
+        sy = ey;
+    }
+    fillTriangle(x0, y0, sx, sy, x3, y3, color);
 }
