@@ -144,6 +144,14 @@ Depends: chipkit, libdisplaycore-core
 Description: Arial font for DisplayCore
  The classic Arial font
 
+Package: libdisplaycore-font-arialbold
+Architecture: all
+XBSC-Subgroup: Fonts
+Provides: ArialBold.h
+Depends: chipkit, libdisplaycore-core
+Description: ArialBold font for DisplayCore
+ The classic ArialBold font
+
 Package: libdisplaycore-font-dejavusans
 Architecture: all
 Provides: DejaVuSans.h

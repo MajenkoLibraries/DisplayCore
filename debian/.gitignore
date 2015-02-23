@@ -30,3 +30,6 @@ libdisplaycore-driver-st7735
 libdisplaycore-driver-framebuffer332
 libdisplaycore-driver-ssd1963-7
 libdisplaycore-driver-lm6800
+libdisplaycore-font-sinclair
+libdisplaycore-font-ubuntu
+libdisplaycore-image-binaryvector
