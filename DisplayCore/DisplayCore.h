@@ -190,6 +190,44 @@ class DisplayCore : public Print
 
         virtual uint16_t bgColorAt(int16_t x, int16_t y);
         virtual uint16_t colorAt(int16_t x, int16_t y);
+
+        /*! Start buffered mode
+         *  ===================
+         *  In buffered mode, where applicable, any data that would be sent to
+         *  the screen is delayed until buffered mode is ended.  This generally
+         *  has no effect on most screens, but those that use their own driver
+         *  level may use this to delay pushing out of the buffer to the screen.
+         */
+        virtual void startBuffer() {}
+
+        /*! End buffered mode
+         *  =================
+         *  Any changes that are pending will be pushed out to the screen. See
+         *  `startBuffer()` for more information.
+         */
+        virtual void endBuffer() {}
+
+        /*! Enable Back Light
+         *  =================
+         *  For devices with their own backlight control this function will turn
+         *  the backlight on. The brightness should be either the default brightness
+         *  (typically full on) or the last brightness set with `setBacklight()`.
+         */
+        virtual void enableBacklight() {}
+        /*! Disable Back Light
+         *  ==================
+         *  For devices with their own backlight control this function will turn
+         *  the backlight off.
+         */
+        virtual void disableBacklight() {}
+        /*! Set Back Light Brightness
+         *  =========================
+         *  For devices with their own backlight control this function will set the
+         *  brightness of the backlight.
+         */
+        virtual void setBacklight(uint8_t b) {}
+
+
 #if ARDUINO >= 100
         size_t write(uint8_t c);
 #else

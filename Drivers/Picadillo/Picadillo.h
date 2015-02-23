@@ -29,7 +29,8 @@ class Picadillo : public DisplayCore
         static const uint16_t Width      = 320;
         static const uint16_t Height     = 480;
 
-		Picadillo() : DisplayCore(), _lastOp(Picadillo::opWrite) {}
+
+		Picadillo() : DisplayCore(), _lastOp(Picadillo::opWrite), _brightness(255) {}
 
 		void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 		void setAddrWindowRead(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
@@ -54,8 +55,13 @@ class Picadillo : public DisplayCore
         void inline writeCommand(uint16_t);
         void inline writeData(uint16_t);
 		
+        void enableBacklight();
+        void disableBacklight();
+        void setBacklight(uint8_t b);
+
 	protected:
 		uint8_t colstart, rowstart;
+        uint8_t _brightness;
 };
 
 #endif

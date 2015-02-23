@@ -478,4 +478,15 @@ void Picadillo::flushCacheBlock() {
     _cacheState = cacheClean;
 }
 
+void Picadillo::enableBacklight() {
+    analogWrite(PIN_BACKLIGHT, _brightness);
+}
 
+void Picadillo::disableBacklight() {
+    analogWrite(PIN_BACKLIGHT, 0);
+}
+
+void Picadillo::setBacklight(uint8_t b) {
+    _brightness = b;
+    analogWrite(PIN_BACKLIGHT, _brightness);
+}
