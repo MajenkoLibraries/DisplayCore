@@ -103,6 +103,15 @@ Depends: chipkit, libdisplaycore-core
 Description: DisplayCore BMP Flash renderer
  Display a BMP file stored in internal Flash
 
+Package: libdisplaycore-image-binaryvector
+Architecture: all
+Provides: BinaryVector.h
+XBSC-Subgroup: Image
+Depends: chipkit, libdisplaycore-core
+Description: Binary Vector drawing image class
+ Compose simple vector images using the standard DisplayCore
+ drawing routines.
+
 Package: libdisplaycore-image-bmpfile
 Architecture: all
 Provides: BMPFile.h
@@ -229,6 +238,22 @@ Depends: chipkit, libdisplaycore-core
 Description: Topaz font for DisplayCore
  Topaz is famous for being the main default font on the Commodore
  Amiga computers.  Only in size 8.
+
+Package: libdisplaycore-font-sinclair
+Architecture: all
+Provides: Sinclair.h
+XBSC-Subgroup: Fonts
+Depends: chipkit, libdisplaycore-core
+Description: Sinclair font for DisplayCore
+ The classic font from Sinclair ZX Spectrum computers.
+
+Package: libdisplaycore-font-ubuntu
+Architecture: all
+Provides: Topaz.h
+XBSC-Subgroup: Fonts
+Depends: chipkit, libdisplaycore-core
+Description: Ubuntu font for DisplayCore
+ The standard font from Ubuntu.
 
 Package: libdisplaycore-toolkit-widgets
 Architecture: all
