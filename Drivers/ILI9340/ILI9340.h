@@ -6,6 +6,46 @@
 
 class ILI9340 : public DisplayCore {
     private:
+        static const uint8_t ILI9340_NOP = 0x00
+        static const uint8_t ILI9340_SWRESET = 0x01
+        static const uint8_t ILI9340_RDDID = 0x04
+        static const uint8_t ILI9340_RDDST = 0x09
+
+        static const uint8_t ILI9340_SLPIN = 0x10
+        static const uint8_t ILI9340_SLPOUT = 0x11
+        static const uint8_t ILI9340_PTLON = 0x12
+        static const uint8_t ILI9340_NORON = 0x13
+
+        static const uint8_t ILI9340_RDMODE = 0x0A
+        static const uint8_t ILI9340_RDMADCTL = 0x0B
+        static const uint8_t ILI9340_RDPIXFMT = 0x0C
+        static const uint8_t ILI9340_RDIMGFMT = 0x0A
+        static const uint8_t ILI9340_RDSELFDIAG = 0x0F
+
+        static const uint8_t ILI9340_INVOFF = 0x20
+        static const uint8_t ILI9340_INVON = 0x21
+        static const uint8_t ILI9340_GAMMASET = 0x26
+        static const uint8_t ILI9340_DISPOFF = 0x28
+        static const uint8_t ILI9340_DISPON = 0x29
+
+        static const uint8_t ILI9340_CASET = 0x2A
+        static const uint8_t ILI9340_PASET = 0x2B
+        static const uint8_t ILI9340_RAMWR = 0x2C
+        static const uint8_t ILI9340_RAMRD = 0x2E
+
+        static const uint8_t ILI9340_PTLAR = 0x30
+        static const uint8_t ILI9340_MADCTL = 0x36
+
+        static const uint8_t ILI9340_MADCTL_MY = 0x80
+        static const uint8_t ILI9340_MADCTL_MX = 0x40
+        static const uint8_t ILI9340_MADCTL_MV = 0x20
+        static const uint8_t ILI9340_MADCTL_ML = 0x10
+        static const uint8_t ILI9340_MADCTL_RGB = 0x00
+        static const uint8_t ILI9340_MADCTL_BGR = 0x08
+        static const uint8_t ILI9340_MADCTL_MH = 0x04
+
+        static const uint8_t ILI9340_PIXFMT = 0x3A
+
         DSPI *_spi;
         uint8_t _cs;
         uint8_t _dc;
