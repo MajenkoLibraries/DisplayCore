@@ -1,34 +1,5 @@
 #include <Picadillo.h>
 
-//--------------------------------------------------------------------------//
-// HX8357 Driver Registers
-//--------------------------------------------------------------------------//
-#define HX8357_EXIT_SLEEP_MODE          	0x11
-#define HX8357_SET_DISPLAY_OFF          	0x28
-#define HX8357_SET_DISPLAY_ON           	0x29
-#define HX8357_SET_COLUMN_ADDRESS       	0x2A
-#define HX8357_SET_PAGE_ADDRESS         	0x2B
-#define HX8357_WRITE_MEMORY_START       	0x2C
-#define HX8357_READ_MEMORY_START        	0x2E
-#define HX8357_SET_TEAR_ON              	0x35
-#define HX8357_SET_ADDRESS_MODE         	0x36
-#define HX8357_SET_PIXEL_FORMAT         	0x3A
-#define HX8357_WRITE_MEMORY_CONTINUE    	0x3C
-#define HX8357_READ_MEMORY_CONTINUE     	0x3E
-#define HX8357_SET_INTERNAL_OSCILLATOR   	0xB0
-#define HX8357_SET_POWER_CONTROL         	0xB1
-#define HX8357_SET_DISPLAY_MODE          	0xB4
-#define HX8357_SET_VCOM_VOLTAGE         	0xB6
-#define HX8357_ENABLE_EXTENSION_COMMAND 	0xB9
-#define HX8357_SET_PANEL_DRIVING        	0xC0    // not documented!
-#define HX8357_SET_PANEL_CHARACTERISTIC  	0xCC
-#define HX8357_SET_GAMMA_CURVE           	0xE0
-
-#define HX8357_INVON 						0x21
-#define HX8357_INVOFF						0x20
-#define HX8357_DISPLAYOFF					0x28
-#define HX8357_DISPLAYON					0x29
-
 void inline Picadillo::writeCommand(uint16_t c) {
     while (PMMODEbits.BUSY == 1);
     PMADDR = 0x0000;
