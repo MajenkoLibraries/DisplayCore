@@ -1,10 +1,67 @@
-#ifndef _ST7735_H_
-#define _ST7735_H_
+#ifndef _ST7735_H
+#define _ST7735_H
 
 #include <DisplayCore.h>
 #include <DSPI.h>
 
 class ST7735 : public DisplayCore {
+    private:
+        static const uint8_t ST7735_NOP     = 0x00;
+        static const uint8_t ST7735_SWRESET = 0x01;
+        static const uint8_t ST7735_RDDID   = 0x04;
+        static const uint8_t ST7735_RDDST   = 0x09;
+
+        static const uint8_t ST7735_SLPIN   = 0x10;
+        static const uint8_t ST7735_SLPOUT  = 0x11;
+        static const uint8_t ST7735_PTLON   = 0x12;
+        static const uint8_t ST7735_NORON   = 0x13;
+
+        static const uint8_t ST7735_INVOFF  = 0x20;
+        static const uint8_t ST7735_INVON   = 0x21;
+        static const uint8_t ST7735_DISPOFF = 0x28;
+        static const uint8_t ST7735_DISPON  = 0x29;
+        static const uint8_t ST7735_CASET   = 0x2A;
+        static const uint8_t ST7735_RASET   = 0x2B;
+        static const uint8_t ST7735_RAMWR   = 0x2C;
+        static const uint8_t ST7735_RAMRD   = 0x2E;
+
+        static const uint8_t ST7735_PTLAR   = 0x30;
+        static const uint8_t ST7735_COLMOD  = 0x3A;
+        static const uint8_t ST7735_MADCTL  = 0x36;
+
+        static const uint8_t ST7735_FRMCTR1 = 0xB1;
+        static const uint8_t ST7735_FRMCTR2 = 0xB2;
+        static const uint8_t ST7735_FRMCTR3 = 0xB3;
+        static const uint8_t ST7735_INVCTR  = 0xB4;
+        static const uint8_t ST7735_DISSET5 = 0xB6;
+
+        static const uint8_t ST7735_PWCTR1  = 0xC0;
+        static const uint8_t ST7735_PWCTR2  = 0xC1;
+        static const uint8_t ST7735_PWCTR3  = 0xC2;
+        static const uint8_t ST7735_PWCTR4  = 0xC3;
+        static const uint8_t ST7735_PWCTR5  = 0xC4;
+        static const uint8_t ST7735_VMCTR1  = 0xC5;
+
+        static const uint8_t ST7735_RDID1   = 0xDA;
+        static const uint8_t ST7735_RDID2   = 0xDB;
+        static const uint8_t ST7735_RDID3   = 0xDC;
+        static const uint8_t ST7735_RDID4   = 0xDD;
+
+        static const uint8_t ST7735_PWCTR6  = 0xFC;
+
+        static const uint8_t ST7735_GMCTRP1 = 0xE0;
+        static const uint8_t ST7735_GMCTRN1 = 0xE1;
+
+        static const uint8_t DELAY = 0x80;
+
+        static const uint8_t MADCTL_MY  = 0x80;
+        static const uint8_t MADCTL_MX  = 0x40;
+        static const uint8_t MADCTL_MV  = 0x20;
+        static const uint8_t MADCTL_ML  = 0x10;
+        static const uint8_t MADCTL_RGB = 0x08;
+        static const uint8_t MADCTL_MH  = 0x04;
+
+
 
 	public:
         /*! Adafruit screen with a green tab */

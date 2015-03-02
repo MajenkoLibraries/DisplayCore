@@ -382,19 +382,6 @@ void SSD1963_7::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color
 	}
 }
 
-#define SSD1963_EMODE 0x0003
-
-#define SSD1963_TRI 0x8000
-#define SSD1963_DFM 0x4000
-#define SSD1963_BGR 0x1000
-#define SSD1963_HWM 0x0200
-#define SSD1963_ORG 0x0080
-#define SSD1963_ID0 0x0000
-#define SSD1963_ID1 0x0010
-#define SSD1963_ID2 0x0020
-#define SSD1963_ID3 0x0030
-#define SSD1963_AM  0x0008
-
 void SSD1963_7::setRotation(uint8_t m) {
 	rotation = m % 4; // can't be higher than 3
 }

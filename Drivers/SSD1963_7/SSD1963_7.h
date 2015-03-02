@@ -1,5 +1,5 @@
-#ifndef _SSD1963_7_H_
-#define _SSD1963_7_H_
+#ifndef _SSD1963_7_H
+#define _SSD1963_7_H
 
 #include <DisplayCore.h>
 
@@ -82,6 +82,19 @@ class SSD1963_7 : public DisplayCore {
         static const uint8_t SSD1963_GetLShiftFreq         = 0xE7;
         static const uint8_t SSD1963_SetPixelDataInterface = 0xF0;
         static const uint8_t SSD1963_GetPixelDataInterface = 0xF1;
+
+        static const uint16_t SSD1963_EMODE = 0x0003;
+
+        static const uint16_t SSD1963_TRI = 0x8000;
+        static const uint16_t SSD1963_DFM = 0x4000;
+        static const uint16_t SSD1963_BGR = 0x1000;
+        static const uint16_t SSD1963_HWM = 0x0200;
+        static const uint16_t SSD1963_ORG = 0x0080;
+        static const uint16_t SSD1963_ID0 = 0x0000;
+        static const uint16_t SSD1963_ID1 = 0x0010;
+        static const uint16_t SSD1963_ID2 = 0x0020;
+        static const uint16_t SSD1963_ID3 = 0x0030;
+        static const uint16_t SSD1963_AM  = 0x0008;
 
         static const uint16_t   HDP=799;
         static const uint16_t   HT=928;

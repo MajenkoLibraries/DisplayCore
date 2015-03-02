@@ -3,7 +3,14 @@
 
 #include <DisplayCore.h>
 
+#if !defined(max)
+#define max(A,B) ((A) > (B) ? (A) : (B))
+#endif
+
 class AnalogTouch : public Touch {
+    private:
+        static const uint8_t ANALOGTOUCH_SMPSIZE = 50;
+
     public: 
         AnalogTouch(uint8_t xl, uint8_t xr, uint8_t yu, uint8_t yd, uint16_t w, uint16_t h) : Touch(w, h), 
             _xl(xl), _xr(xr), _yu(yu), _yd(yd) {}

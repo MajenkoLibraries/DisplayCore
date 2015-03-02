@@ -1,5 +1,5 @@
-#ifndef _PICADILLO_H_
-#define _PICADILLO_H_
+#ifndef _PICADILLO_H
+#define _PICADILLO_H
 
 #include <DisplayCore.h>
 #include <AnalogTouch.h>

@@ -1,5 +1,5 @@
-#ifndef _FILTER_ADJUST_CONTRAST_H_
-#define _FILTER_ADJUST_CONTRAST_H_
+#ifndef _FILTER_ADJUST_CONTRAST_H
+#define _FILTER_ADJUST_CONTRAST_H
 
 #include <Filters.h>
 

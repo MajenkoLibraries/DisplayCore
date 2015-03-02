@@ -1,5 +1,5 @@
-#ifndef _FILTER_ADJUST_HSV_H_
-#define _FILTER_ADJUST_HSV_H_
+#ifndef _FILTER_ADJUST_HSV_H
+#define _FILTER_ADJUST_HSV_H
 
 #include <Filters.h>
 

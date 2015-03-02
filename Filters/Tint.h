@@ -1,5 +1,5 @@
-#ifndef _FILTER_TINT_H_
-#define _FILTER_TINT_H_
+#ifndef _FILTER_TINT_H
+#define _FILTER_TINT_H
 
 #include <Filters.h>
 

@@ -1,5 +1,5 @@
-#ifndef _FILTER_MONOCHROME_H_
-#define _FILTER_MONOCHROME_H_
+#ifndef _FILTER_MONOCHROME_H
+#define _FILTER_MONOCHROME_H
 
 #include <Filters.h>
 

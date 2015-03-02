@@ -3,19 +3,21 @@
 
 #include <DisplayCore.h>
 
-#define GLCD_CMD_OFF         0b00111110
-#define GLCD_CMD_ON          0b00111111
-#define GLCD_CMD_SET_Y       0b01000000
-#define GLCD_CMD_SET_PAGE    0b10111000
-#define GLCD_CMD_START       0b11000000
-
-#define GLCD_STAT_BUSY   0b10000000
-#define GLCD_STAT_ONOFF  0b00100000
-#define GLCD_STAT_RESET  0b00010000
-
 class LM6800 : public DisplayCore {
 
     private:
+
+        static const uint8_t GLCD_CMD_OFF       = 0b00111110;
+        static const uint8_t GLCD_CMD_ON        = 0b00111111;
+        static const uint8_t GLCD_CMD_SET_Y     = 0b01000000;
+        static const uint8_t GLCD_CMD_SET_PAGE  = 0b10111000;
+        static const uint8_t GLCD_CMD_START     = 0b11000000;
+
+        static const uint8_t GLCD_STAT_BUSY     = 0b10000000;
+        static const uint8_t GLCD_STAT_ONOFF    = 0b00100000;
+        static const uint8_t GLCD_STAT_RESET    = 0b00010000;
+
+
         p32_ioport *_port_d0;
         p32_ioport *_port_d1;
         p32_ioport *_port_d2;

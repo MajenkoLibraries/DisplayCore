@@ -1,7 +1,5 @@
 #include <AnalogTouch.h>
 
-#define ANALOGTOUCH_SMPSIZE 50
-
 void AnalogTouch::initializeDevice() {
     pinMode(_xl, INPUT);
     pinMode(_xr, INPUT);
@@ -85,10 +83,6 @@ int AnalogTouch::getSample(uint8_t pin) {
     }
     return most;
 }
-
-#if !defined(max)
-#define max(A,B) ((A) > (B) ? (A) : (B))
-#endif
 
 void AnalogTouch::sample() {
     pinMode(_xl, OUTPUT);

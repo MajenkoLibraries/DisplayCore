@@ -1,5 +1,5 @@
-#ifndef _FILTER_INVERT_H_
-#define _FILTER_INVERT_H_
+#ifndef _FILTER_INVERT_H
+#define _FILTER_INVERT_H
 
 #include <Filters.h>
 

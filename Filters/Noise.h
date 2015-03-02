@@ -1,5 +1,5 @@
-#ifndef _FILTER_NOISE_H_
-#define _FILTER_NOISE_H_
+#ifndef _FILTER_NOISE_H
+#define _FILTER_NOISE_H
 
 #include <Filters.h>
 

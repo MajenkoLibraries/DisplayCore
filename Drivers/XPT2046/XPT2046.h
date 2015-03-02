@@ -5,6 +5,11 @@
 #include <DSPI.h>
 
 class XPT2046 : public Touch {
+    private:
+        static const uint8_t TOUCH_CMD_X      = 0xD0;
+        static const uint8_t TOUCH_CMD_Y      = 0x90;
+        static const uint8_t XPT2046_SMPSIZE  = 50;
+
     public: 
         /**@{*/
         /*! Create a new XPT2046 object

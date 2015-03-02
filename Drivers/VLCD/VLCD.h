@@ -28,8 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _VLCD
-#define _VLCD
+#ifndef _VLCD_H
+#define _VLCD_H
 
 #include <DisplayCore.h>
 

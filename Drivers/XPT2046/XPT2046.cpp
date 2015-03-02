@@ -1,10 +1,5 @@
 #include <XPT2046.h>
 
-#define TOUCH_CMD_X        0xD0
-#define TOUCH_CMD_Y        0x90
-
-#define XPT2046_SMPSIZE 50
-
 void XPT2046::initializeDevice() {
     _spi->begin();
     pinMode(_cs, OUTPUT);
