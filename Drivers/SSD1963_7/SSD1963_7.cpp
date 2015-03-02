@@ -1,17 +1,5 @@
 #include <SSD1963_7.h>
 
-const uint16_t   HDP=799;
-const uint16_t   HT=928;
-const uint16_t   HPS=46;
-const uint16_t   LPS=15;
-const uint8_t    HPW=48;
-
-const uint16_t   VDP=479;
-const uint16_t   VT=525;
-const uint16_t   VPS=16;
-const uint16_t   FPS=8;
-const uint8_t    VPW=16;
-
 SSD1963_7::SSD1963_7(
     uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
     uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,

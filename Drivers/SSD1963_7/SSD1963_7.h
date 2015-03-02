@@ -3,112 +3,118 @@
 
 #include <DisplayCore.h>
 
-#define SSD1963_NOP                     0x00
-#define SSD1963_SoftReset               0x01
-#define SSD1963_GetPowerMode            0x0A
-#define SSD1963_GetAddressMode          0x0B
-#define SSD1963_GetDisplayMode          0x0D
-#define SSD1963_GetTearEffectsStatus    0x0E
-#define SSD1963_EnterSleepMode          0x10
-#define SSD1963_ExitSleepMode           0x11
-#define SSD1963_EnterPartialMode        0x12
-#define SSD1963_EnterNormalMode         0x13
-#define SSD1963_ExitInvertMode          0x20
-#define SSD1963_EnterInvertMode         0x21
-#define SSD1963_SetGammaCurve           0x26
-#define SSD1963_SetDisplayOff           0x28
-#define SSD1963_SetDisplayOn            0x29
-#define SSD1963_SetColumnAddress        0x2A
-#define SSD1963_SetPageAddress          0x2B
-#define SSD1963_WriteMemoryStart        0x2C
-#define SSD1963_ReadMemoryStart         0x2E
-#define SSD1963_SetPartialArea          0x30
-#define SSD1963_SetScrollArea           0x33
-#define SSD1963_SetTearOff              0x34
-#define SSD1963_SetTearOn               0x35
-#define SSD1963_SetAddressMode          0x36
-#define SSD1963_SetScrollStart          0x37
-#define SSD1963_ExitIdleMode            0x38
-#define SSD1963_EnterIdleMode           0x39
-#define SSD1963_WriteMemoryContinue     0x3C
-#define SSD1963_ReadMemoryContinue      0x3E
-#define SSD1963_SetTearScanline         0x44
-#define SSD1963_GetScanline             0x45
-#define SSD1963_ReadDDB                 0xA1
-#define SSD1963_SetLCDMode              0xB0
-#define SSD1963_GetLCDMode              0xB1
-#define SSD1963_SetHoriPeriod           0xB4
-#define SSD1963_GetHoriPeriod           0xB5
-#define SSD1963_SetVertPeriod           0xB6
-#define SSD1963_GetVertPeriod           0xB7
-#define SSD1963_SetGPIOConf             0xB8
-#define SSD1963_GetGPIOConf             0xB9
-#define SSD1963_SetGPIOValue            0xBA
-#define SSD1963_GetGPIOValue            0xBB
-#define SSD1963_SetPostProc             0xBC
-#define SSD1963_GetPostProc             0xBD
-#define SSD1963_SetPWMConf              0xBE
-#define SSD1963_GetPWMConf              0xBF
-#define SSD1963_SetLCDGen0              0xC0
-#define SSD1963_GetLCDGen0              0xC1
-#define SSD1963_SetLCDGen1              0xC2
-#define SSD1963_GetLCDGen1              0xC3
-#define SSD1963_SetLCDGen2              0xC4
-#define SSD1963_GetLCDGen2              0xC5
-#define SSD1963_SetLCDGen3              0xC6
-#define SSD1963_GetLCDGen3              0xC7
-#define SSD1963_SetGPIO0Rop             0xC8
-#define SSD1963_GetGPIO0Rop             0xC9
-#define SSD1963_SetGPIO1Rop             0xCA
-#define SSD1963_GetGPIO1Rop             0xCB
-#define SSD1963_SetGPIO2Rop             0xCC
-#define SSD1963_GetGPIO2Rop             0xCD
-#define SSD1963_SetGPIO3Rop             0xCE
-#define SSD1963_GetGPIO3Rop             0xCF
-#define SSD1963_SetDBCConf              0xD0
-#define SSD1963_GetDBCConf              0xD1
-#define SSD1963_SetDBCTh                0xD4
-#define SSD1963_GetDBCTh                0xD5
-#define SSD1963_SetPLL                  0xE0
-#define SSD1963_SetPLLMN                0xE2
-#define SSD1963_GetPLLMN                0xE3
-#define SSD1963_GetPLLStatus            0xE4
-#define SSD1963_SetDeepSleep            0xE5
-#define SSD1963_SetLShiftFreq           0xE6
-#define SSD1963_GetLShiftFreq           0xE7
-#define SSD1963_SetPixelDataInterface   0xF0
-#define SSD1963_GetPixelDataInterface   0xF1
-
-const uint8_t _PIN_D0 = 0;
-const uint8_t _PIN_D1 = 1;
-const uint8_t _PIN_D2 = 2;
-const uint8_t _PIN_D3 = 3;
-const uint8_t _PIN_D4 = 4;
-const uint8_t _PIN_D5 = 5;
-const uint8_t _PIN_D6 = 6;
-const uint8_t _PIN_D7 = 7;
-const uint8_t _PIN_D8 = 8;
-const uint8_t _PIN_D9 = 9;
-const uint8_t _PIN_D10 = 10;
-const uint8_t _PIN_D11 = 11;
-const uint8_t _PIN_D12 = 12;
-const uint8_t _PIN_D13 = 13;
-const uint8_t _PIN_D14 = 14;
-const uint8_t _PIN_D15 = 15;
-const uint8_t _PIN_CS = 16;
-const uint8_t _PIN_RS = 17;
-const uint8_t _PIN_WR = 18;
-const uint8_t _PIN_RD = 19;
-
-
-#define LSET(P) ports[P]->lat.set = masks[P]
-#define LCLR(P) ports[P]->lat.clr = masks[P]
-#define LVAL(P, V) if (V) { ports[P]->lat.set = masks[P]; } else { ports[P]->lat.clr = masks[P]; }
-
-
 class SSD1963_7 : public DisplayCore {
 
     private:
+
+        static const uint8_t SSD1963_NOP                   = 0x00;
+        static const uint8_t SSD1963_SoftReset             = 0x01;
+        static const uint8_t SSD1963_GetPowerMode          = 0x0A;
+        static const uint8_t SSD1963_GetAddressMode        = 0x0B;
+        static const uint8_t SSD1963_GetDisplayMode        = 0x0D;
+        static const uint8_t SSD1963_GetTearEffectsStatus  = 0x0E;
+        static const uint8_t SSD1963_EnterSleepMode        = 0x10;
+        static const uint8_t SSD1963_ExitSleepMode         = 0x11;
+        static const uint8_t SSD1963_EnterPartialMode      = 0x12;
+        static const uint8_t SSD1963_EnterNormalMode       = 0x13;
+        static const uint8_t SSD1963_ExitInvertMode        = 0x20;
+        static const uint8_t SSD1963_EnterInvertMode       = 0x21;
+        static const uint8_t SSD1963_SetGammaCurve         = 0x26;
+        static const uint8_t SSD1963_SetDisplayOff         = 0x28;
+        static const uint8_t SSD1963_SetDisplayOn          = 0x29;
+        static const uint8_t SSD1963_SetColumnAddress      = 0x2A;
+        static const uint8_t SSD1963_SetPageAddress        = 0x2B;
+        static const uint8_t SSD1963_WriteMemoryStart      = 0x2C;
+        static const uint8_t SSD1963_ReadMemoryStart       = 0x2E;
+        static const uint8_t SSD1963_SetPartialArea        = 0x30;
+        static const uint8_t SSD1963_SetScrollArea         = 0x33;
+        static const uint8_t SSD1963_SetTearOff            = 0x34;
+        static const uint8_t SSD1963_SetTearOn             = 0x35;
+        static const uint8_t SSD1963_SetAddressMode        = 0x36;
+        static const uint8_t SSD1963_SetScrollStart        = 0x37;
+        static const uint8_t SSD1963_ExitIdleMode          = 0x38;
+        static const uint8_t SSD1963_EnterIdleMode         = 0x39;
+        static const uint8_t SSD1963_WriteMemoryContinue   = 0x3C;
+        static const uint8_t SSD1963_ReadMemoryContinue    = 0x3E;
+        static const uint8_t SSD1963_SetTearScanline       = 0x44;
+        static const uint8_t SSD1963_GetScanline           = 0x45;
+        static const uint8_t SSD1963_ReadDDB               = 0xA1;
+        static const uint8_t SSD1963_SetLCDMode            = 0xB0;
+        static const uint8_t SSD1963_GetLCDMode            = 0xB1;
+        static const uint8_t SSD1963_SetHoriPeriod         = 0xB4;
+        static const uint8_t SSD1963_GetHoriPeriod         = 0xB5;
+        static const uint8_t SSD1963_SetVertPeriod         = 0xB6;
+        static const uint8_t SSD1963_GetVertPeriod         = 0xB7;
+        static const uint8_t SSD1963_SetGPIOConf           = 0xB8;
+        static const uint8_t SSD1963_GetGPIOConf           = 0xB9;
+        static const uint8_t SSD1963_SetGPIOValue          = 0xBA;
+        static const uint8_t SSD1963_GetGPIOValue          = 0xBB;
+        static const uint8_t SSD1963_SetPostProc           = 0xBC;
+        static const uint8_t SSD1963_GetPostProc           = 0xBD;
+        static const uint8_t SSD1963_SetPWMConf            = 0xBE;
+        static const uint8_t SSD1963_GetPWMConf            = 0xBF;
+        static const uint8_t SSD1963_SetLCDGen0            = 0xC0;
+        static const uint8_t SSD1963_GetLCDGen0            = 0xC1;
+        static const uint8_t SSD1963_SetLCDGen1            = 0xC2;
+        static const uint8_t SSD1963_GetLCDGen1            = 0xC3;
+        static const uint8_t SSD1963_SetLCDGen2            = 0xC4;
+        static const uint8_t SSD1963_GetLCDGen2            = 0xC5;
+        static const uint8_t SSD1963_SetLCDGen3            = 0xC6;
+        static const uint8_t SSD1963_GetLCDGen3            = 0xC7;
+        static const uint8_t SSD1963_SetGPIO0Rop           = 0xC8;
+        static const uint8_t SSD1963_GetGPIO0Rop           = 0xC9;
+        static const uint8_t SSD1963_SetGPIO1Rop           = 0xCA;
+        static const uint8_t SSD1963_GetGPIO1Rop           = 0xCB;
+        static const uint8_t SSD1963_SetGPIO2Rop           = 0xCC;
+        static const uint8_t SSD1963_GetGPIO2Rop           = 0xCD;
+        static const uint8_t SSD1963_SetGPIO3Rop           = 0xCE;
+        static const uint8_t SSD1963_GetGPIO3Rop           = 0xCF;
+        static const uint8_t SSD1963_SetDBCConf            = 0xD0;
+        static const uint8_t SSD1963_GetDBCConf            = 0xD1;
+        static const uint8_t SSD1963_SetDBCTh              = 0xD4;
+        static const uint8_t SSD1963_GetDBCTh              = 0xD5;
+        static const uint8_t SSD1963_SetPLL                = 0xE0;
+        static const uint8_t SSD1963_SetPLLMN              = 0xE2;
+        static const uint8_t SSD1963_GetPLLMN              = 0xE3;
+        static const uint8_t SSD1963_GetPLLStatus          = 0xE4;
+        static const uint8_t SSD1963_SetDeepSleep          = 0xE5;
+        static const uint8_t SSD1963_SetLShiftFreq         = 0xE6;
+        static const uint8_t SSD1963_GetLShiftFreq         = 0xE7;
+        static const uint8_t SSD1963_SetPixelDataInterface = 0xF0;
+        static const uint8_t SSD1963_GetPixelDataInterface = 0xF1;
+
+        static const uint16_t   HDP=799;
+        static const uint16_t   HT=928;
+        static const uint16_t   HPS=46;
+        static const uint16_t   LPS=15;
+        static const uint8_t    HPW=48;
+
+        static const uint16_t   VDP=479;
+        static const uint16_t   VT=525;
+        static const uint16_t   VPS=16;
+        static const uint16_t   FPS=8;
+        static const uint8_t    VPW=16;
+
+        static const uint8_t _PIN_D0 = 0;
+        static const uint8_t _PIN_D1 = 1;
+        static const uint8_t _PIN_D2 = 2;
+        static const uint8_t _PIN_D3 = 3;
+        static const uint8_t _PIN_D4 = 4;
+        static const uint8_t _PIN_D5 = 5;
+        static const uint8_t _PIN_D6 = 6;
+        static const uint8_t _PIN_D7 = 7;
+        static const uint8_t _PIN_D8 = 8;
+        static const uint8_t _PIN_D9 = 9;
+        static const uint8_t _PIN_D10 = 10;
+        static const uint8_t _PIN_D11 = 11;
+        static const uint8_t _PIN_D12 = 12;
+        static const uint8_t _PIN_D13 = 13;
+        static const uint8_t _PIN_D14 = 14;
+        static const uint8_t _PIN_D15 = 15;
+        static const uint8_t _PIN_CS = 16;
+        static const uint8_t _PIN_RS = 17;
+        static const uint8_t _PIN_WR = 18;
+        static const uint8_t _PIN_RD = 19;
 
         p32_ioport *_port_d0;
         p32_ioport *_port_d1;
