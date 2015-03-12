@@ -86,6 +86,16 @@ Depends: chipkit, libdisplaycore-core
 Description: ILI9340 driver for DisplayCore
  The ILI9340 is used by the Adafruit 2.2" TFT shields.
 
+Package: libdisplaycore-driver-goldelox
+Architecture: all
+Provides: Goldelox.h
+XBSC-Subgroup: Drivers
+Depends: chipkit, libdisplaycore-core
+Description: 4D Goldelox driver for DisplayCore
+ The Goldelox is a display driver chip for small displays from
+ 4D Systems.  This library communicates using the SCE2 protocol
+ through a serial port.
+
 Package: libdisplaycore-driver-analogtouch
 Architecture: all
 XBSC-Subgroup: Drivers
