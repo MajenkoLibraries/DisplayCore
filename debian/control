@@ -52,6 +52,17 @@ Depends: chipkit, libdisplaycore-core
 Description: VirtualLCD Driver for DisplayCore
  Use UECIDE's VirtualLCD plugin as a display device for DisplayCore
 
+Package: libdisplaycore-driver-pg25664cg
+Architecture: all
+XBSC-Subgroup: Drivers
+Provides: PG25664CG.h
+Depends: chipkit, libdisplaycore-core
+Description: PG25664CG OLED Driver for DisplayCore
+ The PG25664CG is a 256x64 OLED display based on the SSD1322
+ display chip. It provides 4-bit grayscale operation with
+ nibble packing of the data.  Consequently it requires an
+ 8KB internal buffer for ease of operation.
+
 Package: libdisplaycore-driver-lm6800
 Architecture: all
 XBSC-Subgroup: Drivers
