@@ -119,7 +119,13 @@ class PG25664CG_PORTB : public PG25664CG {
         PG25664CG_PORTB(uint8_t dc, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t res, uint8_t doff) : pin_dc(dc), pin_wr(wr), pin_rd(rd), pin_cs(cs), pin_res(res), pin_data(doff) {}
 
         void initializeDevice() {
-            TRISB = 0;
+            TRISBCLR = 1<<pin_dc;
+            TRISBCLR = 1<<pin_wr;
+            TRISBCLR = 1<<pin_rd;
+            TRISBCLR = 1<<pin_cs;
+            TRISBCLR = 1<<pin_res;
+            TRISBCLR = 0xFF<<pin_data;
+
             LATBSET = 1<<pin_dc;
             LATBSET = 1<<pin_wr;
             LATBSET = 1<<pin_rd;
