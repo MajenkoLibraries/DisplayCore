@@ -1226,22 +1226,22 @@ boolean DisplayCore::clipToScreen(int16_t &x, int16_t &y, int16_t &w, int16_t &h
         }
     }
 
-    if (x >= _width) {
+    if (x >= getWidth()) {
         return false;
     }
 
-    if (y >= _height) {
+    if (y >= getHeight()) {
         return false;
     }
 
-    if (x + w >= _width) {
+    if (x + w >= getWidth()) {
         w = _width-x;
         if (w <= 0) {
             return false;
         }
     }
 
-    if (y + h >= _height) {
+    if (y + h >= getHeight()) {
         h = _height-y;
         if (h <= 0) {
             return false;
@@ -1497,3 +1497,15 @@ void DisplayCore::fillBezier(
     }
     fillTriangle(x0, y0, sx, sy, x3, y3, color);
 }
+
+p32_ioport *DisplayCore::getPortInformation(uint8_t pin, uint32_t *mask) {
+    uint32_t portno = digitalPinToPort(pin);
+    if (portno == NOT_A_PIN) {
+        return NULL;
+    }
+    if (mask != NULL) {
+        *mask = digitalPinToBitMask(pin);
+    }
+    return (p32_ioport *)portRegisters(portno);
+}
+

@@ -89,6 +89,17 @@ Depends: chipkit, libdisplaycore-core
 Description: ST7735 driver for DisplayCore
  The ST7735 is used by the Adafruit 1.8" TFT shields.
 
+Package: libdisplaycore-driver-ssd1289
+Architecture: all
+Provides: SSD1289.h
+XBSC-Subgroup: Drivers
+Depends: chipkit, libdisplaycore-core
+Description: SSD1289 3.2" TFT
+ Generic SSD1289 based TFT screen (240x320) such as the
+ SainSmart TFT_320QVT or the iTead ITDB02-3.2S. Supports
+ both direct port manipulation driver and PMP driver for
+ blistering speed.
+
 Package: libdisplaycore-driver-ssd1963-7
 Architecture: all
 Provides: SSD1963-UL-7.h

@@ -227,6 +227,14 @@ class DisplayCore : public Print
          */
         virtual void setBacklight(uint8_t b) {}
 
+        /*! Get Port Data
+         *  =============
+         *  Utility function toget the information about an IO port for high speed
+         *  access.
+         */
+        p32_ioport *getPortInformation(uint8_t pin, uint32_t *mask);
+
+
 
 #if ARDUINO >= 100
         size_t write(uint8_t c);
