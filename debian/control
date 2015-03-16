@@ -52,6 +52,14 @@ Depends: chipkit, libdisplaycore-core
 Description: VirtualLCD Driver for DisplayCore
  Use UECIDE's VirtualLCD plugin as a display device for DisplayCore
 
+Package: libdisplaycore-driver-vga
+Architecture: all
+Provides: VGA.h
+XBSC-Subgroup: Drivers
+Depends: chipkit, libdisplaycore-core
+Description: VGA Driver for DisplayCore
+ Generate a crude VGA signal through SPI4.
+
 Package: libdisplaycore-driver-pg25664cg
 Architecture: all
 XBSC-Subgroup: Drivers
