@@ -17,15 +17,28 @@ All this means:
 * Faster display access - removing the communication abstraction layer makes communication much faster
 * Easy to support more displays - not just TFT screens, but any display technology can now be supported
 
-Display drivers:
+Display drivers and tested devices:
 
-  * ILI9340 - Adafruit 2.2" displays
-  * Picadillo - 4D systems PIC32 based 3.5" screen
-  * SSD1963_7 - 7" SSD1963 based (generic Chinese) displays
-  * ST7735 - Adafruit 1.8" TFT shields
-  * VLCD - UECIDE Virtual LCD plugin
-  * ILI9481 - Generic 320x480 16 bit parallel screens
-    * HY-3.2TFT 
+  * Goldelox
+    * uOLED-128-G2
+  * ILI9340
+    * Adafruit 2.2" TFT
+  * ILI9481
+    * HY-3.2TFT
+  * LM6800
+    * 4-chip based KS0108
+  * PG25664CG
+    * 256x64 grey-scale OLED
+  * Picadillo
+    * Picadillo-35T
+  * SSD1289
+    * TFT_320QVT
+  * SSD1963_7
+    * Unbranded 7" TFT
+  * ST7735
+    * Adafruit 1.8" TFT
+  * VLCD
+    * UECIDE VirtualLCD
 
 Framebuffer drivers:
 
@@ -36,3 +49,4 @@ Touch screen drivers:
 
   * AnalogTouch - Uses the PIC's internal ADC to read a 4-wire resistive
     touch panel.
+  * XPT2046
