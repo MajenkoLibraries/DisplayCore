@@ -24,6 +24,8 @@ Display drivers:
   * SSD1963_7 - 7" SSD1963 based (generic Chinese) displays
   * ST7735 - Adafruit 1.8" TFT shields
   * VLCD - UECIDE Virtual LCD plugin
+  * ILI9481 - Generic 320x480 16 bit parallel screens
+    * HY-3.2TFT 
 
 Framebuffer drivers:
 
