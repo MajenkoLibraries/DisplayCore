@@ -322,6 +322,8 @@ class DisplayCore : public Print
         uint16_t winpx;
         uint16_t winpy;
 
+        uint16_t bgColor;
+
 };
 
 class Touch {

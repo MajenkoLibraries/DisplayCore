@@ -251,6 +251,7 @@ void DisplayCore::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint
  *      tft.fillScreen(Color::Black);
  */
 void DisplayCore::fillScreen(uint16_t color) {
+    bgColor = color;
     fillRectangle(0, 0, getWidth(), getHeight(), color);
 }
 
@@ -602,20 +603,37 @@ uint8_t DisplayCore::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t co
             }
             uint32_t pixelValue = lineData & bitmask;
             if (pixelValue > 0) {
-                uint16_t bgc = bg;
-                if (bg == color) {
-                    bgc = colorAt(x+pixelNumber, y+lineNumber);
-                }
-                for (int sy = 0; sy < font_scale_y; sy++) {
-                    for (int sx = 0; sx < font_scale_x; sx++) {
-                        setPixel(x+(pixelNumber * font_scale_x) + sx, y+(lineNumber * font_scale_y) + sy, mix(bgc, color, 255 * pixelValue / bitmask));
+
+                if (pixelValue == bitmask) {
+                    if (font_scale_x == 1 && font_scale_y == 1) {
+                        setPixel(x + pixelNumber, y + lineNumber, color);
+                    } else {
+                        fillRectangle(x + (pixelNumber * font_scale_x), y + (lineNumber * font_scale_y), font_scale_x, font_scale_y, color);
+                    }
+                } else {
+                    if (font_scale_x == 1 && font_scale_y == 1) {
+                        uint16_t bgc = bg;
+                        if (bg != color) {
+                            bgc = colorAt(x+pixelNumber, y+lineNumber);
+                        }
+                        setPixel(x + pixelNumber, y + lineNumber, mix(bgc, color, 255 * pixelValue / bitmask));
+                    } else {
+                        for (int sy = 0; sy < font_scale_y; sy++) {
+                            for (int sx = 0; sx < font_scale_x; sx++) {
+                                uint16_t bgc = bg;
+                                if (bg != color) {
+                                    bgc = colorAt(x+(pixelNumber * font_scale_x) + sx, y+(lineNumber * font_scale_y) + sy);
+                                }
+                                setPixel(x+(pixelNumber * font_scale_x) + sx, y+(lineNumber * font_scale_y) + sy, mix(bgc, color, 255 * pixelValue / bitmask));
+                            }
+                        }
                     }
                 }
             } else if (bg != color) {
-                for (int sy = 0; sy < font_scale_y; sy++) {
-                    for (int sx = 0; sx < font_scale_x; sx++) {
-                        setPixel(x+(pixelNumber * font_scale_x) + sx, y+(lineNumber * font_scale_y) + sy, bg);
-                    }
+                if (font_scale_x == 1 && font_scale_y == 1) {
+                    setPixel(x + pixelNumber, y + lineNumber, bg);
+                } else {
+                    fillRectangle(x + (pixelNumber * font_scale_x), y + (lineNumber * font_scale_y), font_scale_x, font_scale_y, bg);
                 }
             }
             lineData >>= header->bitsPerPixel;
@@ -727,6 +745,7 @@ void DisplayCore::setTextColor(uint16_t c) {
 void DisplayCore::setTextColor(uint16_t fg, uint16_t bg) {
    textcolor = fg;
    textbgcolor = bg;
+    bgColor = bg;
 }
 
 /*! Invert the text colours
@@ -1091,7 +1110,7 @@ uint16_t DisplayCore::hsv2rgb(uint32_t hsv) {
  *      unsigned int color = tft.colorAt(100, 100);
  */
 uint16_t DisplayCore::colorAt(int16_t x, int16_t y) {
-    return Color::Black;
+    return bgColor;
 }
 
 /*! Get the raw colour at a location
@@ -1104,7 +1123,7 @@ uint16_t DisplayCore::colorAt(int16_t x, int16_t y) {
  *      unsigned int color = tft.bgColorAt(100, 100);
  */
 uint16_t DisplayCore::bgColorAt(int16_t x, int16_t y) {
-    return Color::Black;
+    return bgColor;
 }
 
 /*! Mix two colours together
