@@ -19,6 +19,8 @@ All this means:
 
 Display drivers and tested devices:
 
+  * BD663474
+    * WaveShare LCD22
   * Goldelox
     * uOLED-128-G2
   * ILI9340
