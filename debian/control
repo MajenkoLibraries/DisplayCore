@@ -304,6 +304,22 @@ Depends: chipkit, libdisplaycore-core
 Description: Acorn font for DisplayCore
  The classic font from Acorn Electron and BBC Micro computers.
 
+Package: libdisplaycore-font-aquarius
+Architecture: all
+Provides: Aquarius.h
+XBSC-Subgroup: Fonts
+Depends: chipkit, libdisplaycore-core
+Description: Aquarius font for DisplayCore
+ 8-bit font with lots of block drawing characters.
+
+Package: libdisplaycore-font-atari
+Architecture: all
+Provides: Atari.h
+XBSC-Subgroup: Fonts
+Depends: chipkit, libdisplaycore-core
+Description: Atari font for DisplayCore
+ The classic font from Atari 8-bit computers.
+
 Package: libdisplaycore-font-sinclair
 Architecture: all
 Provides: Sinclair.h
