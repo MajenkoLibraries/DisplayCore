@@ -116,6 +116,15 @@ Depends: chipkit, libdisplaycore-core
 Description: ILI9340 driver for DisplayCore
  The ILI9340 is used by the Adafruit 2.2" TFT shields.
 
+Package: libdisplaycore-driver-ili9481
+Architecture: all
+Provides: ILI9481.h
+XBSC-Subgroup: Drivers
+Depends: chipkit, libdisplaycore-core
+Description: ILI9481 driver for DisplayCore
+ The ILI9481 is used by a number of generic 3.2"
+ 320x480 TFT screens.  It's a 16-bit parallel interface.
+
 Package: libdisplaycore-driver-goldelox
 Architecture: all
 Provides: Goldelox.h
