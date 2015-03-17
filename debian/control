@@ -108,6 +108,14 @@ Depends: chipkit, libdisplaycore-core
 Description: SSD1963 7" TFT
  Generic Chinese SSD1963 based TFT screen (800x480)
 
+Package: libdisplaycore-driver-bd663474
+Architecture: all
+Provides: BD663474.h
+XBSC-Subgroup: Drivers
+Depends: chipkit, libdisplaycore-core
+Description: BD663474 driver for DisplayCore
+ The BD663474 is used by the WaveShare LCD22 TFT.
+
 Package: libdisplaycore-driver-ili9340
 Architecture: all
 Provides: ILI9340.h
