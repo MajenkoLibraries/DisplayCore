@@ -188,8 +188,8 @@ class DisplayCore : public Print
         virtual void windowData(uint16_t *d, uint32_t l);
         virtual void closeWindow();
 
-        virtual uint16_t bgColorAt(int16_t x, int16_t y);
         virtual uint16_t colorAt(int16_t x, int16_t y);
+        virtual void getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf);
 
         /*! Start buffered mode
          *  ===================

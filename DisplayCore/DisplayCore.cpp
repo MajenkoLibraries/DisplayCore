@@ -613,7 +613,7 @@ uint8_t DisplayCore::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t co
                 } else {
                     if (font_scale_x == 1 && font_scale_y == 1) {
                         uint16_t bgc = bg;
-                        if (bg != color) {
+                        if (bg == color) {
                             bgc = colorAt(x+pixelNumber, y+lineNumber);
                         }
                         setPixel(x + pixelNumber, y + lineNumber, mix(bgc, color, 255 * pixelValue / bitmask));
@@ -621,7 +621,7 @@ uint8_t DisplayCore::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t co
                         for (int sy = 0; sy < font_scale_y; sy++) {
                             for (int sx = 0; sx < font_scale_x; sx++) {
                                 uint16_t bgc = bg;
-                                if (bg != color) {
+                                if (bg == color) {
                                     bgc = colorAt(x+(pixelNumber * font_scale_x) + sx, y+(lineNumber * font_scale_y) + sy);
                                 }
                                 setPixel(x+(pixelNumber * font_scale_x) + sx, y+(lineNumber * font_scale_y) + sy, mix(bgc, color, 255 * pixelValue / bitmask));
@@ -1113,17 +1113,10 @@ uint16_t DisplayCore::colorAt(int16_t x, int16_t y) {
     return bgColor;
 }
 
-/*! Get the raw colour at a location
- *  ================================
- *  Returns the base image colour at (x,y) before any
- *  further layers or post processing effects are performed.
- *
- *  Example:
- *
- *      unsigned int color = tft.bgColorAt(100, 100);
- */
-uint16_t DisplayCore::bgColorAt(int16_t x, int16_t y) {
-    return bgColor;
+void DisplayCore::getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf) {
+    for (uint32_t i = 0; i < w*h; i++) {
+        buf[i] = bgColor;
+    }
 }
 
 /*! Mix two colours together

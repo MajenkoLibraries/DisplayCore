@@ -96,12 +96,15 @@ class ILI9481 : public DisplayCore {
         void windowData(uint16_t *, uint32_t);
         void closeWindow();
 
+        virtual uint16_t colorAt(int16_t x, int16_t y);
+
         void startDisplay();
 
         virtual void initializeDevice();
         virtual void data(uint16_t);
         virtual void command(uint16_t);
-
+        virtual uint16_t read(boolean cont = false);
+        virtual void getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf);
 };
 
 class ILI9481_PMP : public ILI9481 {
@@ -115,6 +118,7 @@ class ILI9481_PMP : public ILI9481 {
         void initializeDevice();
         void data(uint16_t);
         void command(uint16_t);
+        uint16_t read(boolean cont = false);
 };
 
 

@@ -216,7 +216,7 @@ void ILI9481::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) 
 void ILI9481::setPixel(int16_t x, int16_t y, uint16_t color) {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return;
-	setAddrWindow(x,y,x+1,y+1);
+	setAddrWindow(x,y,x,y);
     data(color);
 }
 
@@ -363,5 +363,48 @@ void ILI9481_PMP::data(uint16_t cmd) {
     while (PMMODEbits.BUSY == 1);
     PMADDR = 0x8001;
     PMDIN = cmd;
+}
+
+
+uint16_t ILI9481::read(boolean cont) {
+    return 0;
+}
+
+uint16_t ILI9481_PMP::read(boolean cont) {
+    uint16_t din;
+    PMADDR = 0x8001;
+    if (!cont) {
+        while (PMMODEbits.BUSY == 1);
+        din = PMDIN;
+    }
+    while (PMMODEbits.BUSY == 1);
+    din = PMDIN;
+    return din;
+}
+
+uint16_t ILI9481::colorAt(int16_t x, int16_t y) {
+	setAddrWindow(x,y,x,y);
+    command(0x002E);
+    (void)read();
+    uint16_t color = read();
+    uint16_t color1 = 0;
+    color1 |= ((color & 0xF800) >> 11);
+    color1 |= (color & 0x07E0);
+    color1 |= ((color & 0x001F) << 11);
+    return color1;
+}
+void ILI9481::getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf) {
+    setAddrWindow(x, y, x+w-1, y+h-1);
+    command(0x002E);
+    (void)read();
+    (void)read(true);
+    for (uint32_t i = 0; i < w * h; i++) {
+        uint16_t color1 = 0;
+        uint16_t color = read(true);
+        buf[i] = 0;
+        buf[i] |= ((color & 0xF800) >> 11);
+        buf[i] |= (color & 0x07E0);
+        buf[i] |= ((color & 0x001F) << 11);
+    }
 }
 
