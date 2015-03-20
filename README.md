@@ -23,6 +23,8 @@ Display drivers and tested devices:
     * WaveShare LCD22
   * Goldelox
     * uOLED-128-G2
+  * ILI9163
+    * Generic 1.44" SPI 128*128 V1.1
   * ILI9340
     * Adafruit 2.2" TFT
   * ILI9481
