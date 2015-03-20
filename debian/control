@@ -116,6 +116,15 @@ Depends: chipkit, libdisplaycore-core
 Description: BD663474 driver for DisplayCore
  The BD663474 is used by the WaveShare LCD22 TFT.
 
+Package: libdisplaycore-driver-ili9163
+Architecture: all
+Provides: ILI9163.h
+XBSC-Subgroup: Drivers
+Depends: chipkit, libdisplaycore-core
+Description: ILI9163 driver for DisplayCore
+ The ILI9163 is used by the ultra-cheap 128x128 displays
+ on eBay
+
 Package: libdisplaycore-driver-ili9340
 Architecture: all
 Provides: ILI9340.h
