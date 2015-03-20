@@ -3,19 +3,37 @@
 
 #include <DisplayCore.h>
 
+#ifndef VGA_USE_DOUBLE_BUFFER
+#define VGA_USE_DOUBLE_BUFFER 0
+#endif
+
+#ifndef VGA_USE_HI_RES
+#define VGA_USE_HI_RES 0
+#endif
+
 class VGA : public DisplayCore {
     public:
-        static const uint16_t Width = 640;
+#if VGA_USE_HI_RES
+        static const uint16_t Width = (108*8);
+#else
+        static const uint16_t Width = (54*8);
+#endif
         static const uint16_t Height = 480;
     private:
         static const uint32_t clockOffset = 10;
 
         // All these are in clock cycles
-        static const uint32_t vgaHFP = 49 - clockOffset;   // Front porch == 49 clock cycles
-        static const uint32_t vgaHSP = 293 - clockOffset;  // HSync pulse == 293 clock cycles
-        static const uint32_t vgaHBP = 147 - clockOffset;  // Back porch == 147 clock cycles
-        static const uint32_t vgaHDP = 1956 - clockOffset; // Display period == 1956 clock cycles
-        // 2445 clock cycles in total
+        // For an 80 MHz chip each clock cycle is 13ns.
+
+        // VGA timings specify:
+        // Front porch = 636ns = 49 cycles
+        static const uint32_t vgaHFP = 49 + 20;
+        // Pulse width = 3813ns = 293 cycles (240)
+        static const uint32_t vgaHSP = 293;  // HSync pulse == 293 clock cycles
+        // Back porch = 1907ns = 147 cycles
+        static const uint32_t vgaHBP = 147; // Back porch == 147 clock cycles
+        // Whole line is 31778ns = 2444 cycles.
+        static const uint32_t vgaHDP = 2444 - vgaHBP - vgaHSP - vgaHFP - 200; // Display period == 1956 clock cycles
 
         static const uint32_t vgaHoriz[];
 
@@ -26,10 +44,16 @@ class VGA : public DisplayCore {
         static const uint32_t vgaVDP = 480;
 
         static const uint32_t vgaVert[];
-        static const uint32_t vgaOffset = 15;
+        static const uint32_t vgaOffset = 45;
 
-        volatile uint8_t _buffer[Width/8 * Height];
-        volatile uint8_t _line[Width/8 + 1];
+        volatile uint8_t _buffer0[((Width/8)+1) * Height];
+#if VGA_USE_DOUBLE_BUFFER
+        volatile uint8_t _buffer1[((Width/8)+1) * Height];
+#endif
+
+        volatile uint8_t *activeBuffer;
+
+        uint32_t bufferNumber;
 
         p32_ioport *_hsync_port;
         p32_ioport *_vsync_port;
@@ -38,8 +62,6 @@ class VGA : public DisplayCore {
 
     
     public:
-        void process();
-        void endPixelData();
         VGA(uint8_t hsync, uint8_t vsync);
         void initializeDevice();
         void setPixel(int16_t x, int16_t y, uint16_t c);
@@ -50,6 +72,11 @@ class VGA : public DisplayCore {
 
         uint16_t getWidth() { return Width; }
         uint16_t getHeight() { return Height; }
+
+        void vblank();
+        void flip();
+
+        void fillScreen(uint16_t c);
 
 };
 
