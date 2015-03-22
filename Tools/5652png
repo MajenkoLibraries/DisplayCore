@@ -1,0 +1,69 @@
+#!/usr/bin/php
+<?php
+
+$options = "w:h:";
+$opts = getopt($options);
+
+foreach( $opts as $o => $a ) {
+    while( $k = array_search( "-" . $o, $argv ) ) {
+        if( $k )
+            unset( $argv[$k] );
+        if( preg_match( "/^.*".$o.":.*$/i", $options ) )
+            unset( $argv[$k+1] );
+    }
+}
+$argv = array_merge( $argv );
+
+if (count($argv) != 3 || !isset($opts['w']) || !isset($opts['h'])) {
+    printf("Usage: %s -w <width> -h <height> <input.565> <output.png>\n", $argv[0]);
+    exit(10);
+}
+
+$width = $opts['w'] - 0;
+$height = $opts['h'] - 0;
+
+$file = $argv[1];
+$png = $argv[2];
+
+if (!file_exists($file)) {
+    printf("File not found: %s\n", $file);
+    exit(10);
+}
+
+$img = ImageCreateTruecolor($width, $height);
+$f = fopen($file, "r");
+
+for ($y = 0; $y < $height; $y++) {
+    for ($x = 0; $x < $width; $x++) {
+        $h = ord(fread($f, 1));
+        $l = ord(fread($f, 1));
+        $col = ($h << 8) | $l;
+
+        $r = ($col >> 8) & 0xFF;
+        if ($r & 0x08) {
+            $r |= 0x07;
+        } else {
+            $r &= 0xF8;
+        }
+
+        $g = ($col >> 3) & 0xFF;
+        if ($g & 0x04) {
+            $g |= 0x03;
+        } else {
+            $g &= 0xFC;
+        }
+
+        $b = ($col << 3) & 0xFF;
+        if ($g & 0x08) {
+            $g |= 0x07;
+        } else {
+            $g &= 0xF8;
+        }
+
+        $rgb = imageColorAllocate($img, $r, $g, $b);
+        imageSetPixel($img, $x, $y, $rgb);
+    }
+}
+fclose($f);
+
+imagePNG($img, $png);

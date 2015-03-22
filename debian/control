@@ -202,6 +202,30 @@ Depends: chipkit, libdisplaycore-core
 Description: DisplayCore Image Filters
  A selection of Image Filters
 
+Package: libdisplaycore-font-comic
+Architecture: all
+XBSC-Subgroup: Fonts
+Provides: Comic.h
+Depends: chipkit, libdisplaycore-core
+Description: Comic book font for DisplayCore
+ Comic book font
+
+Package: libdisplaycore-font-doorly
+Architecture: all
+XBSC-Subgroup: Fonts
+Provides: Doorly.h
+Depends: chipkit, libdisplaycore-core
+Description: Doorly font for DisplayCore
+ Font by Patrick Doorly
+
+Package: libdisplaycore-font-squircle
+Architecture: all
+XBSC-Subgroup: Fonts
+Provides: Squircle.h
+Depends: chipkit, libdisplaycore-core
+Description: Squircle font for DisplayCore
+ Larger rounded (yet square) font.
+
 Package: libdisplaycore-font-xterm
 Architecture: all
 XBSC-Subgroup: Fonts
