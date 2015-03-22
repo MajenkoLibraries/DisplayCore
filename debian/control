@@ -202,6 +202,31 @@ Depends: chipkit, libdisplaycore-core
 Description: DisplayCore Image Filters
  A selection of Image Filters
 
+Package: libdisplaycore-font-xterm
+Architecture: all
+XBSC-Subgroup: Fonts
+Provides: XTerm.h
+Depends: chipkit, libdisplaycore-core
+Description: XTerm font for DisplayCore
+ Small but clean font.
+
+Package: libdisplaycore-font-lcdish
+Architecture: all
+XBSC-Subgroup: Fonts
+Provides: LCDish.h
+Depends: chipkit, libdisplaycore-core
+Description: HD44780 LCD font for DisplayCore
+ Make your screen look like it's displaying text on a
+ HD44780 LCD display
+
+Package: libdisplaycore-font-dos
+Architecture: all
+XBSC-Subgroup: Fonts
+Provides: DOS.h
+Depends: chipkit, libdisplaycore-core
+Description: DOS VGA font for DisplayCore
+ The classic VGA font
+
 Package: libdisplaycore-font-arial
 Architecture: all
 XBSC-Subgroup: Fonts

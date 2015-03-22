@@ -1,0 +1,131 @@
+#!/usr/bin/php
+<?php
+
+$options = "iw:";
+$opts = getopt($options);
+
+foreach( $opts as $o => $a ) {
+    while( $k = array_search( "-" . $o, $argv ) ) {
+        if( $k )
+            unset( $argv[$k] );
+        if( preg_match( "/^.*".$o.":.*$/i", $options ) )
+            unset( $argv[$k+1] );
+    }
+}
+$argv = array_merge( $argv );
+
+if (count($argv) < 2) {
+    print("Usage: png2font [-i] <filename>\n");
+    exit(10);
+}
+$file = $argv[1];
+if (!file_exists($file)) {
+    print("Cannot find $file\n");
+    exit(10);
+}
+
+if (substr($file, -4, 4) != ".png") {
+    print("$file doesn't have the extension .png\n");
+    exit(10);
+}
+
+$prefix = substr($file, 0, -4);
+
+$img = imageCreateFromPng($file);
+
+$imageWidth = ImageSX($img);
+$imageHeight = ImageSY($img);
+
+$cpl = 16;
+if (isset($opts['w'])) {
+    $cpl = $opts['w']  + 0;
+}
+
+$lines = 256 / $cpl;
+
+$charWidth = floor($imageWidth / $cpl);
+$charHeight = floor($imageHeight / $lines);
+$bpl = ceil($charWidth / 8);
+
+print("Creating font $prefix...\n");
+
+printf("Characters are %d x %d pixels\n", $charWidth, $charHeight);
+printf("Arranged as %d lines of %d characters\n", $lines, $cpl);
+printf("Characters consist of %d byte%c per line\n", $bpl, $bpl == 1 ? '' : 's');
+
+$fontData = array();
+
+for ($y = 0; $y < $imageHeight; $y++) {
+    for ($x = 0; $x < $imageWidth; $x++) {
+        $pno = $y * $imageWidth + $x;
+
+        // Where in the font array are we supposed to be?
+        $charRow = floor($y / $charHeight);
+        $charCol = floor($x / $charWidth);
+        $charLine = $y % $charHeight;
+        $charPix = $x % $charWidth;
+
+        $charNo = $charRow * $cpl + $charCol;
+        $arrayOffset = $charNo * $charHeight;
+
+        $arraySlice = $arrayOffset + $charLine;
+
+        $pix = imageColorAt($img, $x, $y);
+        $rgb = imageColorsForIndex($img, $pix);
+        $sdata = @$fontData[$arraySlice];
+        $sdata += 0;
+        if (isset($opts["i"])) {
+            if (($rgb["red"] + $rgb["green"] + $rgb["blue"]) != 0) {
+                $sdata |= 1<<$charPix;
+            }
+        } else {
+            if (($rgb["blue"]) == 0) {
+                $sdata |= 1<<$charPix;
+            }
+        }
+        $fontData[$arraySlice] = $sdata;
+    }
+}
+
+@mkdir($prefix);
+
+$cpp = fopen("$prefix/$prefix.cpp", "w");
+
+fprintf($cpp, "#include <$prefix.h>\n");
+fprintf($cpp, "\n");
+fprintf($cpp, "namespace Fonts {\n");
+fprintf($cpp, "\n");
+fprintf($cpp, "    const uint8_t " . $prefix . "[] = {\n");
+fprintf($cpp, "        0x%02X, 0x%02X, 0x00, 0xFF, 0x01,\n", $charHeight, $bpl);
+$slice = 0;
+for ($char = 0; $char < 256; $char++) {
+    fprintf($cpp, "        0x%02X, ", $charWidth);
+    for ($b = 0; $b < $charHeight; $b++) {
+        $val = $fontData[$slice++];
+        for ($c = 0; $c < $bpl; $c++) {
+            fprintf($cpp, "0x%02x, ", 
+                ($val >> (($bpl - $c - 1) * 8)) & 0xFF
+            );
+        }
+    }
+    fprintf($cpp, "\n");
+}
+fprintf($cpp, "    };\n");
+fprintf($cpp, "};\n");
+
+fclose($cpp);
+
+$cap = strtoupper($prefix);
+
+$h = fopen("$prefix/$prefix.h", "w");
+fprintf($h, "#ifndef _" . $cap . "_H\n");
+fprintf($h, "#define _" . $cap . "_H\n");
+fprintf($h, "\n");
+fprintf($h, "#include <DisplayCore.h>\n");
+fprintf($h, "\n");
+fprintf($h, "namespace Fonts {\n");
+fprintf($h, "    extern const uint8_t " . $prefix . "[];\n");
+fprintf($h, "};\n");
+fprintf($h, "\n");
+fprintf($h, "#endif\n");
+fclose($h);
