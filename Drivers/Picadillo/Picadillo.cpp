@@ -1,17 +1,15 @@
 #include <Picadillo.h>
 
-void inline Picadillo::writeCommand(uint16_t c) {
+void Picadillo::writeCommand(uint16_t c) {
     while (PMMODEbits.BUSY == 1);
     PMADDR = 0x0000;
     PMDIN = c;
-    _lastOp = opWrite;
 }
 
-void inline Picadillo::writeData(uint16_t c) {
+void Picadillo::writeData(uint16_t c) {
     while (PMMODEbits.BUSY == 1);
     PMADDR = 0x0001;
     PMDIN = c;
-    _lastOp = opWrite;
 }
 
 //==============================================================
@@ -142,8 +140,6 @@ void Picadillo::initializeDevice()
 	delay(10);
 	writeCommand(HX8357_SET_DISPLAY_ON); //Display On
 	delay(10);
-	writeCommand(HX8357_WRITE_MEMORY_START); //Write SRAM Data
-    _cacheState = cacheInvalid;
     clearClipping();
 }
 
@@ -160,25 +156,7 @@ void Picadillo::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1
     writeData(y0+rowstart);     // YSTART
     writeData((y1+rowstart) >> 8);
     writeData(y1+rowstart);     // YEND
-
-    writeCommand(HX8357_WRITE_MEMORY_START); //Write SRAM Data
-}
-
-void Picadillo::setAddrWindowRead(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) 
-{
-    writeCommand(HX8357_SET_COLUMN_ADDRESS); // Column addr set
-    writeData((x0+colstart) >> 8);
-    writeData(x0+colstart);     // XSTART 
-    writeData((x1+colstart) >> 8);
-    writeData(x1+colstart);     // XEND
-
-    writeCommand(HX8357_SET_PAGE_ADDRESS); // Row addr set
-    writeData((y0+rowstart) >> 8);
-    writeData(y0+rowstart);     // YSTART
-    writeData((y1+rowstart) >> 8);
-    writeData(y1+rowstart);     // YEND
-
-    writeCommand(HX8357_READ_MEMORY_START); //Read SRAM Data
+	writeCommand(HX8357_WRITE_MEMORY_START); //Write SRAM Data
 }
 
 void Picadillo::setPixel(int16_t x, int16_t y, uint16_t color) 
@@ -190,14 +168,11 @@ void Picadillo::setPixel(int16_t x, int16_t y, uint16_t color)
 	setAddrWindow(x,y,x+1,y+1);
     PMADDR = 0x0001;
     PMDIN = color;
-    _lastOp = opWrite;
-    _cacheState = cacheInvalid;
 }
 
 void Picadillo::fillScreen(uint16_t color) 
 {
 	fillRectangle(0, 0,  _width, _height, color);
-    _cacheState = cacheInvalid;
 }
 
 void Picadillo::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) 
@@ -213,8 +188,6 @@ void Picadillo::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16
             PMDIN = color;
 		}
 	}
-    _lastOp = opWrite;
-    _cacheState = cacheInvalid;
 }
 
 void Picadillo::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) 
@@ -229,8 +202,6 @@ void Picadillo::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t col
 	while (w--) {
 		PMDIN = color;
 	}
-    _lastOp = opWrite;
-    _cacheState = cacheInvalid;
 }
 
 void Picadillo::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) 
@@ -245,8 +216,6 @@ void Picadillo::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color
 	while (h--) {
         PMDIN = color;
 	}
-    _lastOp = opWrite;
-    _cacheState = cacheInvalid;
 }
 
 void Picadillo::setRotation(uint8_t m) 
@@ -280,7 +249,6 @@ void Picadillo::setRotation(uint8_t m)
 			_height = Picadillo::Width;
 			break;
 	}
-    _cacheState = cacheInvalid;
     clearClipping();
 }
 
@@ -306,11 +274,14 @@ void Picadillo::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
 
 void Picadillo::windowData(uint16_t d) {
     PMDIN = d;
-    _lastOp = opWrite;
 }
 
 void Picadillo::windowData(uint16_t *d, uint32_t l) {
-
+    for (uint32_t i = 0; i < l; i++) {
+        while (PMMODEbits.BUSY == 1);
+        PMDIN = d[i];
+    }
+    return;
     uint32_t toXfer = l * 2;
 
     uint16_t *data = d;
@@ -333,9 +304,7 @@ void Picadillo::windowData(uint16_t *d, uint32_t l) {
         DCH3DSIZ = 2;
         DCH3CSIZ = 2;
         DCH3ECONbits.SIRQEN = 1;
-#ifdef __PIC32MX__
         DCH3ECONbits.CHSIRQ = _PMP_IRQ;
-#endif
         DCH3CONbits.CHAEN = 0;
         DCH3CONbits.CHEN = 1;
 
@@ -344,12 +313,6 @@ void Picadillo::windowData(uint16_t *d, uint32_t l) {
         DCH3ECONbits.CFORCE = 1;
         data += (chunk >> 1);
     }
-
-//    for (uint32_t i = 0; i < l; i++) {
-//        PMDIN = d[i];
-//    }
-    _lastOp = opWrite;
-    _cacheState = cacheInvalid;
 }
 
 void Picadillo::closeWindow() {
@@ -359,94 +322,60 @@ void Picadillo::closeWindow() {
     }
 }
 
+uint8_t Picadillo::readByte(boolean fresh) {
+    static boolean haveStoredByte = false;
+    static uint8_t storedByte = 0;
+    if (fresh) {
+        haveStoredByte = false;
+    }
+    if (!haveStoredByte) {
+        while (PMMODEbits.BUSY == 1);
+        uint16_t din = PMDIN;
+        storedByte = din & 0xFF;
+        haveStoredByte = true;
+        return din >> 8;
+    }
+    haveStoredByte = false;
+    return storedByte;
+}
 
 uint16_t Picadillo::colorAt(int16_t x, int16_t y) {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return 0;
-    loadCacheBlock(x, y);
+    setAddrWindow(x, y, x, y);
+    writeCommand(HX8357_READ_MEMORY_START);
+    readData(false);
+    readByte(true);
+    readByte();
+    readByte();
+    readByte();
+    readByte();
 
-    int16_t xo = x & ((1 << Picadillo::cacheDimension) - 1);
-    int16_t yo = y & ((1 << Picadillo::cacheDimension) - 1);
+    uint8_t r = readByte();
+    uint8_t g = readByte();
+    uint8_t b = readByte();
 
-    uint32_t offset = yo * (1 << Picadillo::cacheDimension) + xo;
-
-    return _cacheData[offset];
+    return rgb(r, g, b);
+}
+void Picadillo::getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf) {
+    uint32_t i = 0;
+    for (uint32_t py = 0; py < h; py++) {
+        for (uint32_t px = 0; px < w; px++) {
+            buf[i++] = colorAt(x + px, y + py);
+        }
+    }
 }
 
-extern Picadillo tft;
-void Picadillo::loadCacheBlock(int16_t x, int16_t y) {
-    int16_t x0 = x & ~((1 << cacheDimension) - 1);
-    int16_t y0 = y & ~((1 << cacheDimension) - 1);
-    int16_t x1 = x0 + ((1 << cacheDimension) - 1);
-    int16_t y1 = y0 + ((1 << cacheDimension) - 1);
-
-    if (
-        (x >= _cacheX) && 
-        (x < _cacheX + (1 << cacheDimension))  && 
-        (y >= _cacheY) && 
-        (y < _cacheY + (1 << cacheDimension)) && 
-        (_cacheState != cacheInvalid)
-    ) {
-        return;
-    }
-
-    if (_cacheState == cacheDirty) {
-        flushCacheBlock();
-    }
-
-
-	setAddrWindowRead(x0,y0,x1,y1);
-    _lastOp = opRead;
+uint16_t Picadillo::readData(boolean cont) {
+    uint16_t din;
     PMADDR = 0x0001;
-    (void) PMDIN;
-
-    for (int i = 0; i < 5; i++) {
+    if (!cont) {
         while (PMMODEbits.BUSY == 1);
-        (void) PMDIN;
+        din = PMDIN;
     }
-
-    uint16_t values[96];
-    uint32_t vc = 0;
-
-    for (uint32_t cpos = 0; cpos < ((1 << cacheDimension) * (1 << cacheDimension)); cpos+=2) {
-        while (PMMODEbits.BUSY == 1);
-        uint16_t val1 = PMDIN;
-        values[vc++] = val1;
-        while (PMMODEbits.BUSY == 1);
-        uint16_t val2 = PMDIN;
-        values[vc++] = val2;
-        while (PMMODEbits.BUSY == 1);
-        uint16_t val3 = PMDIN;
-        values[vc++] = val3;
-
-        
-        _cacheData[cpos] = rgb(val1 >> 8, val1 & 0xFF, val2 >> 8);
-        _cacheData[cpos+1] = rgb(val2 & 0xFF, val3 >> 8, val3 & 0xFF);
-    }
-    _cacheState = cacheClean;
-    _cacheX = x0;
-    _cacheY = y0;
-//    tft.setCursor(0, 0);
-//    tft.print("Block: ");
-//    tft.print(x0); tft.print("-"); tft.print(y0); tft.print(" to ");
-//    tft.print(x1); tft.print("-"); tft.println(y1);
-
-//    drawRectangle(x0, y0, (1 << cacheDimension), (1 << cacheDimension), Color::Red);
-//    for (int i = 0; i < 96; i++) {
-//        sprintf(temp, "%04X ", values[i]);
-//        tft.print(temp);
-//    }
-//    delay(1000);
-}
-
-void Picadillo::flushCacheBlock() {
-    if (_cacheState != cacheDirty) {
-        return;
-    }
-    openWindow(_cacheX, _cacheY, 1 << cacheDimension, 1 << cacheDimension);
-    windowData(_cacheData, ((1 << cacheDimension) * (1 << cacheDimension)));
-    closeWindow();
-    _cacheState = cacheClean;
+    while (PMMODEbits.BUSY == 1);
+    din = PMDIN;
+    return din;
 }
 
 void Picadillo::enableBacklight() {
