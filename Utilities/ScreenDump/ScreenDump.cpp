@@ -105,7 +105,7 @@ void ScreenDump::dumpBMP(DisplayCore &dev, SDClass &sd, const char *filename) {
     }
     for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
-            uint16_t col = dev.colorAt(x, h - y);
+            uint16_t col = dev.colorAt(x, h - y - 1);
             f.write((uint8_t)(col >> 8));
             f.write((uint8_t)(col & 0xFF));
         }
