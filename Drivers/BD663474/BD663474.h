@@ -7,8 +7,8 @@
 class BD663474 : public DisplayCore {
     private:
         DSPI *_dspi;
-        uint8_t _pin_rs;
         uint8_t _pin_cs;
+        uint8_t _pin_rs;
         uint8_t _pin_reset;
 
         p32_ioport *_port_cs;
@@ -21,8 +21,8 @@ class BD663474 : public DisplayCore {
         static const uint16_t Width      = 240;
         static const uint16_t Height     = 320;
 
-		BD663474(DSPI *dspi, uint8_t rs, uint8_t cs, uint8_t reset) : _dspi(dspi), _pin_rs(rs), _pin_cs(cs), _pin_reset(reset) {}
-		BD663474(DSPI &dspi, uint8_t rs, uint8_t cs, uint8_t reset) : _dspi(&dspi), _pin_rs(rs), _pin_cs(cs), _pin_reset(reset) {}
+		BD663474(DSPI *dspi, uint8_t cs, uint8_t rs, uint8_t reset) : _dspi(dspi), _pin_cs(cs), _pin_rs(rs), _pin_reset(reset) {}
+		BD663474(DSPI &dspi, uint8_t cs, uint8_t rs, uint8_t reset) : _dspi(&dspi), _pin_cs(cs), _pin_rs(rs), _pin_reset(reset) {}
 		BD663474() {}
 
 		void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);

@@ -1,5 +1,5 @@
-#ifndef _ILI9481_H
-#define _ILI9481_H
+#ifndef _ILI9163_H
+#define _ILI9163_H
 
 #include <DisplayCore.h>
 #include <DSPI.h>
