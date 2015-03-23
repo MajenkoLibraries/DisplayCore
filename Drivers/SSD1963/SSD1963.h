@@ -1,9 +1,9 @@
-#ifndef _SSD1963_7_H
-#define _SSD1963_7_H
+#ifndef _SSD1963_H
+#define _SSD1963_H
 
 #include <DisplayCore.h>
 
-class SSD1963_7 : public DisplayCore {
+class SSD1963 : public DisplayCore {
 
     private:
 
@@ -227,7 +227,7 @@ class SSD1963_7 : public DisplayCore {
         /*! The height of the screen is 480 pixels */
         static const uint16_t Height     = 480;
 
-		SSD1963_7(
+		SSD1963(
             uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
             uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
             uint8_t d8, uint8_t d9, uint8_t d10, uint8_t d11,

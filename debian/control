@@ -100,9 +100,9 @@ Description: SSD1289 3.2" TFT
  both direct port manipulation driver and PMP driver for
  blistering speed.
 
-Package: libdisplaycore-driver-ssd1963-7
+Package: libdisplaycore-driver-ssd1963
 Architecture: all
-Provides: SSD1963-UL-7.h
+Provides: SSD1963.h
 XBSC-Subgroup: Drivers
 Depends: chipkit, libdisplaycore-core
 Description: SSD1963 7" TFT

@@ -1,6 +1,6 @@
-#include <SSD1963_7.h>
+#include <SSD1963.h>
 
-SSD1963_7::SSD1963_7(
+SSD1963::SSD1963(
     uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
     uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
     uint8_t d8, uint8_t d9, uint8_t d10, uint8_t d11,
@@ -29,7 +29,7 @@ SSD1963_7::SSD1963_7(
     pins[_PIN_RD] = rd;
 }
 
-void SSD1963_7::initializeDevice() {
+void SSD1963::initializeDevice() {
     uint32_t port = 0;
 
     if (pins[_PIN_D0] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
@@ -176,8 +176,8 @@ void SSD1963_7::initializeDevice() {
     _port_rd->lat.set = _mask_rd;
     _port_wr->lat.set = _mask_wr;
 
-    _width  = SSD1963_7::Width;
-    _height = SSD1963_7::Height;
+    _width  = SSD1963::Width;
+    _height = SSD1963::Height;
 
     command(SSD1963_SetPLLMN);
     data(0x0023);        //N=0x36 for 6.5M, 0x23 for 10M crystal
@@ -244,7 +244,7 @@ void SSD1963_7::initializeDevice() {
     data(0x000d);
 }
 
-void SSD1963_7::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void SSD1963::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
 
     uint16_t x0a, x1a, y0a, y1a;
 
@@ -300,7 +300,7 @@ void SSD1963_7::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1
 
 }
 
-void SSD1963_7::setPixel(int16_t x, int16_t y, uint16_t color) {
+void SSD1963::setPixel(int16_t x, int16_t y, uint16_t color) {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return;
 
@@ -308,11 +308,11 @@ void SSD1963_7::setPixel(int16_t x, int16_t y, uint16_t color) {
     data(color);
 }
 
-void SSD1963_7::fillScreen(uint16_t color) {
+void SSD1963::fillScreen(uint16_t color) {
 	fillRectangle(0, 0,  _width, _height, color);
 }
 
-void SSD1963_7::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+void SSD1963::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
     if (!clipToScreen(x, y, w, h)) {
         return;
     }
@@ -322,7 +322,7 @@ void SSD1963_7::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16
 	}
 }
 
-void SSD1963_7::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
+void SSD1963::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
     if ((y < 0) || (y >= _height) || (w <= 0)) {
         return;
     }
@@ -352,7 +352,7 @@ void SSD1963_7::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t col
 	}
 }
 
-void SSD1963_7::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
+void SSD1963::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
     if ((x < 0) || (x >= _width) || (h <= 0)) {
         return;
     }
@@ -382,22 +382,22 @@ void SSD1963_7::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color
 	}
 }
 
-void SSD1963_7::setRotation(uint8_t m) {
+void SSD1963::setRotation(uint8_t m) {
 	rotation = m % 4; // can't be higher than 3
 }
 
-void SSD1963_7::invertDisplay(boolean i) {
+void SSD1963::invertDisplay(boolean i) {
 	command(i ? SSD1963_EnterInvertMode : SSD1963_ExitInvertMode);
 }
 
-void SSD1963_7::displayOn() {
+void SSD1963::displayOn() {
     command(SSD1963_ExitIdleMode);
     command(SSD1963_SetDisplayOn);
     command(SSD1963_EnterSleepMode);
     enableBacklight();
 }
 
-void SSD1963_7::displayOff() {
+void SSD1963::displayOff() {
     command(SSD1963_ExitSleepMode);
     command(SSD1963_SetDisplayOff);
     command(SSD1963_EnterIdleMode);
@@ -405,15 +405,15 @@ void SSD1963_7::displayOff() {
 }
 
 
-void SSD1963_7::windowData(uint16_t d) {
+void SSD1963::windowData(uint16_t d) {
     data(d);
 }
 
-void SSD1963_7::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void SSD1963::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
     setAddrWindow(x0, y0, x0 + x1 - 1, y0 + y1 - 1);
 }
 
-void SSD1963_7::enableBacklight() {
+void SSD1963::enableBacklight() {
     command(SSD1963_SetPWMConf);
     data(0x06);
     data(0xFF);
@@ -424,7 +424,7 @@ void SSD1963_7::enableBacklight() {
     _brightness = 0xff;
 }
 
-void SSD1963_7::disableBacklight() {
+void SSD1963::disableBacklight() {
     command(SSD1963_SetPWMConf);
     data(0x06);
     data(0xFF);
@@ -434,7 +434,7 @@ void SSD1963_7::disableBacklight() {
     data(0x00);
 }
 
-void SSD1963_7::setBacklight(uint8_t b) {
+void SSD1963::setBacklight(uint8_t b) {
     _brightness = b;
     command(SSD1963_SetPWMConf);
     data(0x06);
