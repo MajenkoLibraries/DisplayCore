@@ -49,6 +49,7 @@ class ILI9340 : public DisplayCore {
         DSPI *_spi;
         uint8_t _cs;
         uint8_t _dc;
+        uint8_t _reset;
         p32_ioport *_csp;
         p32_ioport *_dcp;
         uint32_t _csb;
@@ -58,8 +59,8 @@ class ILI9340 : public DisplayCore {
         static const uint16_t Width      = 240;
         static const uint16_t Height     = 320;
 
-		ILI9340(DSPI *spi, uint8_t cs, uint8_t dc) : _spi(spi), _cs(cs), _dc(dc) {}
-		ILI9340(DSPI &spi, uint8_t cs, uint8_t dc) : _spi(&spi), _cs(cs), _dc(dc) {}
+		ILI9340(DSPI *spi, uint8_t cs, uint8_t dc, uint8_t reset) : _spi(spi), _cs(cs), _dc(dc), _reset(reset) {}
+		ILI9340(DSPI &spi, uint8_t cs, uint8_t dc, uint8_t reset) : _spi(&spi), _cs(cs), _dc(dc), _reset(reset) {}
 
 		void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
         void fillScreen(uint16_t color);

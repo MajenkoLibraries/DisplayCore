@@ -45,6 +45,15 @@ void ILI9340::initializeDevice() {
 
     _width  = ILI9340::Width;
     _height = ILI9340::Height;
+
+    pinMode(_reset, OUTPUT);
+    digitalWrite(_reset, HIGH);
+    delay(100);
+    digitalWrite(_reset, LOW);
+    delay(100);
+    digitalWrite(_reset, HIGH);
+    delay(100);
+
     command(0xEF);
     data(0x03);
     data(0x80);
