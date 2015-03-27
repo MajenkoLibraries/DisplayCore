@@ -195,4 +195,10 @@ class DCFont {
         saveFont();
     }
 
+    public void cropAll() {
+        for (DCChar ch : characters) {
+            ch.shiftAndCrop();
+        }
+    }
+
 }

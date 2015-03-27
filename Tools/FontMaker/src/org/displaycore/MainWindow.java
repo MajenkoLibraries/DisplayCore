@@ -12,6 +12,7 @@ class MainWindow extends JFrame {
 
     JMenuBar menuBar;
     JMenu fileMenu;
+    JMenu toolsMenu;
     JMenu MRUMenu;
     JPanel mainPanel;
 
@@ -32,6 +33,8 @@ class MainWindow extends JFrame {
     JButton scrollLeftButton;
     JButton scrollRightButton;
 
+    boolean unsaved = false;
+
     int pixelZoomSize = 16;
 
     DCFont loadedFont = null;
@@ -45,6 +48,9 @@ class MainWindow extends JFrame {
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         menuBar.add(fileMenu);
+
+        toolsMenu = new JMenu("Tools");
+        menuBar.add(toolsMenu);
 
         JMenuItem openFont = new JMenuItem("Open font file...");
         openFont.addActionListener(new ActionListener() {
@@ -75,7 +81,30 @@ class MainWindow extends JFrame {
             }
         });
         fileMenu.add(saveFontAs);
+
+        fileMenu.addSeparator();
+        JMenuItem quitMenu = new JMenuItem("Quit");
+        quitMenu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                closeProgram();
+            }
+        });
+        fileMenu.add(quitMenu);
         
+
+        JMenuItem cropAll = new JMenuItem("Autocrop All");
+        cropAll.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (loadedFont != null) {
+                    loadedFont.cropAll();
+                    unsaved = true;
+                    if (currentCharacter != null) {
+                        createEditor(currentCharacter);
+                    }
+                }
+            }
+        });
+        toolsMenu.add(cropAll);
 
         add(menuBar, BorderLayout.NORTH);
 
@@ -99,16 +128,13 @@ class MainWindow extends JFrame {
         infoPanel.add(new JLabel("Font Name:"), c);
         c.gridx = 1;
         infoPanel.add(fontNameBox, c);
-        Dimension bs = fontNameBox.getPreferredSize();
-        bs.width = 100;
-        fontNameBox.setPreferredSize(bs);
-        fontNameBox.setMinimumSize(bs);
-        fontNameBox.setMaximumSize(bs);
+        setComponentWidth(fontNameBox, 100);
 
         c.gridx = 0;
         c.gridy++; 
         infoPanel.add(new JLabel("Font Height:"), c);
         fontHeightBox = new JSpinner();
+        setComponentWidth(fontHeightBox, 100);
         c.gridx = 1;
         infoPanel.add(fontHeightBox, c);
 
@@ -116,6 +142,7 @@ class MainWindow extends JFrame {
         c.gridy++; 
         infoPanel.add(new JLabel("Font Width:"), c);
         fontWidthBox = new JSpinner();
+        setComponentWidth(fontWidthBox, 100);
         c.gridx = 1;
         infoPanel.add(fontWidthBox, c);
 
@@ -123,6 +150,7 @@ class MainWindow extends JFrame {
         c.gridy++; 
         infoPanel.add(new JLabel("Font Depth:"), c);
         bitDepthBox = new JSpinner();
+        setComponentWidth(bitDepthBox, 100);
         c.gridx = 1;
         infoPanel.add(bitDepthBox, c);
 
@@ -130,6 +158,7 @@ class MainWindow extends JFrame {
         c.gridy++; 
         infoPanel.add(new JLabel("Character Width:"), c);
         charWidthBox = new JSpinner();
+        setComponentWidth(charWidthBox, 100);
         c.gridx = 1;
         infoPanel.add(charWidthBox, c);
 
@@ -152,6 +181,7 @@ class MainWindow extends JFrame {
         c.gridy++; 
         infoPanel.add(new JLabel("Baseline:"), c);
         baselineBox = new JSpinner();
+        setComponentWidth(baselineBox, 100);
         c.gridx = 1;
         infoPanel.add(baselineBox, c);
 
@@ -179,6 +209,7 @@ class MainWindow extends JFrame {
         scrollLeftButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (currentCharacter != null) {
+                    unsaved = true;
                     currentCharacter.scrollLeft();
                     createEditor(currentCharacter);
                 }
@@ -188,6 +219,7 @@ class MainWindow extends JFrame {
         scrollUpButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (currentCharacter != null) {
+                    unsaved = true;
                     currentCharacter.scrollUp();
                     createEditor(currentCharacter);
                 }
@@ -197,6 +229,7 @@ class MainWindow extends JFrame {
         scrollDownButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (currentCharacter != null) {
+                    unsaved = true;
                     currentCharacter.scrollDown();
                     createEditor(currentCharacter);
                 }
@@ -206,6 +239,7 @@ class MainWindow extends JFrame {
         scrollRightButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (currentCharacter != null) {
+                    unsaved = true;
                     currentCharacter.scrollRight();
                     createEditor(currentCharacter);
                 }
@@ -226,6 +260,7 @@ class MainWindow extends JFrame {
         autoCrop.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (currentCharacter != null) {
+                    unsaved = true;
                     currentCharacter.shiftAndCrop();
                     createEditor(currentCharacter);
                 }
@@ -269,7 +304,7 @@ class MainWindow extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.exit(0);
+                closeProgram();
             }
         });
 
@@ -367,6 +402,7 @@ class MainWindow extends JFrame {
                             int br;
                             int mods = e.getModifiersEx();
                             if ((mods & MouseEvent.BUTTON1_DOWN_MASK) != 0) {
+                                unsaved = true;
                                 col++; 
                                 if (col > maxcol) {
                                     col = maxcol;
@@ -380,6 +416,7 @@ class MainWindow extends JFrame {
                                 }
                                 revalidate();
                             } else if ((mods & MouseEvent.BUTTON3_DOWN_MASK) != 0) {
+                                unsaved = true;
                                 col--;
                                 if (col < 0) {
                                     col = 0;
@@ -404,6 +441,7 @@ class MainWindow extends JFrame {
                             int br;
                             switch (e.getButton()) {
                                 case MouseEvent.BUTTON1:
+                                    unsaved = true;
                                     col++; 
                                     if (col > maxcol) {
                                         col = maxcol;
@@ -418,6 +456,7 @@ class MainWindow extends JFrame {
                                     revalidate();
                                     break;
                                 case MouseEvent.BUTTON3:
+                                    unsaved = true;
                                     col--;
                                     if (col < 0) {
                                         col = 0;
@@ -482,6 +521,7 @@ class MainWindow extends JFrame {
     }
 
     public void loadFont(File f) {
+        unsaved = false;
         currentCharacter = null;
         editorPanel.removeAll();
         characterPanel.removeAll();
@@ -523,7 +563,7 @@ class MainWindow extends JFrame {
         charWidthBox.setValue(0);
     }
 
-    public void saveAs() {
+    public boolean saveAs() {
         JFileChooser fc = new JFileChooser();
         fc.setCurrentDirectory(new File("/u2/home/matt/DC/DisplayCore/Fonts"));
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Font CPP Files", "cpp");
@@ -531,6 +571,48 @@ class MainWindow extends JFrame {
         int rv = fc.showSaveDialog(this);
         if (rv == JFileChooser.APPROVE_OPTION) {
             loadedFont.saveFont(fc.getSelectedFile());
+            return true;
         }
+        return false;
+    }
+
+    public void closeProgram() {
+        if (unsaved) {
+            Object[] options = {
+                                "Save",
+                                "Save As...",
+                                "Cancel",
+                                "Quit"
+            };
+            int n = JOptionPane.showOptionDialog(this,
+                "The font hasn't been saved!",
+                "Really close?",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+            switch(n) {
+                case 0:
+                    loadedFont.saveFont();
+                    break;
+                case 1:
+                    if (!saveAs()) {
+                        return;
+                    }
+                    break;
+                case 2:
+                    return;
+            }
+        }
+        System.exit(0);
+    }
+
+    public void setComponentWidth(JComponent c, int w) {
+        Dimension bs = c.getPreferredSize();
+        bs.width = w;
+        c.setPreferredSize(bs);
+        c.setMinimumSize(bs);
+        c.setMaximumSize(bs);
     }
 }
