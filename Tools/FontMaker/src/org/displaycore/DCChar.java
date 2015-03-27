@@ -12,16 +12,18 @@ class DCChar extends JComponent {
     int characterWidth;
     int bitsPerPixel;
     int characterHeight; // Fixed and set by the DCFont that generated it.
+    int bytesPerLine;
     ArrayList<BigInteger> characterData;
     boolean selected = false;
     int glyphNumber;
 
-    public DCChar(int gn, int w, int h, int bpp, ArrayList<BigInteger> d) {
+    public DCChar(int gn, int w, int h, int bpp, int bpl, ArrayList<BigInteger> d) {
         bitsPerPixel = bpp;
         glyphNumber = gn;
         characterWidth = w;
         characterHeight = h;
         characterData = d;
+        bytesPerLine = bpl;
     }
 
     public void setBorder(Border b) {
@@ -126,5 +128,93 @@ class DCChar extends JComponent {
     public void setSelected(boolean s) {
         selected = s;
     }
-       
+
+    public void scrollUp() {
+        BigInteger topLine = characterData.remove(0);
+        characterData.add(topLine);
+        repaint();
+    }
+
+    public void scrollDown() {
+        BigInteger bottomLine = characterData.remove(characterHeight - 1);
+        characterData.add(0, bottomLine);
+        repaint();
+    }
+
+    public void scrollLeft() {
+        for (int line = 0; line < characterHeight; line++) {
+            int leftmostPixel = getPixel(0, line);
+            BigInteger lineValue = characterData.get(line);
+            lineValue = lineValue.shiftRight(bitsPerPixel);
+            characterData.set(line, lineValue);
+            setPixel(characterWidth - 1, line, leftmostPixel);
+        }
+        repaint();
+    }
+
+    public void scrollRight() {
+        for (int line = 0; line < characterHeight; line++) {
+            int rightmostPixel = getPixel(characterWidth - 1, line);
+            BigInteger lineValue = characterData.get(line);
+            lineValue = lineValue.shiftLeft(bitsPerPixel);
+            characterData.set(line, lineValue);
+            setPixel(0, line, rightmostPixel);
+        }
+        repaint();
+    }
+
+    public String getFontData() {
+        StringBuilder b = new StringBuilder();
+        BigInteger byteMask = BigInteger.valueOf(0xff);
+        for (int line = 0; line < characterHeight; line++) {
+            BigInteger lineData = characterData.get(line);
+            String linePart = "";
+            for (int chunk = 0; chunk < bytesPerLine; chunk++) {
+                BigInteger aByte = lineData.and(byteMask);
+                lineData = lineData.shiftRight(8);
+                int bVal = aByte.intValue();
+                linePart = bVal + ", " + linePart;
+            }
+            b.append(linePart);
+        }
+        return b.toString();
+    }
+
+    public void shiftAndCrop() {
+
+        // First scroll it left until it butts up against the edge.
+
+        int maxIter = characterWidth;
+        while (maxIter > 0) {
+            boolean hasPixel = false;
+            for (int i = 0; i < characterHeight; i++) {
+                if (getPixel(0, i) > 0) {
+                    hasPixel = true;
+                }
+            }
+            if (hasPixel) {
+                break;
+            }
+            scrollLeft();
+            maxIter--;
+        }
+
+        // Now find the right-most pixel.
+
+        while (characterWidth > 0) {
+            boolean hasPixel = false;
+            for (int i = 0; i < characterHeight; i++) {
+                if (getPixel(characterWidth - 1, i) > 0) {
+                    hasPixel = true;
+                }
+            }
+            if (hasPixel) {
+                break;
+            }
+            characterWidth--;
+        }
+        characterWidth ++;
+        repaint();
+    }
 }
+

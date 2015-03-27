@@ -12,6 +12,7 @@ class DCFont {
     public int endGlyph;
     public int bitsPerPixel;
     public String fontName;
+    public File sourceFile;
 
     public ArrayList<DCChar> characters;
 
@@ -32,6 +33,8 @@ class DCFont {
         if (!file.exists()) {
             return false;
         }
+
+        sourceFile = file;
 
         StringBuilder incomingLines = new StringBuilder();
         try {
@@ -107,7 +110,7 @@ class DCFont {
                 }
                 cdata.add(lineValue);
             }
-            DCChar ch = new DCChar(i, width, linesPerCharacter, bitsPerPixel, cdata);
+            DCChar ch = new DCChar(i, width, linesPerCharacter, bitsPerPixel, bytesPerLine, cdata);
             characters.add(ch);
     
         }
@@ -156,4 +159,40 @@ class DCFont {
             }
         }
     }
+
+    public String baseName() {
+        Pattern p = Pattern.compile("^([^\\d]+)");
+        Matcher m = p.matcher(fontName);
+        if (m.find()) {
+            return m.group(1);
+        }
+        return fontName;
+    }
+
+    public void saveFont() {
+        try {
+            PrintWriter pw = new PrintWriter(sourceFile);
+            pw.println("#include <" + baseName() + ".h>");
+            pw.println("");
+            pw.println("namespace Fonts {");
+            pw.println("");
+            pw.println("    const uint8_t " + fontName + "[] = {");
+            pw.println("        " + linesPerCharacter + ", " + bytesPerLine + ", " + startGlyph + ", " + endGlyph + ", " + bitsPerPixel + ",");
+            for (DCChar ch : characters) {
+                pw.println("        " + ch.getWidth() + ", ");
+                pw.println("        " + ch.getFontData());
+            }
+            pw.println("    };");
+            pw.println("};");
+            pw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveFont(File f) {
+        sourceFile = f;
+        saveFont();
+    }
+
 }

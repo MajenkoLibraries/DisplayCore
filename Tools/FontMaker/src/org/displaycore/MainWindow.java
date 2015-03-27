@@ -26,6 +26,11 @@ class MainWindow extends JFrame {
     JSpinner fontWidthBox;
     JSpinner charWidthBox;
     JSpinner bitDepthBox;
+    JSpinner baselineBox;
+    JButton scrollUpButton;
+    JButton scrollDownButton;
+    JButton scrollLeftButton;
+    JButton scrollRightButton;
 
     int pixelZoomSize = 16;
 
@@ -52,6 +57,24 @@ class MainWindow extends JFrame {
         MRUMenu = new JMenu("Recent Fonts");
         fileMenu.add(MRUMenu);
         updateMRU();
+
+        JMenuItem saveFont = new JMenuItem("Save Font");
+        saveFont.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (loadedFont != null) {
+                    loadedFont.saveFont();
+                }
+            }
+        });
+        fileMenu.add(saveFont);
+
+        JMenuItem saveFontAs = new JMenuItem("Save Font As...");
+        saveFontAs.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveAs();
+            }
+        });
+        fileMenu.add(saveFontAs);
         
 
         add(menuBar, BorderLayout.NORTH);
@@ -124,6 +147,92 @@ class MainWindow extends JFrame {
                 }
             }
         });
+
+        c.gridx = 0;
+        c.gridy++; 
+        infoPanel.add(new JLabel("Baseline:"), c);
+        baselineBox = new JSpinner();
+        c.gridx = 1;
+        infoPanel.add(baselineBox, c);
+
+        baselineBox.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                if (currentCharacter != null) {
+                    createEditor(currentCharacter);
+                }
+            }
+        });
+
+        JPanel scrollButtons = new JPanel();
+        scrollButtons.setLayout(new BoxLayout(scrollButtons, BoxLayout.LINE_AXIS));
+
+        scrollLeftButton = new JButton("<");
+        scrollUpButton = new JButton("^");
+        scrollDownButton = new JButton("v");
+        scrollRightButton = new JButton(">");
+
+        scrollButtons.add(scrollLeftButton);
+        scrollButtons.add(scrollUpButton);
+        scrollButtons.add(scrollDownButton);
+        scrollButtons.add(scrollRightButton);
+
+        scrollLeftButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (currentCharacter != null) {
+                    currentCharacter.scrollLeft();
+                    createEditor(currentCharacter);
+                }
+            }
+        });
+
+        scrollUpButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (currentCharacter != null) {
+                    currentCharacter.scrollUp();
+                    createEditor(currentCharacter);
+                }
+            }
+        });
+
+        scrollDownButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (currentCharacter != null) {
+                    currentCharacter.scrollDown();
+                    createEditor(currentCharacter);
+                }
+            }
+        });
+
+        scrollRightButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (currentCharacter != null) {
+                    currentCharacter.scrollRight();
+                    createEditor(currentCharacter);
+                }
+            }
+        });
+
+        c.gridx = 0;
+        c.gridy++; 
+        c.gridwidth = 2;
+        infoPanel.add(scrollButtons, c);
+
+        c.gridy++; 
+
+        JPanel toolsPanel = new JPanel();
+        infoPanel.add(toolsPanel, c);
+
+        JButton autoCrop = new JButton("Autocrop");
+        autoCrop.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (currentCharacter != null) {
+                    currentCharacter.shiftAndCrop();
+                    createEditor(currentCharacter);
+                }
+            }
+        });
+        toolsPanel.add(autoCrop);
+                    
 
 
         editorPanel.addMouseWheelListener(new MouseWheelListener() {
@@ -205,11 +314,7 @@ class MainWindow extends JFrame {
         fc.setFileFilter(filter);
         int rv = fc.showOpenDialog(this);
         if (rv == JFileChooser.APPROVE_OPTION) {
-            loadedFont = new DCFont(fc.getSelectedFile());
-            addToMRU(fc.getSelectedFile());
-            setTitle("FontMaker for DisplayCore :: " + loadedFont.getName());
-            updateFontInfo();
-            refreshScreen();
+            loadFont(fc.getSelectedFile());
         }
     }
 
@@ -243,7 +348,11 @@ class MainWindow extends JFrame {
                     c.gridheight = 1;
                     Pixel l = new Pixel(x, y);
                     int br = 255 - (255 * col / ((1 << loadedFont.bitsPerPixel) - 1));
-                    l.setBackground(new Color(br, br, br));
+                    if (y < (Integer)baselineBox.getValue()) {
+                        l.setBackground(new Color(br, br, br));
+                    } else {
+                        l.setBackground(new Color(br, br/3*2, br/3*2));
+                    }
                     l.setBorder(border);
                     l.setOpaque(true);
                     l.setSize(pixelSize);
@@ -264,7 +373,11 @@ class MainWindow extends JFrame {
                                 }
                                 currentCharacter.setPixel(p.getPosition(), col);
                                 br = 255 - (255 * col / maxcol);
-                                p.setBackground(new Color(br, br, br));
+                                if (p.getPosition().y < (Integer)baselineBox.getValue()) {
+                                    p.setBackground(new Color(br, br, br));
+                                } else {
+                                    p.setBackground(new Color(br, br/3*2, br/3*2));
+                                }
                                 revalidate();
                             } else if ((mods & MouseEvent.BUTTON3_DOWN_MASK) != 0) {
                                 col--;
@@ -273,7 +386,11 @@ class MainWindow extends JFrame {
                                 }
                                 currentCharacter.setPixel(p.getPosition(), col);
                                 br = 255 - (255 * col / maxcol);
-                                p.setBackground(new Color(br, br, br));
+                                if (p.getPosition().y < (Integer)baselineBox.getValue()) {
+                                    p.setBackground(new Color(br, br, br));
+                                } else {
+                                    p.setBackground(new Color(br, br/3*2, br/3*2));
+                                }
                                 revalidate();
                             }
                         }
@@ -293,7 +410,11 @@ class MainWindow extends JFrame {
                                     }
                                     currentCharacter.setPixel(p.getPosition(), col);
                                     br = 255 - (255 * col / maxcol);
-                                    p.setBackground(new Color(br, br, br));
+                                    if (p.getPosition().y < (Integer)baselineBox.getValue()) {
+                                        p.setBackground(new Color(br, br, br));
+                                    } else {
+                                        p.setBackground(new Color(br, br/3*2, br/3*2));
+                                    }
                                     revalidate();
                                     break;
                                 case MouseEvent.BUTTON3:
@@ -303,7 +424,11 @@ class MainWindow extends JFrame {
                                     }
                                     currentCharacter.setPixel(p.getPosition(), col);
                                     br = 255 - (255 * col / maxcol);
-                                    p.setBackground(new Color(br, br, br));
+                                    if (p.getPosition().y < (Integer)baselineBox.getValue()) {
+                                        p.setBackground(new Color(br, br, br));
+                                    } else {
+                                        p.setBackground(new Color(br, br/3*2, br/3*2));
+                                    }
                                     revalidate();
                                     break;
                                 case MouseEvent.BUTTON2:
@@ -347,17 +472,25 @@ class MainWindow extends JFrame {
                         String fn = e.getActionCommand();
                         File f = new File(fn);
                         if (f.exists()) {
-                            loadedFont = new DCFont(f);
-                            addToMRU(f);
-                            setTitle("FontMaker for DisplayCore :: " + loadedFont.getName());
-                            updateFontInfo();
-                            refreshScreen();
+                            loadFont(f);
                         }
                     }
                 });
                 MRUMenu.add(i);
             }
         }
+    }
+
+    public void loadFont(File f) {
+        currentCharacter = null;
+        editorPanel.removeAll();
+        characterPanel.removeAll();
+        revalidate();
+        loadedFont = new DCFont(f);
+        addToMRU(f);
+        setTitle("FontMaker for DisplayCore :: " + loadedFont.getName());
+        updateFontInfo();
+        refreshScreen();
     }
 
     public void addToMRU(File file) {
@@ -386,6 +519,18 @@ class MainWindow extends JFrame {
         fontHeightBox.setValue(loadedFont.getHeight());
         fontWidthBox.setValue(loadedFont.getWidth());
         bitDepthBox.setValue(loadedFont.getDepth());
+        baselineBox.setValue(loadedFont.getHeight() / 3 * 2);
         charWidthBox.setValue(0);
+    }
+
+    public void saveAs() {
+        JFileChooser fc = new JFileChooser();
+        fc.setCurrentDirectory(new File("/u2/home/matt/DC/DisplayCore/Fonts"));
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Font CPP Files", "cpp");
+        fc.setFileFilter(filter);
+        int rv = fc.showSaveDialog(this);
+        if (rv == JFileChooser.APPROVE_OPTION) {
+            loadedFont.saveFont(fc.getSelectedFile());
+        }
     }
 }
