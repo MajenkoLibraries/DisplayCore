@@ -106,6 +106,15 @@ class MainWindow extends JFrame {
         });
         toolsMenu.add(cropAll);
 
+        JMenuItem renderTruetype = new JMenuItem("Render TrueType Font");
+        renderTruetype.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                TrueTypeRender ttr = new TrueTypeRender(MainWindow.this);
+                ttr.open();
+            }
+        });
+        toolsMenu.add(renderTruetype);
+
         add(menuBar, BorderLayout.NORTH);
 
         mainPanel = new JPanel();
