@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project name="FontMaker" default="build">
+
+
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="../../lib/ant-contrib.jar"/>
+        </classpath>
+    </taskdef>
+
+    <tstamp>
+        <format property="TODAY" pattern="yyyyMMdd" />
+    </tstamp>
+
+    <target name="clean" description="Clean the build directories">
+        <delete dir="bin" />
+        <delete file="FontMaker.jar" />
+    </target>
+
+    <target name="compile" description="Compile sources">
+        <mkdir dir="bin" />
+
+        <javac srcdir="src" 
+                debug="true"
+                debuglevel="lines,vars,source"
+	        destdir="bin" 
+	        includeAntRuntime="false"/>
+    </target>
+   
+    <target name="build" depends="compile" description="Build the plugin jars">
+        <jar destfile="FontMaker.jar">
+            <fileset dir="bin" />
+            <!--zipgroupfileset dir="zipfix" includes="*.jar" /-->
+            <manifest>
+                <attribute name="Version" value="1.0.0" />
+                <attribute name="Compiled" value="${TODAY}" />
+                <attribute name="Author" value="Majenko Technologies" />
+                <attribute name="Main-Class" value="org.displaycore.FontMaker" />
+            </manifest>
+        </jar>
+        <chmod perm="0755" file="FontMaker.jar" />
+    </target>
+
+</project>

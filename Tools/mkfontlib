@@ -1,0 +1,300 @@
+#!/usr/bin/perl
+
+use strict;
+use GD;
+use Data::Dumper;
+
+my $file = shift;
+
+if ($file =~ /^[a-zA-Z0-9]/) {
+    die("You must provide a path, relative or absolute.");
+}
+
+my $fontname = "";
+
+system("fop-ttfreader -q '$file' /tmp/$$.xml");
+open(IN, "</tmp/$$.xml");
+my $in = "";
+while ($in = <IN>) {
+    if ($in =~ /<font-name>(.*)<\/font-name>/) {
+        $fontname = $1;
+    }
+}
+close(IN);
+unlink("/tmp/$$.xml");
+
+if ($fontname eq "") {
+    print "Unable to get font name\n";
+    exit(10);
+}
+
+$fontname =~ s/-//g;
+$fontname =~ s/\s//g;
+$fontname =~ s/_//g;
+
+my $points = "8-40";
+my $start = 32;
+my $end = 127;
+
+my $name = $fontname;
+
+if(!$points) 
+{
+    $points = 8;
+}
+
+if (!$start)
+{
+    $start = 0;
+}
+
+if (!$end)
+{
+    $end = 255;
+}
+
+if(!-f $file)
+{
+	die("Unable to open $file");
+}
+
+mkdir($fontname);
+
+my $pstart = 0;
+my $pend = 0;
+
+if ($points =~ /(\d+)-(\d+)/) {
+    $pstart = $1;
+    $pend = $2;
+} else {
+    $pstart = $points;
+    $pend = $points;
+}
+
+$points = $pstart;
+
+my $out = $name . "/" . $name . ".h";
+open(OUT, ">$out");
+
+print OUT "#ifndef _FONTS_" . uc($name) . "_H\n";
+print OUT "#define _FONTS_" . uc($name) . "_H\n";
+print OUT "\n";
+print OUT "#include <TFT.h>\n";
+print OUT "\n";
+print OUT "namespace Fonts {\n";
+while ($points <= $pend) {
+    print OUT "        extern const uint8_t " . $name . $points . "[];\n";
+    $points++;
+}
+print OUT "};\n";
+print OUT "\n";
+print OUT "#endif\n";
+close(OUT);
+
+my $bitsperpixel = 1;
+
+$points = $pstart;
+while ($points <= $pend) {
+
+    my $fontname = $name . $points;
+    $out = $name . "/" . $fontname . ".cpp";
+
+    my $chardata;   # Array to store character data
+
+    my $char = 0;  # Start with the space character
+
+    my $size = findFontSize($file,$points);
+
+    $size->{bpl} = int($size->{width} / 8) + 1;
+
+    #if ($size->{bpl} > 8) {
+    #    print "ERROR: Font is too wide!\n";
+    #    exit(10);
+    #}
+
+    my $fontdata;
+    my $offset = 0;
+
+    open(OUT,">$out");
+    print OUT "#include <$name.h>\n\n";
+
+    print OUT "namespace Fonts {\n";
+    print OUT "    const uint8_t " . $name . $points . "[] = {\n";
+
+    printf(OUT "        %d, %d, 0x%02X, 0x%02X, %d,\n",
+        $size->{height}, $size->{bpl} * $bitsperpixel, $start, $end, $bitsperpixel);
+
+    my $char = $start;
+
+    while($char < $end)
+    {
+        my $img = GD::Image->new($size->{width}*2,$size->{height}*2);
+        my $bg = $img->colorAllocate(0,0,255);
+        my $fg = $img->colorAllocate(255,255,255);
+        $img->filledRectangle(0,0,$size->{width}*2,$size->{height}*2,$bg);
+        my @bb = $img->stringFT(-$fg,$file,$points,0,abs($size->{origin}->{x}),$size->{origin}->{y},chr($char));
+
+#        open PNG,">" . $char . ".png";
+#        print PNG $img->png;
+#        close PNG;
+
+        ## We now have the font drawin in an image. Next task is to work out what the *REAL* bounding box is.
+
+        my $left = 0;
+        my $right = $img->width;
+        my $found = 0;
+        while (($left < $right) && ($found == 0)) {
+            my $scanrow = 0;
+            while ($scanrow < $img->height) {
+                my $pixel = $img->getPixel($left, $scanrow);
+                if ($pixel == $fg) {
+                    $found = 1;
+                }
+                $scanrow++;
+            }
+            $left++;
+        }
+        $left--;
+        $left--;
+
+        my $right = $img->width;
+        $found = 0;
+        while (($right > $left) && ($found == 0)) {
+            $right--;
+            my $scanrow = 0;
+            while ($scanrow < $img->height) {
+                my $pixel = $img->getPixel($right, $scanrow);
+                if ($pixel == $fg) {
+                    $found = 1;
+                }
+                $scanrow++;
+            }
+        }
+#        $right += 2;
+
+        my $width = $right - $left;
+        if ($found == 0) {
+            $width = $bb[2] - $bb[0];
+        }
+
+        printf(OUT "        %2d,", $width);
+        my $line = 0;
+        my $byte = 0;
+        while($line < $size->{height})
+        {
+            my $data = 0;
+            my $bit = 0;
+            while($bit < $width)
+            {
+                my $pixel = $img->getPixel($left + ($width-$bit),$line);
+                $data = $data << 1;
+                if($pixel == $fg)
+                {
+                    $data |= 1;
+                }
+                $bit++;
+            }
+            $bit = $size->{bpl};
+            while($bit > 0)
+            {
+                $bit--;
+                printf(OUT "     0x%02X,", ($data >> ($bit * 8)) & 0xFF)
+            }
+            $line++;
+        }
+        print OUT "\n";
+
+        $char++;
+    }
+
+    print OUT "    };\n";
+    print OUT "};\n";
+
+    close (OUT);
+
+    $points++;
+}
+
+mkdir("$name/examples");
+mkdir("$name/examples/Demo");
+open(OUT, ">$name/examples/Demo/Demo.ino");
+print OUT <<EOF
+#include <TFT.h>
+#include <$name.h>
+
+PICadillo35t tft;
+ 
+void setup()
+{
+	analogWrite(PIN_BACKLIGHT, 255);
+	tft.initializeDevice();
+	tft.setTextWrap(false);
+	tft.setRotation(1);
+	tft.setCursor(0, 0);
+	tft.fillScreen(Color::Black);
+	tft.setTextColor(Color::Red);
+EOF
+;
+
+$points = $pstart;
+while ($points <= $pend) {
+    print OUT "	tft.setFont(Fonts::" . $name . $points . ");\n";
+    print OUT "	tft.println(\"$name $points\");\n";
+    $points+=4;
+}
+
+print OUT <<EOF
+}
+
+void loop()
+{
+}
+EOF
+;
+close(OUT);
+
+sub findFontSize()
+{
+    my $font = shift;
+    my $points = shift;
+ 
+    my $char = 32;
+
+    my $bottom = 0;
+    my $top = 0;
+    my $left = 0;
+    my $right = 0;
+
+    while($char < 128)
+    {
+        my @bb = GD::Image->stringFT(-1,$font,$points,0,0,0,chr($char));
+        if($bb[1] > $bottom)
+        {
+            $bottom = $bb[1];
+        }
+        if($bb[7] < $top)
+        {
+            $top = $bb[7];
+        }
+        if($bb[0] < $left)
+        {
+            $left = $bb[0];
+        }
+        if($bb[2] > $right)
+        {
+            $right = $bb[2];
+        }
+        $char++;
+    }
+
+    my $data;
+    $data->{top} = $top;
+    $data->{bottom} = $bottom;
+    $data->{left} = $left;
+    $data->{right} = $right;
+    $data->{width} = $right - $left;
+    $data->{height} = $bottom - $top;
+    $data->{origin}->{x} = 0-$left;
+    $data->{origin}->{y} = 0-$top;
+    return $data;
+}
