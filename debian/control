@@ -152,6 +152,14 @@ Description: 4D Goldelox driver for DisplayCore
  4D Systems.  This library communicates using the SCE2 protocol
  through a serial port.
 
+Package: libdisplaycore-driver-xpt2046
+Architecture: all
+XBSC-Subgroup: Drivers
+Provides: XPT2046.h
+Depends: chipkit, libdisplaycore-core
+Description: XPT2046 touchscreen driver
+ SPI connected XPT2046 resistive touch panel controller
+
 Package: libdisplaycore-driver-analogtouch
 Architecture: all
 XBSC-Subgroup: Drivers
