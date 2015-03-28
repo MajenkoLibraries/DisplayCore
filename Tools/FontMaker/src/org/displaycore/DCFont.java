@@ -24,6 +24,17 @@ class DCFont {
         loadFontFile(file);
     }
 
+    public DCFont(int lpc, int bpl, int start, int end, int bpp, String name, ArrayList<DCChar> chars) {
+        linesPerCharacter = lpc;
+        bytesPerLine = bpl;
+        startGlyph = start;
+        endGlyph = end;
+        bitsPerPixel = bpp;
+        fontName = name;
+        sourceFile = null;
+        characters = chars;
+    }
+
     public boolean loadFontFile(String filename) {
         return loadFontFile(new File(filename));
     }
@@ -184,6 +195,47 @@ class DCFont {
             }
             pw.println("    };");
             pw.println("};");
+            pw.close();
+            File par = sourceFile.getParentFile();
+            File header = new File(par, baseName() + ".h");
+            ArrayList<String> fontEntries = new ArrayList<String>();
+
+            Pattern pat = Pattern.compile("extern const uint8_t (.*)\\[\\]");
+            boolean inThere = false;
+            if (header.exists()) {
+                FileReader fr = new FileReader(header);
+                BufferedReader br = new BufferedReader(fr);
+                String line;
+                while((line = br.readLine()) != null) {
+                    Matcher m = pat.matcher(line);
+                    if (m.find()) {
+                        String en = m.group(1).trim();
+                        fontEntries.add(en);
+                        if (fontName.equals(en)) {
+                            inThere = true;
+                        }
+                    }
+                }
+                br.close();
+                fr.close();
+            }
+
+            if (!inThere) {
+                fontEntries.add(fontName);
+            }
+
+            pw = new PrintWriter(header);
+            pw.println("#ifndef _" + baseName().toUpperCase() + "_H");
+            pw.println("#define _" + baseName().toUpperCase() + "_H");
+            pw.println("");
+            pw.println("#include <DisplayCore.h>");
+            pw.println("");
+            pw.println("namespace Fonts {");
+            for (String s : fontEntries) {
+                pw.println("    extern const uint8_t " + s + "[];");
+            }
+            pw.println("};");
+            pw.println("#endif");
             pw.close();
         } catch (Exception e) {
             e.printStackTrace();

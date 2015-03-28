@@ -16,6 +16,9 @@ class MainWindow extends JFrame {
     JMenu MRUMenu;
     JPanel mainPanel;
 
+    static File lastSaveLocation = null;
+    static File lastOpenLocation = null;
+
     JScrollPane characterScroll;
     JPanel characterPanel;
     JPanel editorPanel;
@@ -68,7 +71,11 @@ class MainWindow extends JFrame {
         saveFont.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (loadedFont != null) {
-                    loadedFont.saveFont();
+                    if (loadedFont.sourceFile == null) {
+                        saveAs();
+                    } else {
+                        loadedFont.saveFont();
+                    }
                 }
             }
         });
@@ -352,12 +359,16 @@ class MainWindow extends JFrame {
 
     public void openFontFile() {
         JFileChooser fc = new JFileChooser();
-        fc.setCurrentDirectory(new File("/u2/home/matt/DC/DisplayCore/Fonts"));
+        if (lastOpenLocation == null) {
+            lastOpenLocation = new File(System.getProperty("user.dir"));
+        }
+        fc.setCurrentDirectory(lastOpenLocation);
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
             "Font CPP Files", "cpp");
         fc.setFileFilter(filter);
         int rv = fc.showOpenDialog(this);
         if (rv == JFileChooser.APPROVE_OPTION) {
+            lastOpenLocation = fc.getSelectedFile().getParentFile();
             loadFont(fc.getSelectedFile());
         }
     }
@@ -529,6 +540,18 @@ class MainWindow extends JFrame {
         }
     }
 
+    public void setFont(DCFont f) {
+        unsaved = true;
+        currentCharacter = null;
+        editorPanel.removeAll();
+        characterPanel.removeAll();
+        revalidate();
+        loadedFont = f;
+        setTitle("FontMaker for DisplayCore :: " + loadedFont.getName());
+        updateFontInfo();
+        refreshScreen();
+    }
+
     public void loadFont(File f) {
         unsaved = false;
         currentCharacter = null;
@@ -574,12 +597,23 @@ class MainWindow extends JFrame {
 
     public boolean saveAs() {
         JFileChooser fc = new JFileChooser();
-        fc.setCurrentDirectory(new File("/u2/home/matt/DC/DisplayCore/Fonts"));
+        if (lastSaveLocation == null) {
+            lastSaveLocation = new File(System.getProperty("user.dir"));
+        }
+        fc.setCurrentDirectory(lastSaveLocation);
+        fc.setSelectedFile(new File(loadedFont.getName() + ".cpp"));
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Font CPP Files", "cpp");
         fc.setFileFilter(filter);
         int rv = fc.showSaveDialog(this);
         if (rv == JFileChooser.APPROVE_OPTION) {
-            loadedFont.saveFont(fc.getSelectedFile());
+            File f = fc.getSelectedFile();
+            lastSaveLocation = f.getParentFile();
+            String fp = f.getAbsolutePath();
+            if (!fp.endsWith(".cpp")) {
+                fp = fp + ".cpp";
+            }
+            f = new File(fp);
+            loadedFont.saveFont(f);
             return true;
         }
         return false;
