@@ -193,6 +193,7 @@ public class TrueTypeRender extends JDialog {
                 }
                 renderFontSample();
                 infoBox.setText("Estimated " + calculateSize() + " bytes");
+                fontNameBox.setText(loadedFont.getFontName().replace(" ", "") + fs);
             }
         });
 
@@ -322,7 +323,7 @@ public class TrueTypeRender extends JDialog {
             return;
         }
 
-        fontNameBox.setText(loadedFont.getFontName().replace(" ", ""));
+        fontNameBox.setText(loadedFont.getFontName().replace(" ", "") + "20");
 
         fontSizeBox.setValue(20);
         fontDepthBox.setValue(2);

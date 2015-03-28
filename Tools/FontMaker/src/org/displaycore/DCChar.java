@@ -32,14 +32,7 @@ class DCChar extends JComponent {
     public void paintComponent(Graphics g) {
         BufferedImage offscreen = new BufferedImage(characterWidth + 2, characterHeight + 2, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphic = offscreen.createGraphics();
-        if (selected) {
-            graphic.setColor(new Color(255, 128, 128));
-        } else {
-            graphic.setColor(new Color(128, 128, 128));
-        }
         graphic.fillRect(0, 0, characterWidth + 2, characterHeight + 2);
-        graphic.setColor(new Color(255, 255, 255));
-        graphic.fillRect(1, 1, characterWidth, characterHeight);
 
         graphic.setColor(new Color(0, 0, 0));
 
@@ -53,8 +46,12 @@ class DCChar extends JComponent {
                 BigInteger pv = v.and(bitMask);
                 int pixelValue = pv.intValue();
                 int brightness = 255 - (255 * pixelValue / bitMask.intValue());
-                graphic.setColor(new Color(brightness, brightness, brightness));
-                graphic.drawLine(pixelNumber + 1, y + 1, pixelNumber + 1, y + 1);
+                if (selected) {
+                    graphic.setColor(new Color(brightness / 5 * 4, brightness, brightness / 5 * 4));
+                } else {
+                    graphic.setColor(new Color(brightness, brightness, brightness));
+                }
+                graphic.drawLine(pixelNumber, y + 1, pixelNumber, y + 1);
                 v = v.shiftRight(bitsPerPixel);
             }
         }

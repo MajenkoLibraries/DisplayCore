@@ -24,6 +24,7 @@ class MainWindow extends JFrame {
     JPanel editorPanel;
     JScrollPane editorScroll;
     JPanel infoPanel;
+    JLabel hoverBox;
 
     JTextArea fontNameBox;
     JSpinner fontHeightBox;
@@ -44,7 +45,7 @@ class MainWindow extends JFrame {
     DCChar currentCharacter = null;
 
     public void open() {
-        setResizable(false);
+        setResizable(true);
         setLayout(new BorderLayout());
         setTitle("FontMaker for DisplayCore :: No Font");
 
@@ -132,6 +133,7 @@ class MainWindow extends JFrame {
         mainPanel.add(editorScroll, BorderLayout.CENTER);
         infoPanel = new JPanel();
         mainPanel.add(infoPanel, BorderLayout.EAST);
+        setComponentWidth(infoPanel, 200);
 
         infoPanel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -139,43 +141,49 @@ class MainWindow extends JFrame {
         c.gridy = 0;
         c.gridwidth = 1;
         c.gridheight = 1;
+        c.weightx = 0D;
+        c.fill = GridBagConstraints.HORIZONTAL;
 
         fontNameBox = new JTextArea();
         infoPanel.add(new JLabel("Font Name:"), c);
         c.gridx = 1;
+        c.weightx = 1D;
         infoPanel.add(fontNameBox, c);
-        setComponentWidth(fontNameBox, 100);
 
         c.gridx = 0;
         c.gridy++; 
+        c.weightx = 0D;
         infoPanel.add(new JLabel("Font Height:"), c);
         fontHeightBox = new JSpinner();
-        setComponentWidth(fontHeightBox, 100);
         c.gridx = 1;
+        c.weightx = 1D;
         infoPanel.add(fontHeightBox, c);
 
         c.gridx = 0;
         c.gridy++; 
+        c.weightx = 0D;
         infoPanel.add(new JLabel("Font Width:"), c);
         fontWidthBox = new JSpinner();
-        setComponentWidth(fontWidthBox, 100);
         c.gridx = 1;
+        c.weightx = 1D;
         infoPanel.add(fontWidthBox, c);
 
         c.gridx = 0;
         c.gridy++; 
+        c.weightx = 0D;
         infoPanel.add(new JLabel("Font Depth:"), c);
         bitDepthBox = new JSpinner();
-        setComponentWidth(bitDepthBox, 100);
+        c.weightx = 1D;
         c.gridx = 1;
         infoPanel.add(bitDepthBox, c);
 
         c.gridx = 0;
         c.gridy++; 
+        c.weightx = 0D;
         infoPanel.add(new JLabel("Character Width:"), c);
         charWidthBox = new JSpinner();
-        setComponentWidth(charWidthBox, 100);
         c.gridx = 1;
+        c.weightx = 1D;
         infoPanel.add(charWidthBox, c);
 
         charWidthBox.addChangeListener(new ChangeListener() {
@@ -195,10 +203,11 @@ class MainWindow extends JFrame {
 
         c.gridx = 0;
         c.gridy++; 
+        c.weightx = 0D;
         infoPanel.add(new JLabel("Baseline:"), c);
         baselineBox = new JSpinner();
-        setComponentWidth(baselineBox, 100);
         c.gridx = 1;
+        c.weightx = 1D;
         infoPanel.add(baselineBox, c);
 
         baselineBox.addChangeListener(new ChangeListener() {
@@ -265,12 +274,24 @@ class MainWindow extends JFrame {
         c.gridx = 0;
         c.gridy++; 
         c.gridwidth = 2;
+        c.weightx = 0D;
         infoPanel.add(scrollButtons, c);
 
         c.gridy++; 
+        c.weightx = 1D;
 
         JPanel toolsPanel = new JPanel();
         infoPanel.add(toolsPanel, c);
+
+        c.gridx = 0;
+        c.gridy++;
+        c.gridwidth = 1;
+        c.weightx = 0D;
+        infoPanel.add(new JLabel("Colour: "), c);
+        c.gridx = 1;
+        c.weightx = 1D;
+        hoverBox = new JLabel("0");
+        infoPanel.add(hoverBox, c);
 
         JButton autoCrop = new JButton("Autocrop");
         autoCrop.addActionListener(new ActionListener() {
@@ -303,6 +324,8 @@ class MainWindow extends JFrame {
         });
 
         characterPanel = new JPanel();
+        characterPanel.setBackground(new Color(80, 80, 80));
+        characterPanel.setOpaque(true);
         characterScroll = new JScrollPane(characterPanel);
 
         characterPanel.setLayout(new FlowLayout());
@@ -326,6 +349,7 @@ class MainWindow extends JFrame {
 
         pack();
         setSize(1000, 700);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -406,7 +430,7 @@ class MainWindow extends JFrame {
                     if (y < (Integer)baselineBox.getValue()) {
                         l.setBackground(new Color(br, br, br));
                     } else {
-                        l.setBackground(new Color(br, br/3*2, br/3*2));
+                        l.setBackground(new Color(br/5*4, br/5*4, br));
                     }
                     l.setBorder(border);
                     l.setOpaque(true);
@@ -432,7 +456,7 @@ class MainWindow extends JFrame {
                                 if (p.getPosition().y < (Integer)baselineBox.getValue()) {
                                     p.setBackground(new Color(br, br, br));
                                 } else {
-                                    p.setBackground(new Color(br, br/3*2, br/3*2));
+                                    p.setBackground(new Color(br/5*4, br/5*4, br));
                                 }
                                 revalidate();
                             } else if ((mods & MouseEvent.BUTTON3_DOWN_MASK) != 0) {
@@ -446,10 +470,11 @@ class MainWindow extends JFrame {
                                 if (p.getPosition().y < (Integer)baselineBox.getValue()) {
                                     p.setBackground(new Color(br, br, br));
                                 } else {
-                                    p.setBackground(new Color(br, br/3*2, br/3*2));
+                                    p.setBackground(new Color(br/5*4, br/5*4, br));
                                 }
                                 revalidate();
                             }
+                            hoverBox.setText("" + col);
                         }
                         public void mouseExited(MouseEvent e) {}
                         public void mouseClicked(MouseEvent e) {}
@@ -471,7 +496,7 @@ class MainWindow extends JFrame {
                                     if (p.getPosition().y < (Integer)baselineBox.getValue()) {
                                         p.setBackground(new Color(br, br, br));
                                     } else {
-                                        p.setBackground(new Color(br, br/3*2, br/3*2));
+                                        p.setBackground(new Color(br/5*4, br/5*4, br));
                                     }
                                     revalidate();
                                     break;
@@ -486,13 +511,14 @@ class MainWindow extends JFrame {
                                     if (p.getPosition().y < (Integer)baselineBox.getValue()) {
                                         p.setBackground(new Color(br, br, br));
                                     } else {
-                                        p.setBackground(new Color(br, br/3*2, br/3*2));
+                                        p.setBackground(new Color(br/5*4, br/5*4, br));
                                     }
                                     revalidate();
                                     break;
                                 case MouseEvent.BUTTON2:
                                     break;
                             }
+                            hoverBox.setText("" + col);
                         }
                     });
                     editorPanel.add(l, c);
@@ -502,7 +528,7 @@ class MainWindow extends JFrame {
                     c.gridwidth = 1;
                     c.gridheight = 1;
                     Pixel l = new Pixel(x, y);
-                    l.setBackground(new Color(200, 100, 100));
+                    l.setBackground(new Color(255, 200, 200));
                     l.setBorder(border);
                     l.setOpaque(true);
                     l.setSize(pixelSize);
@@ -614,6 +640,7 @@ class MainWindow extends JFrame {
             }
             f = new File(fp);
             loadedFont.saveFont(f);
+            addToMRU(f);
             return true;
         }
         return false;

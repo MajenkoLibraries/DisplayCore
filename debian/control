@@ -202,6 +202,24 @@ Depends: chipkit, libdisplaycore-core
 Description: DisplayCore Image Filters
  A selection of Image Filters
 
+Package: libdisplaycore-font-lcars
+Architecture: all
+XBSC-Subgroup: Fonts
+Provides: LCARS.h
+Depends: chipkit, libdisplaycore-core
+Description: LCARS font for DisplayCore
+ The classic LCARS StarTrek font in 4-bit depth
+ anti-aliased rendering.
+
+Package: libdisplaycore-font-comfortaa
+Architecture: all
+XBSC-Subgroup: Fonts
+Provides: ComfortAA.h
+Depends: chipkit, libdisplaycore-core
+Description: Comfort Anti-Aliased font for DisplayCore
+ The Comfort font is heavily anti-aliased for a very clean
+ look.  It is rendered in 4-bit (16 colour) mode.
+
 Package: libdisplaycore-font-comic
 Architecture: all
 XBSC-Subgroup: Fonts
