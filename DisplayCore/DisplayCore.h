@@ -295,11 +295,7 @@ class DisplayCore : public Print
 
         void fatalError(const char *title, const char *message);
 
-        void setFontScaleX(uint8_t sx);
-        void setFontScaleY(uint8_t sy);
-
         uint32_t color2rgb(uint16_t c);
-
 
         int16_t _clip_x0;
         int16_t _clip_x1;
@@ -309,10 +305,6 @@ class DisplayCore : public Print
     protected:
         /*! A pointer to the currently selected font table */
         const uint8_t *font;
-        /*! The current X scaling factor of the font */
-        uint8_t font_scale_x;
-        /*! The current Y scaling factor of the font */
-        uint8_t font_scale_y;
 
     private:
         uint16_t winx0;
@@ -444,6 +436,110 @@ class Image : public DisplayCore {
 
         uint16_t _width;
         uint16_t _height;
+};
+
+// An abstraction of an event including the type, location, widget, etc;
+class Widget;
+
+struct Event {
+    Widget *source;
+    int x;
+    int y;
+    int dx;
+    int dy;
+    uint32_t type;
+};
+
+enum {
+    EVENT_PRESS,
+    EVENT_RELEASE,
+    EVENT_TAP,
+    EVENT_DRAG,
+    EVENT_REPEAT
+};
+
+// A widget is an extension of an image. It's effectively an interactive
+// image.  How you build it up on screen is up to you.
+class Widget : public Image {
+    protected:
+        Touch *_ts;
+        DisplayCore *_dev;
+        int _x;
+        int _y;
+        int _value;
+        uint32_t _user;
+        boolean _redraw;
+
+        int _sx;
+        int _sy;
+        int _ex;
+        int _ey;
+        int _rx;
+        int _ry;
+        uint32_t _st;
+        uint32_t _rt;
+        uint32_t _et;
+        int _rc;
+        int _rp;
+        int _tx;
+        int _ty;
+
+        boolean _active;
+        boolean _touch;
+
+        void (*_press)(Event *);
+        void (*_release)(Event *);
+        void (*_drag)(Event *);
+        void (*_tap)(Event *);
+        void (*_repeat)(Event *);
+
+    public:
+        Widget(Touch &t, DisplayCore &d, int x, int y) : 
+            _ts(&t), _dev(&d), _x(x), _y(y), _redraw(true), _touch(false), 
+            _press(NULL), _release(NULL), _drag(NULL), _tap(NULL), _repeat(NULL),
+            Image() {}
+        virtual void setValue(int v);
+        virtual int getValue();
+        virtual void render();
+        int _sense_x;
+        int _sense_y;
+        int _sense_w;
+        int _sense_h;
+
+        void setUserValue(uint32_t v) { _user = v; }
+        uint32_t getUserValue() { return _user; }
+
+        // Event registering functions
+        void onPress(void (*func)(Event *)) { _press = func; }
+        void onRelease(void (*func)(Event *)) { _release = func; }
+        void onDrag(void (*func)(Event *)) { _drag = func; }
+        void onTap(void (*func)(Event *)) { _tap = func; }
+        void onRepeat(void (*func)(Event *)) { _repeat = func; }
+
+        void handleTouch();
+
+        virtual void draw(DisplayCore *dev, int16_t x, int16_t y) = 0;
+
+        void draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t t);
+        void drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform);
+        void drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform, uint16_t t);
+
+        void draw(DisplayCore &dev, int16_t x, int16_t y);
+        void draw(DisplayCore &dev, int16_t x, int16_t y, uint16_t t);
+        void drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform);
+        void drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform, uint16_t t);
+
+        virtual void redraw();
+
+};
+
+// A form is a collection of widgets.  Build widgets into a form, and then
+// render the whole form processing any events that may occur within that
+// form.
+class Form {
+    public:
+        Form() {}
+        ~Form() {}
 };
 
 

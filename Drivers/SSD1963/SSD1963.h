@@ -108,68 +108,70 @@ class SSD1963 : public DisplayCore {
         static const uint16_t   FPS=8;
         static const uint8_t    VPW=16;
 
-        static const uint8_t _PIN_D0 = 0;
-        static const uint8_t _PIN_D1 = 1;
-        static const uint8_t _PIN_D2 = 2;
-        static const uint8_t _PIN_D3 = 3;
-        static const uint8_t _PIN_D4 = 4;
-        static const uint8_t _PIN_D5 = 5;
-        static const uint8_t _PIN_D6 = 6;
-        static const uint8_t _PIN_D7 = 7;
-        static const uint8_t _PIN_D8 = 8;
-        static const uint8_t _PIN_D9 = 9;
-        static const uint8_t _PIN_D10 = 10;
-        static const uint8_t _PIN_D11 = 11;
-        static const uint8_t _PIN_D12 = 12;
-        static const uint8_t _PIN_D13 = 13;
-        static const uint8_t _PIN_D14 = 14;
-        static const uint8_t _PIN_D15 = 15;
-        static const uint8_t _PIN_CS = 16;
-        static const uint8_t _PIN_RS = 17;
-        static const uint8_t _PIN_WR = 18;
-        static const uint8_t _PIN_RD = 19;
+        p32_ioport *port_d0;
+        p32_ioport *port_d1;
+        p32_ioport *port_d2;
+        p32_ioport *port_d3;
+        p32_ioport *port_d4;
+        p32_ioport *port_d5;
+        p32_ioport *port_d6;
+        p32_ioport *port_d7;
+        p32_ioport *port_d8;
+        p32_ioport *port_d9;
+        p32_ioport *port_d10;
+        p32_ioport *port_d11;
+        p32_ioport *port_d12;
+        p32_ioport *port_d13;
+        p32_ioport *port_d14;
+        p32_ioport *port_d15;
+        p32_ioport *port_cs;
+        p32_ioport *port_rs;
+        p32_ioport *port_wr;
+        p32_ioport *port_rd;
 
-        p32_ioport *_port_d0;
-        p32_ioport *_port_d1;
-        p32_ioport *_port_d2;
-        p32_ioport *_port_d3;
-        p32_ioport *_port_d4;
-        p32_ioport *_port_d5;
-        p32_ioport *_port_d6;
-        p32_ioport *_port_d7;
-        p32_ioport *_port_d8;
-        p32_ioport *_port_d9;
-        p32_ioport *_port_d10;
-        p32_ioport *_port_d11;
-        p32_ioport *_port_d12;
-        p32_ioport *_port_d13;
-        p32_ioport *_port_d14;
-        p32_ioport *_port_d15;
-        p32_ioport *_port_cs;
-        p32_ioport *_port_rs;
-        p32_ioport *_port_wr;
-        p32_ioport *_port_rd;
+        uint32_t mask_d0;
+        uint32_t mask_d1;
+        uint32_t mask_d2;
+        uint32_t mask_d3;
+        uint32_t mask_d4;
+        uint32_t mask_d5;
+        uint32_t mask_d6;
+        uint32_t mask_d7;
+        uint32_t mask_d8;
+        uint32_t mask_d9;
+        uint32_t mask_d10;
+        uint32_t mask_d11;
+        uint32_t mask_d12;
+        uint32_t mask_d13;
+        uint32_t mask_d14;
+        uint32_t mask_d15;
+        uint32_t mask_cs;
+        uint32_t mask_rs;
+        uint32_t mask_wr;
+        uint32_t mask_rd;
 
-        uint32_t _mask_d0;
-        uint32_t _mask_d1;
-        uint32_t _mask_d2;
-        uint32_t _mask_d3;
-        uint32_t _mask_d4;
-        uint32_t _mask_d5;
-        uint32_t _mask_d6;
-        uint32_t _mask_d7;
-        uint32_t _mask_d8;
-        uint32_t _mask_d9;
-        uint32_t _mask_d10;
-        uint32_t _mask_d11;
-        uint32_t _mask_d12;
-        uint32_t _mask_d13;
-        uint32_t _mask_d14;
-        uint32_t _mask_d15;
-        uint32_t _mask_cs;
-        uint32_t _mask_rs;
-        uint32_t _mask_wr;
-        uint32_t _mask_rd;
+        uint8_t pin_rs;
+        uint8_t pin_rd;
+        uint8_t pin_wr;
+        uint8_t pin_cs;
+        uint8_t pin_reset;
+        uint8_t pin_d0;
+        uint8_t pin_d1;
+        uint8_t pin_d2;
+        uint8_t pin_d3;
+        uint8_t pin_d4;
+        uint8_t pin_d5;
+        uint8_t pin_d6;
+        uint8_t pin_d7;
+        uint8_t pin_d8;
+        uint8_t pin_d9;
+        uint8_t pin_d10;
+        uint8_t pin_d11;
+        uint8_t pin_d12;
+        uint8_t pin_d13;
+        uint8_t pin_d14;
+        uint8_t pin_d15;
+
 
 		void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 
@@ -177,49 +179,109 @@ class SSD1963 : public DisplayCore {
 
         int8_t pins[20];
         inline void command(uint16_t cmd) {
-            _port_rs->lat.clr = _mask_rs;
-            (cmd & 0x0001) ? _port_d0->lat.set = _mask_d0 : _port_d0->lat.clr = _mask_d0;
-            (cmd & 0x0002) ? _port_d1->lat.set = _mask_d1 : _port_d1->lat.clr = _mask_d1;
-            (cmd & 0x0004) ? _port_d2->lat.set = _mask_d2 : _port_d2->lat.clr = _mask_d2;
-            (cmd & 0x0008) ? _port_d3->lat.set = _mask_d3 : _port_d3->lat.clr = _mask_d3;
-            (cmd & 0x0010) ? _port_d4->lat.set = _mask_d4 : _port_d4->lat.clr = _mask_d4;
-            (cmd & 0x0020) ? _port_d5->lat.set = _mask_d5 : _port_d5->lat.clr = _mask_d5;
-            (cmd & 0x0040) ? _port_d6->lat.set = _mask_d6 : _port_d6->lat.clr = _mask_d6;
-            (cmd & 0x0080) ? _port_d7->lat.set = _mask_d7 : _port_d7->lat.clr = _mask_d7;
-            (cmd & 0x0100) ? _port_d8->lat.set = _mask_d8 : _port_d8->lat.clr = _mask_d8;
-            (cmd & 0x0200) ? _port_d9->lat.set = _mask_d9 : _port_d9->lat.clr = _mask_d9;
-            (cmd & 0x0400) ? _port_d10->lat.set = _mask_d10 : _port_d10->lat.clr = _mask_d10;
-            (cmd & 0x0800) ? _port_d11->lat.set = _mask_d11 : _port_d11->lat.clr = _mask_d11;
-            (cmd & 0x1000) ? _port_d12->lat.set = _mask_d12 : _port_d12->lat.clr = _mask_d12;
-            (cmd & 0x2000) ? _port_d13->lat.set = _mask_d13 : _port_d13->lat.clr = _mask_d13;
-            (cmd & 0x4000) ? _port_d14->lat.set = _mask_d14 : _port_d14->lat.clr = _mask_d14;
-            (cmd & 0x8000) ? _port_d15->lat.set = _mask_d15 : _port_d15->lat.clr = _mask_d15;
-            _port_wr->lat.clr = _mask_wr;
-            _port_wr->lat.set = _mask_wr;
+            port_rs->lat.clr = mask_rs;
+            (cmd & 0x0001) ? port_d0->lat.set = mask_d0 : port_d0->lat.clr = mask_d0;
+            (cmd & 0x0002) ? port_d1->lat.set = mask_d1 : port_d1->lat.clr = mask_d1;
+            (cmd & 0x0004) ? port_d2->lat.set = mask_d2 : port_d2->lat.clr = mask_d2;
+            (cmd & 0x0008) ? port_d3->lat.set = mask_d3 : port_d3->lat.clr = mask_d3;
+            (cmd & 0x0010) ? port_d4->lat.set = mask_d4 : port_d4->lat.clr = mask_d4;
+            (cmd & 0x0020) ? port_d5->lat.set = mask_d5 : port_d5->lat.clr = mask_d5;
+            (cmd & 0x0040) ? port_d6->lat.set = mask_d6 : port_d6->lat.clr = mask_d6;
+            (cmd & 0x0080) ? port_d7->lat.set = mask_d7 : port_d7->lat.clr = mask_d7;
+            (cmd & 0x0100) ? port_d8->lat.set = mask_d8 : port_d8->lat.clr = mask_d8;
+            (cmd & 0x0200) ? port_d9->lat.set = mask_d9 : port_d9->lat.clr = mask_d9;
+            (cmd & 0x0400) ? port_d10->lat.set = mask_d10 : port_d10->lat.clr = mask_d10;
+            (cmd & 0x0800) ? port_d11->lat.set = mask_d11 : port_d11->lat.clr = mask_d11;
+            (cmd & 0x1000) ? port_d12->lat.set = mask_d12 : port_d12->lat.clr = mask_d12;
+            (cmd & 0x2000) ? port_d13->lat.set = mask_d13 : port_d13->lat.clr = mask_d13;
+            (cmd & 0x4000) ? port_d14->lat.set = mask_d14 : port_d14->lat.clr = mask_d14;
+            (cmd & 0x8000) ? port_d15->lat.set = mask_d15 : port_d15->lat.clr = mask_d15;
+            port_wr->lat.clr = mask_wr;
+            port_wr->lat.set = mask_wr;
         }
 
         inline void data(uint16_t cmd) {
-            _port_rs->lat.set = _mask_rs;
-            (cmd & 0x0001) ? _port_d0->lat.set = _mask_d0 : _port_d0->lat.clr = _mask_d0;
-            (cmd & 0x0002) ? _port_d1->lat.set = _mask_d1 : _port_d1->lat.clr = _mask_d1;
-            (cmd & 0x0004) ? _port_d2->lat.set = _mask_d2 : _port_d2->lat.clr = _mask_d2;
-            (cmd & 0x0008) ? _port_d3->lat.set = _mask_d3 : _port_d3->lat.clr = _mask_d3;
-            (cmd & 0x0010) ? _port_d4->lat.set = _mask_d4 : _port_d4->lat.clr = _mask_d4;
-            (cmd & 0x0020) ? _port_d5->lat.set = _mask_d5 : _port_d5->lat.clr = _mask_d5;
-            (cmd & 0x0040) ? _port_d6->lat.set = _mask_d6 : _port_d6->lat.clr = _mask_d6;
-            (cmd & 0x0080) ? _port_d7->lat.set = _mask_d7 : _port_d7->lat.clr = _mask_d7;
-            (cmd & 0x0100) ? _port_d8->lat.set = _mask_d8 : _port_d8->lat.clr = _mask_d8;
-            (cmd & 0x0200) ? _port_d9->lat.set = _mask_d9 : _port_d9->lat.clr = _mask_d9;
-            (cmd & 0x0400) ? _port_d10->lat.set = _mask_d10 : _port_d10->lat.clr = _mask_d10;
-            (cmd & 0x0800) ? _port_d11->lat.set = _mask_d11 : _port_d11->lat.clr = _mask_d11;
-            (cmd & 0x1000) ? _port_d12->lat.set = _mask_d12 : _port_d12->lat.clr = _mask_d12;
-            (cmd & 0x2000) ? _port_d13->lat.set = _mask_d13 : _port_d13->lat.clr = _mask_d13;
-            (cmd & 0x4000) ? _port_d14->lat.set = _mask_d14 : _port_d14->lat.clr = _mask_d14;
-            (cmd & 0x8000) ? _port_d15->lat.set = _mask_d15 : _port_d15->lat.clr = _mask_d15;
-            _port_wr->lat.clr = _mask_wr;
-            _port_wr->lat.set = _mask_wr;
+            port_rs->lat.set = mask_rs;
+            (cmd & 0x0001) ? port_d0->lat.set = mask_d0 : port_d0->lat.clr = mask_d0;
+            (cmd & 0x0002) ? port_d1->lat.set = mask_d1 : port_d1->lat.clr = mask_d1;
+            (cmd & 0x0004) ? port_d2->lat.set = mask_d2 : port_d2->lat.clr = mask_d2;
+            (cmd & 0x0008) ? port_d3->lat.set = mask_d3 : port_d3->lat.clr = mask_d3;
+            (cmd & 0x0010) ? port_d4->lat.set = mask_d4 : port_d4->lat.clr = mask_d4;
+            (cmd & 0x0020) ? port_d5->lat.set = mask_d5 : port_d5->lat.clr = mask_d5;
+            (cmd & 0x0040) ? port_d6->lat.set = mask_d6 : port_d6->lat.clr = mask_d6;
+            (cmd & 0x0080) ? port_d7->lat.set = mask_d7 : port_d7->lat.clr = mask_d7;
+            (cmd & 0x0100) ? port_d8->lat.set = mask_d8 : port_d8->lat.clr = mask_d8;
+            (cmd & 0x0200) ? port_d9->lat.set = mask_d9 : port_d9->lat.clr = mask_d9;
+            (cmd & 0x0400) ? port_d10->lat.set = mask_d10 : port_d10->lat.clr = mask_d10;
+            (cmd & 0x0800) ? port_d11->lat.set = mask_d11 : port_d11->lat.clr = mask_d11;
+            (cmd & 0x1000) ? port_d12->lat.set = mask_d12 : port_d12->lat.clr = mask_d12;
+            (cmd & 0x2000) ? port_d13->lat.set = mask_d13 : port_d13->lat.clr = mask_d13;
+            (cmd & 0x4000) ? port_d14->lat.set = mask_d14 : port_d14->lat.clr = mask_d14;
+            (cmd & 0x8000) ? port_d15->lat.set = mask_d15 : port_d15->lat.clr = mask_d15;
+            port_wr->lat.clr = mask_wr;
+            port_wr->lat.set = mask_wr;
         }
 
+        inline uint16_t read() {
+            port_d0->tris.set = mask_d0;
+            port_d1->tris.set = mask_d1;
+            port_d2->tris.set = mask_d2;
+            port_d3->tris.set = mask_d3;
+            port_d4->tris.set = mask_d4;
+            port_d5->tris.set = mask_d5;
+            port_d6->tris.set = mask_d6;
+            port_d7->tris.set = mask_d7;
+            port_d8->tris.set = mask_d8;
+            port_d9->tris.set = mask_d9;
+            port_d10->tris.set = mask_d10;
+            port_d11->tris.set = mask_d11;
+            port_d12->tris.set = mask_d12;
+            port_d13->tris.set = mask_d13;
+            port_d14->tris.set = mask_d14;
+            port_d15->tris.set = mask_d15;
+
+            port_rs->lat.set = mask_rs;
+            port_rd->lat.clr = mask_rd;
+            uint16_t out = 0;
+
+            out |= (port_d0->port.reg & mask_d0) ? 0x0001 : 0x0000;
+            out |= (port_d1->port.reg & mask_d1) ? 0x0002 : 0x0000;
+            out |= (port_d2->port.reg & mask_d2) ? 0x0004 : 0x0000;
+            out |= (port_d3->port.reg & mask_d3) ? 0x0008 : 0x0000;
+            out |= (port_d4->port.reg & mask_d4) ? 0x0010 : 0x0000;
+            out |= (port_d5->port.reg & mask_d5) ? 0x0020 : 0x0000;
+            out |= (port_d6->port.reg & mask_d6) ? 0x0040 : 0x0000;
+            out |= (port_d7->port.reg & mask_d7) ? 0x0080 : 0x0000;
+            out |= (port_d8->port.reg & mask_d8) ? 0x0100 : 0x0000;
+            out |= (port_d9->port.reg & mask_d9) ? 0x0200 : 0x0000;
+            out |= (port_d10->port.reg & mask_d10) ? 0x0400 : 0x0000;
+            out |= (port_d11->port.reg & mask_d11) ? 0x0800 : 0x0000;
+            out |= (port_d12->port.reg & mask_d12) ? 0x1000 : 0x0000;
+            out |= (port_d13->port.reg & mask_d13) ? 0x2000 : 0x0000;
+            out |= (port_d14->port.reg & mask_d14) ? 0x4000 : 0x0000;
+            out |= (port_d15->port.reg & mask_d15) ? 0x8000 : 0x0000;
+
+            port_rd->lat.set = mask_rd;
+
+            port_d0->tris.clr = mask_d0;
+            port_d1->tris.clr = mask_d1;
+            port_d2->tris.clr = mask_d2;
+            port_d3->tris.clr = mask_d3;
+            port_d4->tris.clr = mask_d4;
+            port_d5->tris.clr = mask_d5;
+            port_d6->tris.clr = mask_d6;
+            port_d7->tris.clr = mask_d7;
+            port_d8->tris.clr = mask_d8;
+            port_d9->tris.clr = mask_d9;
+            port_d10->tris.clr = mask_d10;
+            port_d11->tris.clr = mask_d11;
+            port_d12->tris.clr = mask_d12;
+            port_d13->tris.clr = mask_d13;
+            port_d14->tris.clr = mask_d14;
+            port_d15->tris.clr = mask_d15;
+
+            return out;
+        }
 
 	public:
         /*! The width of the screen is 800 pixels */
@@ -227,12 +289,14 @@ class SSD1963 : public DisplayCore {
         /*! The height of the screen is 480 pixels */
         static const uint16_t Height     = 480;
 
-		SSD1963(
+        SSD1963(
+            uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
             uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
             uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
             uint8_t d8, uint8_t d9, uint8_t d10, uint8_t d11,
-            uint8_t d12, uint8_t d13, uint8_t d14, uint8_t d15,
-            uint8_t cs, uint8_t rs, uint8_t wr, uint8_t rd);
+            uint8_t d12, uint8_t d13, uint8_t d14, uint8_t d15
+        );
+
 
         void fillScreen(uint16_t color);
         void setPixel(int16_t x, int16_t y, uint16_t color);
@@ -243,6 +307,8 @@ class SSD1963 : public DisplayCore {
         void invertDisplay(boolean i);
         void displayOn();
         void displayOff();
+
+        uint16_t colorAt(int16_t x, int16_t y);
 
         void initializeDevice();
 

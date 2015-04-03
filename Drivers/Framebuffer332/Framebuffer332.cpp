@@ -24,7 +24,6 @@ static inline uint16_t color332to565(uint8_t c) {
 }
 
 void Framebuffer332::setPixel(int16_t x, int16_t y, uint16_t color) {
-    translateCoordinates(&x, &y);
 
     if (x < 0 || x >= _width || y < 0 || y >= _height) {
         return;
@@ -37,6 +36,10 @@ void Framebuffer332::fillScreen(uint16_t color) {
     for (uint32_t x = 0; x < _width * _height; x++) {
         _buf[x] = color565to332(color);
     }
+}
+
+uint16_t Framebuffer332::colorAt(int16_t x, int16_t y) {
+    return color332to565(_buf[x + (y * getWidth())]);
 }
 
 void Framebuffer332::draw(DisplayCore *dev, int16_t x, int16_t y) {

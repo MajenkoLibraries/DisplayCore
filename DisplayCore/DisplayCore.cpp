@@ -27,8 +27,6 @@ DisplayCore::DisplayCore() {
     textbgcolor = 0;
     wrap = true;
     font = Fonts::Default;
-    font_scale_x = 1;
-    font_scale_y = 1;
 }
 
 /*! \name Drawing Functions
@@ -482,6 +480,16 @@ uint16_t DisplayCore::stringWidth(const char *text) {
 
     for (const char *t = text; *t; t++) {
         char c = *t;
+        if (c < header->startGlyph) {
+            if (c >= 'A' && c <= 'Z') {
+                c += ('a' - 'A');
+            }
+        }
+        if (c > header->endGlyph) {
+            if (c >= 'a' && c <= 'z') {
+                c -= ('a' - 'A');
+            }
+        }
         if (c >= header->startGlyph && c <= header->endGlyph) {
             uint8_t co = c - header->startGlyph;
             uint32_t charstart = (co * ((header->linesPerCharacter * header->bytesPerLine) + 1)) + sizeof(FontHeader); // Start of character data
@@ -489,7 +497,7 @@ uint16_t DisplayCore::stringWidth(const char *text) {
             w += charwidth;
         }
     }
-    return w * font_scale_x;
+    return w;
 }
         
 /*! Calculate the height of a string
@@ -508,7 +516,7 @@ uint16_t DisplayCore::stringHeight(const char *text) {
     }
     FontHeader *header = (FontHeader *)font;
 
-    return header->linesPerCharacter * font_scale_y;
+    return header->linesPerCharacter;
 }
         
 
@@ -535,17 +543,27 @@ void DisplayCore::write(uint8_t c) {
     FontHeader *header = (FontHeader *)font;
 
     if (c == '\n') {
-        cursor_y += (header->linesPerCharacter * font_scale_y);
+        cursor_y += header->linesPerCharacter;
         cursor_x = 0;
     } else if (c == '\r') {
         // skip em
     } else {
+        if (c < header->startGlyph) {
+            if (c >= 'A' && c <= 'Z') {
+                c += ('a' - 'A');
+            }
+        }
+        if (c > header->endGlyph) {
+            if (c >= 'a' && c <= 'z') {
+                c -= ('a' - 'A');
+            }
+        }
         if (c >= header->startGlyph && c <= header->endGlyph) {
             uint8_t co = c - header->startGlyph;
             uint32_t charstart = (co * ((header->linesPerCharacter * header->bytesPerLine) + 1)) + sizeof(FontHeader); // Start of character data
-            uint8_t charwidth = font[charstart++] * font_scale_x;
+            uint8_t charwidth = font[charstart++];
             if (wrap && (cursor_x > (getWidth() - charwidth))) {
-                cursor_y += header->linesPerCharacter * font_scale_y;
+                cursor_y += header->linesPerCharacter;
                 cursor_x = 0;
             }
             cursor_x += drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor);
@@ -587,60 +605,73 @@ uint8_t DisplayCore::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t co
     uint32_t charstart = (c * ((header->linesPerCharacter * header->bytesPerLine) + 1)) + sizeof(FontHeader); // Start of character data
     uint8_t charwidth = font[charstart++]; // The first byte of a block is the width of the character
 
-    uint32_t bitmask = (1 << header->bitsPerPixel) - 1;
+    uint8_t nCols = 1 << header->bitsPerPixel;
+    uint32_t bitmask = nCols - 1;
+    uint16_t cmap[nCols];
 
-    for (int8_t lineNumber = 0; lineNumber < header->linesPerCharacter; lineNumber++ ) {
-        uint8_t lineData = 0;
+    if (bg != color) {
+        for (uint8_t i = 0; i < nCols; i++) {
+            cmap[i] = mix(bg, color, 255 * i / bitmask);
+        }
 
-        int8_t bitsLeft = -1;
-        uint8_t byteNumber = 0;
+        openWindow(x, y, charwidth, header->linesPerCharacter);
 
-        for (int8_t pixelNumber = 0; pixelNumber < charwidth; pixelNumber++) {
-            if (bitsLeft <= 0) {
-                bitsLeft = 8;
-                lineData = font[charstart + (lineNumber * header->bytesPerLine) + (header->bytesPerLine - byteNumber - 1)];
-                byteNumber++;
+        for (int8_t lineNumber = 0; lineNumber < header->linesPerCharacter; lineNumber++ ) {
+            uint8_t lineData = 0;
+
+            int8_t bitsLeft = -1;
+            uint8_t byteNumber = 0;
+
+
+            for (int8_t pixelNumber = 0; pixelNumber < charwidth; pixelNumber++) {
+                if (bitsLeft <= 0) {
+                    bitsLeft = 8;
+                    lineData = font[charstart + (lineNumber * header->bytesPerLine) + (header->bytesPerLine - byteNumber - 1)];
+                    byteNumber++;
+                }
+                uint32_t pixelValue = lineData & bitmask;
+
+                windowData(cmap[pixelValue]);
+    
+                lineData >>= header->bitsPerPixel;
+                bitsLeft -= header->bitsPerPixel;
             }
-            uint32_t pixelValue = lineData & bitmask;
-            if (pixelValue > 0) {
+        }
+        closeWindow();
+    } else {
 
-                if (pixelValue == bitmask) {
-                    if (font_scale_x == 1 && font_scale_y == 1) {
+        for (int8_t lineNumber = 0; lineNumber < header->linesPerCharacter; lineNumber++ ) {
+            uint8_t lineData = 0;
+
+            int8_t bitsLeft = -1;
+            uint8_t byteNumber = 0;
+
+
+            for (int8_t pixelNumber = 0; pixelNumber < charwidth; pixelNumber++) {
+                if (bitsLeft <= 0) {
+                    bitsLeft = 8;
+                    lineData = font[charstart + (lineNumber * header->bytesPerLine) + (header->bytesPerLine - byteNumber - 1)];
+                    byteNumber++;
+                }
+                uint32_t pixelValue = lineData & bitmask;
+
+                // If we have some kind of foreground colour...
+                if (pixelValue > 0) {
+                    // If it is at full opacity...
+                    if (pixelValue == bitmask) {
                         setPixel(x + pixelNumber, y + lineNumber, color);
+                    // Otherwise mix or fade the colour...
                     } else {
-                        fillRectangle(x + (pixelNumber * font_scale_x), y + (lineNumber * font_scale_y), font_scale_x, font_scale_y, color);
-                    }
-                } else {
-                    if (font_scale_x == 1 && font_scale_y == 1) {
-                        uint16_t bgc = bg;
-                        if (bg == color) {
-                            bgc = colorAt(x+pixelNumber, y+lineNumber);
-                        }
+                        uint16_t bgc = colorAt(x+pixelNumber, y+lineNumber);
                         setPixel(x + pixelNumber, y + lineNumber, mix(bgc, color, 255 * pixelValue / bitmask));
-                    } else {
-                        for (int sy = 0; sy < font_scale_y; sy++) {
-                            for (int sx = 0; sx < font_scale_x; sx++) {
-                                uint16_t bgc = bg;
-                                if (bg == color) {
-                                    bgc = colorAt(x+(pixelNumber * font_scale_x) + sx, y+(lineNumber * font_scale_y) + sy);
-                                }
-                                setPixel(x+(pixelNumber * font_scale_x) + sx, y+(lineNumber * font_scale_y) + sy, mix(bgc, color, 255 * pixelValue / bitmask));
-                            }
-                        }
                     }
                 }
-            } else if (bg != color) {
-                if (font_scale_x == 1 && font_scale_y == 1) {
-                    setPixel(x + pixelNumber, y + lineNumber, bg);
-                } else {
-                    fillRectangle(x + (pixelNumber * font_scale_x), y + (lineNumber * font_scale_y), font_scale_x, font_scale_y, bg);
-                }
+                lineData >>= header->bitsPerPixel;
+                bitsLeft -= header->bitsPerPixel;
             }
-            lineData >>= header->bitsPerPixel;
-            bitsLeft -= header->bitsPerPixel;
         }
     }
-    return charwidth * font_scale_x;
+    return charwidth;
 }
 
 /*! Set the text cursor
@@ -786,38 +817,6 @@ void DisplayCore::setTextWrap(boolean w) {
  */
 void DisplayCore::setFont(const uint8_t *f) {
     font = f;
-}
-
-/*! Set the X scale of the font
- *  ===========================
- *  A font can be stretched in either of the X or Y coordinates
- *  to make it bigger than normal.
- *
- *  Example:
- *
- *      tft.setFontScaleX(2);
- */
-void DisplayCore::setFontScaleX(uint8_t sx) {
-    font_scale_x = sx;
-    if (font_scale_x < 1) {
-        font_scale_x = 1;
-    }
-}
-
-/*! Set the Y scale of the font
- *  ===========================
- *  A font can be stretched in either of the X or Y coordinates
- *  to make it bigger than normal.
- *
- *  Example:
- *
- *      tft.setFontScaleY(2);
- */
-void DisplayCore::setFontScaleY(uint8_t sy) {
-    font_scale_y = sy;
-    if (font_scale_y < 1) {
-        font_scale_y = 1;
-    }
 }
 
 /*! Get the current foreground colour
@@ -1358,14 +1357,11 @@ void DisplayCore::fatalError(const char *title, const char *message) {
     uint16_t mwidth = max(swidth, twidth);
     while (mwidth < width) {
         sx++;
-        setFontScaleX(sx);
         swidth = stringWidth((char *)message);
         twidth = stringWidth((char *)title);
         mwidth = max(swidth, twidth);
     }
     sx--;
-    setFontScaleY(sx);
-    setFontScaleX(sx);
     swidth = stringWidth((char *)message);
     int16_t sheight = stringHeight((char *)message);
     twidth = stringWidth((char *)title);
@@ -1521,3 +1517,162 @@ p32_ioport *DisplayCore::getPortInformation(uint8_t pin, uint32_t *mask) {
     return (p32_ioport *)portRegisters(portno);
 }
 
+void Widget::setValue(int v) {
+    _value = v;
+    _redraw = true;
+}
+
+int Widget::getValue() {
+    return _value;
+}
+
+void Widget::handleTouch() {
+    if (!_touch) {
+        return;
+    }
+
+    boolean pressed = _ts->isPressed();
+
+    if (pressed) {
+        _tx = _ts->x();
+        _ty = _ts->y();
+    }
+
+    boolean inBounds = (
+        (_tx >= (_x + _sense_x)) && (_tx < (_x + _sense_x + _sense_w)) &&
+        (_ty >= (_y + _sense_y)) && (_ty < (_y + _sense_y + _sense_h))
+    );
+
+
+    // Press
+
+    if ((pressed && inBounds) && (!_active)) {
+        _active = true;
+        _st = millis();
+        _sx = _tx - _x;
+        _sy = _ty - _y;
+        _rt = millis();
+        _rp = 0;
+        _redraw = true;
+        draw(_dev, _x, _y);
+
+        if (_press != NULL) {
+            Event e = {this, _sx, _sy, _sx, _sy, EVENT_PRESS};
+            _rx = _sx;
+            _ry = _sy;
+            _press(&e);
+        }
+    }
+
+    // Release
+    if ((!pressed) && (_active)) {
+        _active = false;
+        _et = millis();
+        _ex = _tx - _x;
+        _ey = _ty - _y;
+        _redraw = true;
+        draw(_dev, _x, _y);
+
+        if (_release != NULL) {
+            _rx = _ex;
+            _ry = _ey;
+            Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_RELEASE};
+            _release(&e);
+        }
+
+        if (((_et - _st) > 10) && ((_et - _st) < 2000)) {
+            if (_tap != NULL) {
+                _rx = _ex;
+                _ry = _ey;
+                Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_TAP};
+                _tap(&e);
+            }
+        }
+    }
+
+    // Drag
+    if ((pressed && inBounds) && _active) {
+        _ex = _tx - _x;
+        _ey = _ty - _y;
+        if (_sx != _ex || _sy != _ey) {
+            if (_drag != NULL) {
+                _rx = _ex;
+                _ry = _ey;
+                Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_DRAG};
+                _drag(&e);
+            }
+        }
+        // Key repeat
+
+        if (_rp == 0) {
+            _rt = millis();
+            _rp = 1;
+            if (_repeat != NULL) {
+                _rx = _ex;
+                _ry = _ey;
+                Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_REPEAT};
+                _repeat(&e);
+            }
+        } else if (_rp == 1) {
+            if (millis() - _rt >= 1000) {
+                _rt = millis();
+                _rp = 2;
+                _rc = 0;
+                if (_repeat != NULL) {
+                    _rx = _ex;
+                    _ry = _ey;
+                    Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_REPEAT};
+                    _repeat(&e);
+                }
+            }
+
+        } else if (_rp == 2) {
+            if (millis() - _rt >= 200) {
+                _rt = millis();
+                if (_repeat != NULL) {
+                    _rx = _ex;
+                    _ry = _ey;
+                    Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_REPEAT};
+                    _repeat(&e);
+                }
+                _rc++;
+                if (_rc == 10) {
+                    _rp = 3;
+                }
+            }
+        } else if (_rp == 3) {
+            if (millis() - _rt >= 50) {
+                _rt = millis();
+                if (_repeat != NULL) {
+                    _rx = _ex;
+                    _ry = _ey;
+                    Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_REPEAT};
+                    _repeat(&e);
+                }
+            }
+        }
+
+        _sx = _ex;
+        _sy = _ey;
+    }
+}
+
+void Widget::draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t t) { draw(dev, x, y); }
+void Widget::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform) { draw(dev, x, y); }
+void Widget::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform, uint16_t t) { draw(dev, x, y); }
+void Widget::draw(DisplayCore &dev, int16_t x, int16_t y) { draw(&dev, x, y); }
+void Widget::draw(DisplayCore &dev, int16_t x, int16_t y, uint16_t t) { draw(&dev, x, y, t); }
+void Widget::drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform) { drawTransformed(&dev, x, y, transform); }
+void Widget::drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform, uint16_t t) { drawTransformed(&dev, x, y, t); }
+
+void Widget::render() {
+    handleTouch();
+    if (_redraw) {
+        draw(_dev, _x, _y);
+        _redraw = false;
+    }
+}
+
+void Widget::redraw() {
+    _redraw = true;
+}

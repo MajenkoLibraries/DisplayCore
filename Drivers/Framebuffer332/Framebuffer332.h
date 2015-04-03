@@ -13,6 +13,7 @@ class Framebuffer332 : public Image {
         void initializeDevice();
 
         void setPixel(int16_t x, int16_t y, uint16_t c);
+        uint16_t colorAt(int16_t x, int16_t y);
         void fillScreen(uint16_t c);
 
         void draw(DisplayCore *dev, int16_t x, int16_t y);

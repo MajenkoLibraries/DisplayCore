@@ -1,183 +1,98 @@
 #include <SSD1963.h>
 
 SSD1963::SSD1963(
+    uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
     uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
     uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
     uint8_t d8, uint8_t d9, uint8_t d10, uint8_t d11,
-    uint8_t d12, uint8_t d13, uint8_t d14, uint8_t d15,
-    uint8_t cs, uint8_t rs, uint8_t wr, uint8_t rd
+    uint8_t d12, uint8_t d13, uint8_t d14, uint8_t d15
 ) {
-    pins[_PIN_D0] = d0;
-    pins[_PIN_D1] = d1;
-    pins[_PIN_D2] = d2;
-    pins[_PIN_D3] = d3;
-    pins[_PIN_D4] = d4;
-    pins[_PIN_D5] = d5;
-    pins[_PIN_D6] = d6;
-    pins[_PIN_D7] = d7;
-    pins[_PIN_D8] = d8;
-    pins[_PIN_D9] = d9;
-    pins[_PIN_D10] = d10;
-    pins[_PIN_D11] = d11;
-    pins[_PIN_D12] = d12;
-    pins[_PIN_D13] = d13;
-    pins[_PIN_D14] = d14;
-    pins[_PIN_D15] = d15;
-    pins[_PIN_CS] = cs;
-    pins[_PIN_RS] = rs;
-    pins[_PIN_WR] = wr;
-    pins[_PIN_RD] = rd;
+    pin_d0 = d0;
+    pin_d1 = d1;
+    pin_d2 = d2;
+    pin_d3 = d3;
+    pin_d4 = d4;
+    pin_d5 = d5;
+    pin_d6 = d6;
+    pin_d7 = d7;
+    pin_d8 = d8;
+    pin_d9 = d9;
+    pin_d10 = d10;
+    pin_d11 = d11;
+    pin_d12 = d12;
+    pin_d13 = d13;
+    pin_d14 = d14;
+    pin_d15 = d15;
+    pin_rs = rs;
+    pin_wr = wr;
+    pin_rd = rd;
+    pin_cs = cs;
+    pin_reset = reset;
 }
 
 void SSD1963::initializeDevice() {
-    uint32_t port = 0;
 
-    if (pins[_PIN_D0] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D0], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D0]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d0 = (p32_ioport *)portRegisters(port);
-    _mask_d0 = digitalPinToBitMask(pins[_PIN_D0]);
+    pinMode(pin_rs, OUTPUT);
+    pinMode(pin_cs, OUTPUT);
+    pinMode(pin_rd, OUTPUT);
+    pinMode(pin_wr, OUTPUT);
+    pinMode(pin_reset, OUTPUT);
+    pinMode(pin_d0, OUTPUT);
+    pinMode(pin_d1, OUTPUT);
+    pinMode(pin_d2, OUTPUT);
+    pinMode(pin_d3, OUTPUT);
+    pinMode(pin_d4, OUTPUT);
+    pinMode(pin_d5, OUTPUT);
+    pinMode(pin_d6, OUTPUT);
+    pinMode(pin_d7, OUTPUT);
+    pinMode(pin_d8, OUTPUT);
+    pinMode(pin_d9, OUTPUT);
+    pinMode(pin_d10, OUTPUT);
+    pinMode(pin_d11, OUTPUT);
+    pinMode(pin_d12, OUTPUT);
+    pinMode(pin_d13, OUTPUT);
+    pinMode(pin_d14, OUTPUT);
+    pinMode(pin_d15, OUTPUT);
 
-    if (pins[_PIN_D1] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D1], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D1]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d1 = (p32_ioport *)portRegisters(port);
-    _mask_d1 = digitalPinToBitMask(pins[_PIN_D1]);
+    port_rs = getPortInformation(pin_rs, &mask_rs);
+    port_rd = getPortInformation(pin_rd, &mask_rd);
+    port_wr = getPortInformation(pin_wr, &mask_wr);
+    port_d0 = getPortInformation(pin_d0, &mask_d0);
+    port_d1 = getPortInformation(pin_d1, &mask_d1);
+    port_d2 = getPortInformation(pin_d2, &mask_d2);
+    port_d3 = getPortInformation(pin_d3, &mask_d3);
+    port_d4 = getPortInformation(pin_d4, &mask_d4);
+    port_d5 = getPortInformation(pin_d5, &mask_d5);
+    port_d6 = getPortInformation(pin_d6, &mask_d6);
+    port_d7 = getPortInformation(pin_d7, &mask_d7);
+    port_d8 = getPortInformation(pin_d8, &mask_d8);
+    port_d9 = getPortInformation(pin_d9, &mask_d9);
+    port_d10 = getPortInformation(pin_d10, &mask_d10);
+    port_d11 = getPortInformation(pin_d11, &mask_d11);
+    port_d12 = getPortInformation(pin_d12, &mask_d12);
+    port_d13 = getPortInformation(pin_d13, &mask_d13);
+    port_d14 = getPortInformation(pin_d14, &mask_d14);
+    port_d15 = getPortInformation(pin_d15, &mask_d15);
 
-    if (pins[_PIN_D2] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D2], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D2]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d2 = (p32_ioport *)portRegisters(port);
-    _mask_d2 = digitalPinToBitMask(pins[_PIN_D2]);
-
-    if (pins[_PIN_D3] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D3], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D3]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d3 = (p32_ioport *)portRegisters(port);
-    _mask_d3 = digitalPinToBitMask(pins[_PIN_D3]);
-
-    if (pins[_PIN_D4] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D4], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D4]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d4 = (p32_ioport *)portRegisters(port);
-    _mask_d4 = digitalPinToBitMask(pins[_PIN_D4]);
-
-    if (pins[_PIN_D5] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D5], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D5]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d5 = (p32_ioport *)portRegisters(port);
-    _mask_d5 = digitalPinToBitMask(pins[_PIN_D5]);
-
-    if (pins[_PIN_D6] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D6], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D6]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d6 = (p32_ioport *)portRegisters(port);
-    _mask_d6 = digitalPinToBitMask(pins[_PIN_D6]);
-
-    if (pins[_PIN_D7] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D7], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D7]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d7 = (p32_ioport *)portRegisters(port);
-    _mask_d7 = digitalPinToBitMask(pins[_PIN_D7]);
-
-    if (pins[_PIN_D8] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D8], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D8]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d8 = (p32_ioport *)portRegisters(port);
-    _mask_d8 = digitalPinToBitMask(pins[_PIN_D8]);
-
-    if (pins[_PIN_D9] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D9], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D9]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d9 = (p32_ioport *)portRegisters(port);
-    _mask_d9 = digitalPinToBitMask(pins[_PIN_D9]);
-
-    if (pins[_PIN_D10] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D10], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D10]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d10 = (p32_ioport *)portRegisters(port);
-    _mask_d10 = digitalPinToBitMask(pins[_PIN_D10]);
-
-    if (pins[_PIN_D11] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D11], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D11]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d11 = (p32_ioport *)portRegisters(port);
-    _mask_d11 = digitalPinToBitMask(pins[_PIN_D11]);
-
-    if (pins[_PIN_D12] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D12], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D12]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d12 = (p32_ioport *)portRegisters(port);
-    _mask_d12 = digitalPinToBitMask(pins[_PIN_D12]);
-
-    if (pins[_PIN_D13] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D13], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D13]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d13 = (p32_ioport *)portRegisters(port);
-    _mask_d13 = digitalPinToBitMask(pins[_PIN_D13]);
-
-    if (pins[_PIN_D14] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D14], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D14]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d14 = (p32_ioport *)portRegisters(port);
-    _mask_d14 = digitalPinToBitMask(pins[_PIN_D14]);
-
-    if (pins[_PIN_D15] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_D15], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_D15]);
-    if (port == NOT_A_PIN) { return; }
-    _port_d15 = (p32_ioport *)portRegisters(port);
-    _mask_d15 = digitalPinToBitMask(pins[_PIN_D15]);
-
-    if (pins[_PIN_CS] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_CS], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_CS]);
-    if (port == NOT_A_PIN) { return; }
-    _port_cs = (p32_ioport *)portRegisters(port);
-    _mask_cs = digitalPinToBitMask(pins[_PIN_CS]);
-
-    if (pins[_PIN_RS] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_RS], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_RS]);
-    if (port == NOT_A_PIN) { return; }
-    _port_rs = (p32_ioport *)portRegisters(port);
-    _mask_rs = digitalPinToBitMask(pins[_PIN_RS]);
-
-    if (pins[_PIN_WR] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_WR], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_WR]);
-    if (port == NOT_A_PIN) { return; }
-    _port_wr = (p32_ioport *)portRegisters(port);
-    _mask_wr = digitalPinToBitMask(pins[_PIN_WR]);
-
-    if (pins[_PIN_RD] >= NUM_DIGITAL_PINS_EXTENDED) { return; }
-    pinMode(pins[_PIN_RD], OUTPUT);
-    port = digitalPinToPort(pins[_PIN_RD]);
-    if (port == NOT_A_PIN) { return; }
-    _port_rd = (p32_ioport *)portRegisters(port);
-    _mask_rd = digitalPinToBitMask(pins[_PIN_RD]);
-
-    _port_cs->lat.clr = _mask_cs;
-    _port_rd->lat.set = _mask_rd;
-    _port_wr->lat.set = _mask_wr;
+    digitalWrite(pin_rs, HIGH);
+    digitalWrite(pin_cs, HIGH);
+    digitalWrite(pin_rd, HIGH);
+    digitalWrite(pin_wr, HIGH);
 
     _width  = SSD1963::Width;
     _height = SSD1963::Height;
+
+    digitalWrite(pin_cs, HIGH);
+
+    pinMode(pin_reset, OUTPUT);
+    digitalWrite(pin_reset, HIGH);
+    delay(100);
+    digitalWrite(pin_reset, LOW);
+    delay(100);
+    digitalWrite(pin_reset, HIGH);
+    delay(100);
+
+    digitalWrite(pin_cs, LOW);
 
     command(SSD1963_SetPLLMN);
     data(0x0023);        //N=0x36 for 6.5M, 0x23 for 10M crystal
@@ -443,4 +358,10 @@ void SSD1963::setBacklight(uint8_t b) {
     data(_brightness);
     data(0x00);
     data(0x00);
+}
+
+uint16_t SSD1963::colorAt(int16_t x, int16_t y) {
+    setAddrWindow(x, y, x, y);
+    command(0x2E);
+    return read();
 }

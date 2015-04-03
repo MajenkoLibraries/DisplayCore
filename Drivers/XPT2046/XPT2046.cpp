@@ -56,6 +56,7 @@ boolean XPT2046::isPressed() {
 int XPT2046::getSample(uint8_t pin) {
     int samples[XPT2046_SMPSIZE];
     _spi->setSpeed(1000000UL);
+    uint32_t smpTot = 0;
     for (int i = 0; i < XPT2046_SMPSIZE; i++) {
         digitalWrite(_cs, LOW);
         _spi->transfer(pin);
@@ -63,8 +64,11 @@ int XPT2046::getSample(uint8_t pin) {
         in |= _spi->transfer(0x00);
         digitalWrite(_cs, HIGH);
         samples[i] = in >> 3;
+        smpTot += (in >> 3);
     }
-    _spi->unsetSpeed();
+
+    smpTot = smpTot / XPT2046_SMPSIZE;
+    return smpTot;
     int most = samples[0];
     int mostcount = 1;
     for(int pos = 0; pos < XPT2046_SMPSIZE; pos++) {
