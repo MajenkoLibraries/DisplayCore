@@ -101,7 +101,7 @@ namespace LCARS {
         private:
             uint16_t _color;
             const uint8_t *_font;
-            const char *_text;
+            char _text[100];
             uint8_t _align;
 
         public:
@@ -109,7 +109,10 @@ namespace LCARS {
             static const uint8_t AlignRight = 1;
             static const uint8_t AlignCenter = 2;
             StaticText(Touch &ts, DisplayCore &dev, int x, int y, uint16_t col, const uint8_t *f, const char *txt) : Widget(ts, dev, x, y), 
-                _color(col), _font(f), _text(txt), _align(AlignLeft) {}
+                _color(col), _font(f), _align(AlignLeft) {
+                memset(_text, 0, 100);
+                strncpy(_text, txt, 99);
+            }
                 
             void setPixel(int16_t x, int16_t y, uint16_t c) {} // No drawing!
 
@@ -118,6 +121,7 @@ namespace LCARS {
             void initializeDevice() { }
 
             void setAlign(uint8_t align);
+            void setText(const char *txt);
     };
 
     class MiniScope : public Widget {
@@ -132,6 +136,7 @@ namespace LCARS {
 
         void setValue(int v);
         int getValue();
+        int getAverage();
         void setPixel(int16_t x, int16_t y, uint16_t c);
         void draw(DisplayCore *dev, int16_t x, int16_t y);
 
@@ -222,6 +227,23 @@ namespace LCARS {
             }
 
             void draw(DisplayCore *dev, int16_t x, int16_t y);
+    };
+
+    class MessageLog : public Widget {
+        private:
+            char _data[5][300];
+            int _cpos;
+            int _mix_percent;
+            boolean _full;
+        public:
+            MessageLog(Touch &ts, DisplayCore &dev, int x, int y) : Widget(ts, dev, x, y), _full(true) {}
+
+            void setValue(int v);
+            void setValue(const char *str);
+
+            void draw(DisplayCore *dev, int16_t x, int16_t y);
+            void render();
+            size_t write(uint8_t v);
     };
 };
 

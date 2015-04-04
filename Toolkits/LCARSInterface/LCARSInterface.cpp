@@ -54,21 +54,14 @@ namespace LCARS {
             ddF_x += 2;
             f     += ddF_x;
             if (corner & 0x4) {
-                dev->drawLine(x0 + x, y0 + y, x0, y0 + y, color);
-                dev->drawLine(x0 + y, y0 + x, x0, y0 + x, color);
-    //            setPixel(x0 + x, y0 + y, color);
-     //           setPixel(x0 + y, y0 + x, color);
+                dev->drawLine(x0 + x, y0 + y, x0-r, y0 + y, color);
+                dev->drawLine(x0 + y, y0 + x, x0-r, y0 + x, color);
             }
             if (corner & 0x2) {
-                dev->drawLine(x0 + x, y0 - y, x0, y0 - y, color);
-                dev->drawLine(x0 + y, y0 - x, x0, y0 - x, color);
-    //            setPixel(x0 + x, y0 - y, color);
-    //            setPixel(x0 + y, y0 - x, color);
+                dev->drawLine(x0 + x, y0 - y, x0-r, y0 - y, color);
+                dev->drawLine(x0 + y, y0 - x, x0-r, y0 - x, color);
             }
             if (corner & 0x8) {
-    //            setPixel(x0 - y, y0 + x, color);
-    //            setPixel(x0 - x, y0 + y, color);
-
                 dev->drawLine(x0 - x, y0 + y, x0-r, y0 + y, color);
                 dev->drawLine(x0 - y, y0 + x, x0-r, y0 + x, color);
             }
@@ -217,6 +210,12 @@ namespace LCARS {
         _align = align;
     }
 
+    void StaticText::setText(const char *txt) {
+        memset(_text, 0, 100);
+        strncpy(_text, txt, 99);
+        _redraw = true;
+    }
+
     uint16_t MiniScope::scratchpad[276*84];
 
     void MiniScope::setValue(int v) {
@@ -228,6 +227,10 @@ namespace LCARS {
 
     int MiniScope::getValue() {
         return data->get(1);
+    }
+
+    int MiniScope::getAverage() {
+        return data->mean();
     }
 
     void MiniScope::setPixel(int16_t x, int16_t y, uint16_t c) {
@@ -334,6 +337,78 @@ namespace LCARS {
         _dev->setCursor(_x + 90, _y + 30);
         _dev->setTextColor(_col_st, Color::Black);
         _dev->print(getValue() == 0 ? _off_text : _on_text);
+    }
+
+    void MessageLog::setValue(int v) {
+        setFont(Fonts::LCARS16);
+        if (v == '\n') {
+            strcpy(_data[0], _data[1]);
+            strcpy(_data[1], _data[2]);
+            strcpy(_data[2], _data[3]);
+            strcpy(_data[3], _data[4]);
+            _data[4][0] = 0;
+            _cpos = 0;
+            _redraw = true;
+            _full = true;
+            _mix_percent = 255;
+            return;
+        }
+
+        if (stringWidth(_data[4]) >= 400) {
+            strcpy(_data[0], _data[1]);
+            strcpy(_data[1], _data[2]);
+            strcpy(_data[2], _data[3]);
+            strcpy(_data[3], _data[4]);
+            _data[4][0] = 0;
+            _cpos = 0;
+            _redraw = true;
+            _full = true;
+            _mix_percent = 255;
+        }
+        _data[4][_cpos++] = v;
+        _data[4][_cpos] = 0;
+    }
+
+    void MessageLog::setValue(const char *str) {
+        for (int i = 0; i < strlen(str); i++) {
+            setValue(str[i]);
+        }
+    }
+
+    void MessageLog::render() {
+        if (_mix_percent > 0) {
+            _mix_percent--;
+            _redraw = true;
+        }
+        if (_redraw) {
+            draw(_dev, _x, _y);
+            _redraw = false;
+        }
+    }
+
+    void MessageLog::draw(DisplayCore *dev, int16_t x, int16_t y) {
+        dev->setFont(Fonts::LCARS16);
+        if (_full) {
+            dev->fillRectangle(x, y, 420, 76, Color::Black);
+            dev->setTextColor(LCARS::DarkRed, Color::Black);
+            dev->setCursor(x, y);
+            dev->setTextWrap(false);
+            dev->print(_data[0]);
+            dev->setCursor(x, y + 19);
+            dev->print(_data[1]);
+            dev->setCursor(x, y + 38);
+            dev->print(_data[2]);
+            _full = false;
+        }
+        uint16_t lcol = mix(LCARS::DarkRed, LCARS::White, _mix_percent);
+        dev->setCursor(x, y + 57);
+        dev->setTextColor(lcol, Color::Black);
+        dev->print(_data[3]);
+    }
+
+    size_t MessageLog::write(uint8_t v) {
+        setValue((int)v);
+        return 1;
     }
 
 };

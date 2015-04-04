@@ -237,9 +237,9 @@ class DisplayCore : public Print
 
 
 #if ARDUINO >= 100
-        size_t write(uint8_t c);
+        virtual size_t write(uint8_t c);
 #else
-        void write(uint8_t c);
+        virtual void write(uint8_t c);
 #endif
 
         /*! The text cursor X position */
