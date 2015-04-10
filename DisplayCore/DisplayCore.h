@@ -1,11 +1,7 @@
 #ifndef _DISPLAY_CORE_H
 #define _DISPLAY_CORE_H
 
-#if ARDUINO >= 100
-# include <Arduino.h>
-#else
-# include <WProgram.h>
-#endif
+#include <Arduino.h>
 
 #define RGB(r,g,b) ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)
 
