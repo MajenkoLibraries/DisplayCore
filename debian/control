@@ -442,3 +442,12 @@ Provides: Widgets.h
 Depends: libdisplaycore-core
 Description: Simple Widget toolkit library for DisplayCore
  Allows direct drawing of simple buttons and horizontal scales.
+
+Package: libdisplaycore-toolkit-lcarsinterface
+Architecture: all
+XBSC-Subgroup: Toolkits
+Provides: LCARSInterface.h
+Depends: libdisplaycore-core, libdisplaycore-font-lcars
+Description: LCARS-like interface widgets
+ Widgets (both static and active) designed to look like
+ the LCARS system from Star Trek.
