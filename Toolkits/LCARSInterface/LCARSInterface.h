@@ -53,6 +53,7 @@ namespace LCARS {
             uint16_t midSize;
             uint16_t bendSize;
             const char *text;
+            uint32_t _lastRender;
 
             boolean movedMid;
             boolean redraw;
@@ -244,6 +245,24 @@ namespace LCARS {
             void draw(DisplayCore *dev, int16_t x, int16_t y);
             void render();
             size_t write(uint8_t v);
+    };
+
+    class VScale : public Widget {
+        private:
+            uint16_t _lowCol;
+            uint16_t _hiCol;
+            uint16_t _overCol;
+            boolean _valueChanged;
+            int _realValue;
+            uint32_t _lastRender;
+
+        public:
+            VScale(Touch &ts, DisplayCore &dev, int x, int y, uint16_t lowCol, uint16_t hiCol, uint16_t overCol) : Widget(ts, dev, x, y), _lowCol(lowCol), _hiCol(hiCol), _overCol(overCol) { _valueChanged = false; }
+            
+
+            void setValue(int v);
+            void draw(DisplayCore *dev, int16_t x, int16_t y);
+            void render();
     };
 };
 

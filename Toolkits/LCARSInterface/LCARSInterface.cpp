@@ -159,20 +159,30 @@ namespace LCARS {
 
 
     void HBarBend::render() {
-        if (midPos > _value) {
-            int dif = (midPos - _value) / 4;
-            if (dif <= 0) {
-                dif = 1;
+
+        if (_lastRender == 0) {
+            _lastRender = millis() / 10;
+        }
+
+        int numIters = millis() / 10 - _lastRender;
+        _lastRender = millis() / 10;
+
+        for (int i = 0; i < numIters; i++) {
+            if (midPos > _value) {
+                int dif = (midPos - _value) / 10;
+                if (dif <= 0) {
+                    dif = 1;
+                }
+                midPos -= dif;
+                movedMid = true;
+            } else if (midPos < _value) {
+                int dif = (_value - midPos) / 10;
+                if (dif <= 0) {
+                    dif = 1;
+                }
+                midPos += dif;
+                movedMid = true;
             }
-            midPos -= dif;
-            movedMid = true;
-        } else if (midPos < _value) {
-            int dif = (_value - midPos) / 4;
-            if (dif <= 0) {
-                dif = 1;
-            }
-            midPos += dif;
-            movedMid = true;
         }
         if (_redraw || movedMid) {
             draw(_dev, _x, _y);
@@ -206,14 +216,17 @@ namespace LCARS {
         dev->print(_text);
     }
 
+
     void StaticText::setAlign(uint8_t align) {
         _align = align;
     }
 
     void StaticText::setText(const char *txt) {
-        memset(_text, 0, 100);
-        strncpy(_text, txt, 99);
-        _redraw = true;
+        if (strcmp(txt, _text) != 0) {
+            memset(_text, 0, 100);
+            strncpy(_text, txt, 99);
+            _redraw = true;
+        }
     }
 
     uint16_t MiniScope::scratchpad[276*84];
@@ -409,6 +422,78 @@ namespace LCARS {
     size_t MessageLog::write(uint8_t v) {
         setValue((int)v);
         return 1;
+    }
+
+    void VScale::setValue(int v) {
+        if (v > 100) {
+            v = 100;
+        }
+        if (v < 0) {
+            v = 0;
+        }
+        if (v != _value) {
+            _value = v;
+            _valueChanged = true;
+        }
+    }
+
+    void VScale::render() {
+        if (_lastRender == 0) {
+            _lastRender = millis() / 10;
+        }
+
+        int numIters = millis() / 10 - _lastRender;
+        _lastRender = millis() / 10;
+
+        for (int i = 0; i < numIters; i++) {
+            if (_realValue > _value) {
+                int dif = (_realValue - _value) / 10;
+                if (dif <= 0) {
+                    dif = 1;
+                }
+                _realValue -= dif;
+                _valueChanged = true;
+            } else if (_realValue < _value) {
+                int dif = (_value - _realValue) / 10;
+                if (dif <= 0) {
+                    dif = 1;
+                }
+                _realValue += dif;
+                _valueChanged = true;
+            }
+        }
+
+        if (_redraw || _valueChanged) {
+            draw(_dev, _x, _y);
+            _redraw = false;
+            _valueChanged = false;
+        }
+    }
+
+    void VScale::draw(DisplayCore *dev, int16_t x, int16_t y) {
+        // If a full redraw then do everything
+        if (!_valueChanged) {
+        }
+        for (int i = 0; i < 101; i++) {
+            int m = i % 10;
+            int off = 6;
+            if (m == 0) {
+                off = 0;
+            } else if (m == 5) {
+                off = 3;
+            }
+            
+            uint16_t col = _lowCol;
+            if (i <= _realValue) {
+                if (i < 80) {
+                    col = _hiCol;
+                } else {
+                    col = _overCol;
+                }
+            }
+            
+            dev->drawLine(x + off, y + 202 - (i<<1), x+20-off, y + 202 - (i << 1), col);
+        }
     }
 
 };

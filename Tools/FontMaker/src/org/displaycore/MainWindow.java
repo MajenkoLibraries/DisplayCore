@@ -123,6 +123,15 @@ class MainWindow extends JFrame {
         });
         toolsMenu.add(renderTruetype);
 
+        JMenuItem parseBitmap = new JMenuItem("Parse Bitmap File");
+        parseBitmap.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                BitmapParser bp = new BitmapParser(MainWindow.this);
+                bp.open();
+            }
+        });
+        toolsMenu.add(parseBitmap);
+
         add(menuBar, BorderLayout.NORTH);
 
         mainPanel = new JPanel();

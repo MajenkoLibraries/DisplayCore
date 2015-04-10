@@ -1328,7 +1328,9 @@ void DisplayCore::fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t co
     }
 }
 
+#ifndef max
 #define max(X,Y) ((X) > (Y) ? (X) : (Y))
+#endif
 
 /*! Display a fatal error
  *  =====================
@@ -1506,6 +1508,7 @@ void DisplayCore::fillBezier(
     fillTriangle(x0, y0, sx, sy, x3, y3, color);
 }
 
+#if defined(__PIC32MX__) || defined(__PIC32MZ__)
 p32_ioport *DisplayCore::getPortInformation(uint8_t pin, uint32_t *mask) {
     uint32_t portno = digitalPinToPort(pin);
     if (portno == NOT_A_PIN) {
@@ -1516,6 +1519,7 @@ p32_ioport *DisplayCore::getPortInformation(uint8_t pin, uint32_t *mask) {
     }
     return (p32_ioport *)portRegisters(portno);
 }
+#endif
 
 void Widget::setValue(int v) {
     _value = v;

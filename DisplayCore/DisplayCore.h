@@ -228,7 +228,9 @@ class DisplayCore : public Print
          *  Utility function toget the information about an IO port for high speed
          *  access.
          */
+#if defined(__PIC32MX__) || defined(__PIC32MZ__)
         p32_ioport *getPortInformation(uint8_t pin, uint32_t *mask);
+#endif
 
 
 
