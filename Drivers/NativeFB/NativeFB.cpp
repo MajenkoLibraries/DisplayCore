@@ -1,6 +1,49 @@
 #include <NativeFB.h>
 
+int vt = -1;
+
+void cleanupTty() {
+    if (vt > 0) {
+        int cvt = 1;
+        int d;
+        ioctl(vt, KDGKBMODE, &d);
+        ioctl(vt, KDSETMODE, KD_TEXT);
+        ioctl(vt, VT_UNLOCKSWITCH, 1); 
+        ioctl(vt, VT_ACTIVATE, cvt);
+        ioctl(vt, VT_WAITACTIVE, cvt);
+    }
+}
+
 void NativeFB::initializeDevice() {
+    // First attempt to switch to a new TTY.
+    char temp[100];
+    struct vt_stat vtst;
+    int cvt = -1;
+    int tfd = -1;
+    tfd = open("/dev/console", O_WRONLY, 0);
+    if (tfd >= 0) {
+        ioctl(tfd, VT_OPENQRY, &cvt);
+        close(tfd);
+
+        if (cvt >= 0) {
+            sprintf(temp, "/dev/tty%d", cvt);
+            vt = open(temp, O_RDWR);
+            if (vt > 0) {
+                int d;
+                ioctl(vt, KDGKBMODE, &d);
+                ioctl(vt, VT_GETSTATE, &vtst);
+                ioctl(vt, KDSETMODE, KD_TEXT);
+                ioctl(vt, KDSKBMODE, K_MEDIUMRAW);
+                ioctl(vt, VT_UNLOCKSWITCH, 1); 
+                ioctl(vt, VT_ACTIVATE, cvt);
+                ioctl(vt, VT_WAITACTIVE, cvt);
+                ioctl(vt, VT_LOCKSWITCH, 1); 
+                ioctl(vt, KDSETMODE, KD_GRAPHICS);
+                atexit(&cleanupTty);
+            }
+        }
+    }
+
     _fd = open("/dev/fb0", O_RDWR);
 
     if (!_fd) {
@@ -100,7 +143,7 @@ uint16_t NativeFB::colorAt(int16_t x, int16_t y) {
 }
 
 void NativeFB::displayOn() {
-    char *msg = "0\n";
+    const char *msg = "0\n";
     int f = open("/sys/class/graphics/fb0/blank", O_RDWR);
     if (!f) {
         fprintf(stderr, "NativeFB Error: displayOn() requires privileged operation.\r\n");
@@ -111,7 +154,7 @@ void NativeFB::displayOn() {
 }
 
 void NativeFB::displayOff() {
-    char *msg = "1\n";
+    const char *msg = "1\n";
     int f = open("/sys/class/graphics/fb0/blank", O_RDWR);
     if (!f) {
         fprintf(stderr, "NativeFB Error: displayOff() requires privileged operation.\r\n");
@@ -122,7 +165,7 @@ void NativeFB::displayOff() {
 }
 
 void NativeFB::disableCursor() {
-    char *msg = "0\n";
+    const char *msg = "0\n";
     int f = open("/sys/class/graphics/fbcon/cursor_blink", O_RDWR);
     if (!f) {
         fprintf(stderr, "NativeFB Error: disableCursor() requires privileged operation.\r\n");
@@ -133,7 +176,7 @@ void NativeFB::disableCursor() {
 }
 
 void NativeFB::enableCursor() {
-    char *msg = "1\n";
+    const char *msg = "1\n";
     int f = open("/sys/class/graphics/fbcon/cursor_blink", O_RDWR);
     if (!f) {
         fprintf(stderr, "NativeFB Error: enableCursor() requires privileged operation.\r\n");
@@ -143,4 +186,10 @@ void NativeFB::enableCursor() {
     close(f);
 }
 
+uint16_t NativeFB::getWidth() {
+    return _width;
+}
 
+uint16_t NativeFB::getHeight() {
+    return _height;
+}

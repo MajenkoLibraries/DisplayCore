@@ -266,7 +266,7 @@ class DisplayCore : public Print
          *
          *    int width = tft.getWidth();
          */
-        virtual uint16_t getWidth() { return _width; };
+        virtual uint16_t getWidth() = 0;
         /*! Get screen height
          *  =================
          *  Returns the height (in pixels) of the screen.
@@ -275,7 +275,7 @@ class DisplayCore : public Print
          *
          *    int height = tft.getHeight();
          */
-        virtual uint16_t getHeight() { return _height; };
+        virtual uint16_t getHeight() = 0;
 
         point3d rgb2xyz(uint16_t c);
         point3d xyz2lab(point3d c);

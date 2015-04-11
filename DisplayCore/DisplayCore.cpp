@@ -1159,8 +1159,8 @@ uint16_t DisplayCore::mix(uint16_t a, uint16_t b, uint8_t pct) {
 void DisplayCore::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
     winx0 = x0;
     winy0 = y0;
-    winx1 = x1-1;
-    winy1 = y1-1;
+    winx1 = x0 + x1;
+    winy1 = y0 + y1;
     winpx = 0;
     winpy = 0;
 }
@@ -1176,11 +1176,11 @@ void DisplayCore::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 void DisplayCore::windowData(uint16_t d) {
     setPixel(winx0 + winpx, winy0 + winpy, d);
     winpx++;
-    if (winpx + winx0 > winx1) {
+    if ((winx0 + winpx) >= winx1) {
         winpx = 0;
         winpy++;
     }
-    if (winpy + winy0 > winy1) {
+    if ((winy0 + winpy) >= winy1) {
         winpy = 0;
     }
 }
@@ -1246,14 +1246,14 @@ boolean DisplayCore::clipToScreen(int16_t &x, int16_t &y, int16_t &w, int16_t &h
     }
 
     if (x + w >= getWidth()) {
-        w = _width-x;
+        w = getWidth()-x;
         if (w <= 0) {
             return false;
         }
     }
 
     if (y + h >= getHeight()) {
-        h = _height-y;
+        h = getHeight()-y;
         if (h <= 0) {
             return false;
         }
@@ -1413,17 +1413,17 @@ void DisplayCore::translateCoordinates(int16_t *x, int16_t *y) {
     switch (rotation) {
         case 1:
             t = *x;
-            *x = _width - *y;
+            *x = getWidth() - *y;
             *y = t;
             break;
         case 2:
-            *x = _width - *x;
-            *y = _height - *y;
+            *x = getWidth() - *x;
+            *y = getHeight() - *y;
             break;
         case 3:
             t = *x;
             *x = *y;
-            *y = _height - t;
+            *y = getHeight() - t;
             break;
     }
 }
@@ -1547,7 +1547,6 @@ void Widget::handleTouch() {
         (_ty >= (_y + _sense_y)) && (_ty < (_y + _sense_y + _sense_h))
     );
 
-
     // Press
 
     if ((pressed && inBounds) && (!_active)) {
@@ -1594,6 +1593,11 @@ void Widget::handleTouch() {
         }
     }
 
+    if ((pressed && !inBounds) && _active) {
+        _active = false;
+        _redraw = true;
+        draw(_dev, _x, _y);
+    }
     // Drag
     if ((pressed && inBounds) && _active) {
         _ex = _tx - _x;

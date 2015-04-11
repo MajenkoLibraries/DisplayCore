@@ -40,13 +40,17 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include <linux/fb.h>
-
+#include <linux/vt.h>
+#include <linux/kd.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 class NativeFB : public DisplayCore {
     private:
         int _fd;
+        int _tty;
         uint8_t *_buffer;
         struct fb_var_screeninfo _vinfo;
         struct fb_fix_screeninfo _finfo;
@@ -62,8 +66,8 @@ class NativeFB : public DisplayCore {
         void displayOff();
         void invertDisplay(boolean b) { }
 
-        uint16_t getWidth() { return _width; }
-        uint16_t getHeight() { return _height; }
+        uint16_t getWidth();
+        uint16_t getHeight();
 
         // Special functions
         void disableCursor();

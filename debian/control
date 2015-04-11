@@ -167,6 +167,15 @@ Depends: libdisplaycore-core
 Description: XPT2046 touchscreen driver
  SPI connected XPT2046 resistive touch panel controller
 
+Package: libdisplaycore-driver-linuxevent
+Architecture: all
+XBSC-Subgroup: Drivers
+Provides: LinuxEvent.h
+Depends: libdisplaycore-core
+Description: Linux Event driver
+ Receive touchscreen events through the Linux /dev/input/event*
+ framework.
+
 Package: libdisplaycore-driver-analogtouch
 Architecture: all
 XBSC-Subgroup: Drivers
@@ -447,7 +456,7 @@ Package: libdisplaycore-toolkit-lcarsinterface
 Architecture: all
 XBSC-Subgroup: Toolkits
 Provides: LCARSInterface.h
-Depends: libdisplaycore-core, libdisplaycore-font-lcars
+Depends: libdisplaycore-core, libdisplaycore-font-lcars, libaverage
 Description: LCARS-like interface widgets
  Widgets (both static and active) designed to look like
  the LCARS system from Star Trek.
