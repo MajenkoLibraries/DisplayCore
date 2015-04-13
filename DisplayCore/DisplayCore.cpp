@@ -1684,3 +1684,11 @@ void Widget::render() {
 void Widget::redraw() {
     _redraw = true;
 }
+
+uint16_t DisplayCore::getWidth() {
+    return _width;
+}
+
+uint16_t DisplayCore::getHeight() {
+    return _height;
+}
