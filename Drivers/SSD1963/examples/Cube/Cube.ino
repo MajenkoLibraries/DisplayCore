@@ -1,8 +1,8 @@
-#include <SSD1963_7.h>
+#include <SSD1963.h>
 #include <Framebuffer332.h>
 #include <Topaz.h>
 
-SSD1963_7 tft(23, 22, 21, 20, 18, 16, 15, 12, 14, 11, 10, 9, 8, 7, 6, 5, 4, 19, 17, 2);
+SSD1963 tft(23, 22, 21, 20, 18, 16, 15, 12, 14, 11, 10, 9, 8, 7, 6, 5, 4, 19, 17, 2);
 
 int zOff = 150;
 int xOff = 0;
