@@ -68,7 +68,7 @@ int XPT2046::getSample(uint8_t pin) {
     }
 
     smpTot = smpTot / XPT2046_SMPSIZE;
-    return smpTot;
+
     int most = samples[0];
     int mostcount = 1;
     for(int pos = 0; pos < XPT2046_SMPSIZE; pos++) {
