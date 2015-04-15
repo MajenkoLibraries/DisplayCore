@@ -213,5 +213,12 @@ class DCChar extends JComponent {
         characterWidth ++;
         repaint();
     }
+
+    public void setHeight(int h) {
+        characterHeight = h;
+        while (characterData.size() < h) {
+            characterData.add(BigInteger.ZERO);
+        }
+    }
 }
 

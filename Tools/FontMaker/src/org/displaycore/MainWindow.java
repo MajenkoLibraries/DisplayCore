@@ -168,6 +168,17 @@ class MainWindow extends JFrame {
         c.weightx = 1D;
         infoPanel.add(fontHeightBox, c);
 
+        fontHeightBox.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                if (loadedFont != null) {
+                    loadedFont.setHeight((Integer)fontHeightBox.getValue());
+                    if (currentCharacter != null) {
+                        createEditor(currentCharacter);
+                    }
+                }
+            }
+        });
+
         c.gridx = 0;
         c.gridy++; 
         c.weightx = 0D;

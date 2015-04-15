@@ -6,5 +6,4 @@
 namespace Fonts {
     extern const uint8_t Comic[];
 };
-
 #endif

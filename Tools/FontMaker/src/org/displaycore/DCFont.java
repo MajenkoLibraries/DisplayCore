@@ -253,4 +253,10 @@ class DCFont {
         }
     }
 
+    public void setHeight(int h) {
+        linesPerCharacter = h;
+        for (DCChar c : characters) {
+            c.setHeight(h);
+        }
+    }
 }
