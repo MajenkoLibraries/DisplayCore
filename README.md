@@ -1,5 +1,7 @@
 # DisplayCore
 
+http://DisplayCore.org
+
 The DisplayCore system builds on the popular TFT library to create
 a fully modular and easily expandable video display system for chipKIT
 boards.
