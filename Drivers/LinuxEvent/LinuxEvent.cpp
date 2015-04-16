@@ -4,7 +4,7 @@ void LinuxEvent::initializeDevice() {
     char temp[100];
     int i = 0;
     while (1) {
-        sprintf(temp, "/sys/class/input/input%d/name", i);
+        sprintf(temp, "/sys/class/input/event%d/device/name", i);
         int idfd = ::open(temp, O_RDONLY);
         if (idfd < 0) {
             fprintf(stderr, "LinuxEvent Error: Unable to find device '%s'.\r\n", _name);
