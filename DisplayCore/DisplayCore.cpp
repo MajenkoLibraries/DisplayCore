@@ -45,6 +45,7 @@ DisplayCore::DisplayCore() {
  *      tft.drawCircle(50, 50, 20, Color::Red);
  */
 void DisplayCore::drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color) {
+    startBuffer();
     int16_t f = 1 - r;
     int16_t ddF_x = 1;
     int16_t ddF_y = -2 * r;
@@ -75,6 +76,7 @@ void DisplayCore::drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color) 
         setPixel(x0 + y, y0 - x, color);
         setPixel(x0 - y, y0 - x, color);
     }
+    endBuffer();
 }
 
 /*! Draw a filled circle
@@ -88,6 +90,7 @@ void DisplayCore::drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color) 
  *      tft.fillCircle(50, 50, 20, Color::Red);
  */
 void DisplayCore::fillCircle(int16_t x0, int16_t y0, int16_t radius, uint16_t color) {
+    startBuffer();
     int32_t r2 = radius * radius;
     for (int y1 = 0-radius; y1 <= 0; y1++) {
         int32_t y12 = y1 * y1;
@@ -99,6 +102,7 @@ void DisplayCore::fillCircle(int16_t x0, int16_t y0, int16_t radius, uint16_t co
             }
         }
     }
+    endBuffer();
 }
 
 static void inline swap(int16_t &i0, int16_t &i1) {
@@ -119,6 +123,7 @@ static void inline swap(int16_t &i0, int16_t &i1) {
  */
 // bresenham's algorithm - thx wikpedia
 void DisplayCore::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color) {
+    startBuffer();
     int16_t steep = abs(y1 - y0) > abs(x1 - x0);
     if (steep) {
         swap(x0, y0);
@@ -155,6 +160,7 @@ void DisplayCore::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint1
             err += dx;
         }
     }
+    endBuffer();
 }
 
 /*! Set clipping boundaries
@@ -191,15 +197,19 @@ void DisplayCore::clearClipping() {
 }
 
 void DisplayCore::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t c) {
+    startBuffer();
     for(int z = 0; z < w; z++) {
         setPixel(x + z, y, c);
     }
+    endBuffer();
 }
 
 void DisplayCore::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t c) {
+    startBuffer();
     for(int z = 0; z < h; z++) {
         setPixel(x, y + z, c);
     }
+    endBuffer();
 }
 
 /*! Draw a rectangle
@@ -213,10 +223,12 @@ void DisplayCore::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t c) 
  *      tft.drawRectangle(10, 10, 200, 300, Color::Blue);
  */
 void DisplayCore::drawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+    startBuffer();
     drawHorizontalLine(x, y, w, color);
     drawHorizontalLine(x, y+h-1, w, color);
     drawVerticalLine(x, y, h, color);
     drawVerticalLine(x+w-1, y, h, color);
+    endBuffer();
 }
 
 /*! Draw a rectangle
@@ -233,11 +245,13 @@ void DisplayCore::drawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint
  *  optimized function.
  */
 void DisplayCore::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+    startBuffer();
     for (int i = 0; i < h; i++) {
         for (int j = 0; j < w; j++) {
             setPixel(x + j, y + i, color);
         }
     }
+    endBuffer();
 }
 
 /*! Fill the screen with a colour
@@ -249,8 +263,10 @@ void DisplayCore::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint
  *      tft.fillScreen(Color::Black);
  */
 void DisplayCore::fillScreen(uint16_t color) {
+    startBuffer();
     bgColor = color;
     fillRectangle(0, 0, getWidth(), getHeight(), color);
+    endBuffer();
 }
 
 /*! Draw a rounded rectangle
@@ -264,6 +280,7 @@ void DisplayCore::fillScreen(uint16_t color) {
  *      tft.drawRoundRect(10, 10, 100, 50, 4, Color::Yellow);
  */
 void DisplayCore::drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t color) {
+    startBuffer();
     // smarter version
     drawHorizontalLine(x+r  , y    , w-2*r, color); // Top
     drawHorizontalLine(x+r  , y+h-1, w-2*r, color); // Bottom
@@ -274,6 +291,7 @@ void DisplayCore::drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int1
     drawCircleHelper(x+w-r-1, y+r    , r, 2, color);
     drawCircleHelper(x+w-r-1, y+h-r-1, r, 4, color);
     drawCircleHelper(x+r    , y+h-r-1, r, 8, color);
+    endBuffer();
 }
 
 /*! Draw a filled rounded rectangle
@@ -287,12 +305,14 @@ void DisplayCore::drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int1
  *      tft.fillRoundRect(10, 10, 100, 50, 4, Color::Yellow);
  */
 void DisplayCore::fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t color) {
+    startBuffer();
     // smarter version
     fillRectangle(x+r, y, w-2*r, h, color);
 
     // draw four corners
     fillCircleHelper(x+w-r-1, y+r, r, 1, h-2*r-1, color);
     fillCircleHelper(x+r    , y+r, r, 2, h-2*r-1, color);
+    endBuffer();
 }
 
 /*! Draw a triangle
@@ -305,9 +325,11 @@ void DisplayCore::fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int1
  *      tft.drawTriangle(40, 10, 60, 30, 20, 30, Color::Cyan);
  */
 void DisplayCore::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color) {
+    startBuffer();
     drawLine(x0, y0, x1, y1, color);
     drawLine(x1, y1, x2, y2, color);
     drawLine(x2, y2, x0, y0, color);
+    endBuffer();
 }
 
 /*! Draw a filled triangle
@@ -321,6 +343,8 @@ void DisplayCore::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, i
  */
 void DisplayCore::fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color) {
     int16_t a, b, y, last;
+
+    startBuffer();
 
     // Sort coordinates by Y order (y2 >= y1 >= y0)
     if (y0 > y1) {
@@ -340,6 +364,7 @@ void DisplayCore::fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1,
         if(x2 < a)      a = x2;
         else if(x2 > b) b = x2;
         drawHorizontalLine(a, y0, b-a+1, color);
+        endBuffer();
         return;
     }
 
@@ -375,6 +400,7 @@ void DisplayCore::fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1,
         if(a > b) swap(a,b);
         drawHorizontalLine(a, y, b-a+1, color);
     }
+    endBuffer();
 }
 
 /**@}*/
@@ -406,6 +432,7 @@ void DisplayCore::fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 void DisplayCore::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color) {
     int16_t i, j, byteWidth = (w + 7) / 8;
 
+    startBuffer();
     for(j=0; j<h; j++) {
         for(i=0; i<w; i++ ) {
             if(pgm_read_byte(bitmap + j * byteWidth + i / 8) & (128 >> (i & 7))) {
@@ -413,6 +440,7 @@ void DisplayCore::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_
             }
         }
     }
+    endBuffer();
 }
 
 /*! Draw an RGB (565) image
@@ -425,12 +453,14 @@ void DisplayCore::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_
  *    tft.drawRGB(10, 30, myImage, 16, 16);
  */
 void DisplayCore::drawRGB(int16_t x, int16_t y, const uint16_t *bitmap, int16_t w, int16_t h) {
+    startBuffer();
     int16_t i, j;
     for (j = 0; j < h; j++) {
         for (i = 0; i < w; i++) {
             setPixel(x+i, y+j, bitmap[j * w + i]);
         }
     }
+    endBuffer();
 }
 
 /*! Draw a transparent RGB (565) image
@@ -444,6 +474,7 @@ void DisplayCore::drawRGB(int16_t x, int16_t y, const uint16_t *bitmap, int16_t 
  *    tft.drawRGBA(10, 30, myImage, 16, 16, Color::Black);
  */
 void DisplayCore::drawRGBA(int16_t x, int16_t y, const uint16_t *bitmap, int16_t w, int16_t h, uint16_t trans) {
+    startBuffer();
     int16_t i, j;
     uint16_t col;
     for (j = 0; j < h; j++) {
@@ -454,6 +485,7 @@ void DisplayCore::drawRGBA(int16_t x, int16_t y, const uint16_t *bitmap, int16_t
             }
         }
     }
+    endBuffer();
 }
 /**@}*/
 
@@ -519,6 +551,25 @@ uint16_t DisplayCore::stringHeight(const char *text) {
     return header->linesPerCharacter;
 }
         
+
+#if ARDUINO >= 100
+size_t DisplayCore::write(const uint8_t *buffer, size_t size) {
+    startBuffer();
+    for (size_t i = 0; i < size; i++) {
+        write(buffer[i]);
+    }
+    endBuffer();
+    return size;
+}
+#else
+void DisplayCore::write(const uint8_t *buffer, size_t size) {
+    startBuffer();
+    for (size_t i = 0; i < size; i++) {
+        write(buffer[i]);
+    }
+    endBuffer();
+}
+#endif
 
 /*! Write a character to the screen
  *  ===============================
@@ -597,6 +648,8 @@ uint8_t DisplayCore::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t co
         return 0;
     }
 
+    startBuffer();
+
     c = c - header->startGlyph;
 
     // Start of this character's data is the character number multiplied by the
@@ -671,6 +724,7 @@ uint8_t DisplayCore::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t co
             }
         }
     }
+    endBuffer();
     return charwidth;
 }
 
@@ -1163,6 +1217,7 @@ void DisplayCore::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
     winy1 = y0 + y1;
     winpx = 0;
     winpy = 0;
+    startBuffer();
 }
 
 /*! Send pixel data to the window 
@@ -1211,6 +1266,7 @@ void DisplayCore::windowData(uint16_t *d, uint32_t l) {
  */
 
 void DisplayCore::closeWindow() {
+    endBuffer();
 }
 
 /**@}*/
@@ -1265,6 +1321,7 @@ boolean DisplayCore::clipToScreen(int16_t &x, int16_t &y, int16_t &w, int16_t &h
 /*! This is a helper function.  It is used to draw portions of a circle. */
 
 void DisplayCore::drawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t color) {
+    startBuffer();
     int16_t f     = 1 - r;
     int16_t ddF_x = 1;
     int16_t ddF_y = -2 * r;
@@ -1297,10 +1354,12 @@ void DisplayCore::drawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t c
             setPixel(x0 - x, y0 - y, color);
         }
     }
+    endBuffer();
 }
 
 /*! This is a helper function.  It is used to draw segments of a filled circle. */
 void DisplayCore::fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, int16_t delta, uint16_t color) {
+    startBuffer();
     int16_t f     = 1 - r;
     int16_t ddF_x = 1;
     int16_t ddF_y = -2 * r;
@@ -1326,6 +1385,7 @@ void DisplayCore::fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t co
             drawVerticalLine(x0-y, y0-x, 2*x+0+delta, color);
         }
     }
+    endBuffer();
 }
 
 #ifndef max
@@ -1450,6 +1510,7 @@ void DisplayCore::drawBezier(
     int resolution,
     uint16_t color
 ) {
+    startBuffer();
 
     boolean first = true;
     float points = 1.0/(float)resolution;
@@ -1473,6 +1534,7 @@ void DisplayCore::drawBezier(
         sy = ey;
     }
     drawLine(sx, sy, x3, y3, color);
+    endBuffer();
 }
 
 void DisplayCore::fillBezier(
@@ -1483,6 +1545,8 @@ void DisplayCore::fillBezier(
     int resolution,
     uint16_t color
 ) {
+
+    startBuffer();
 
     boolean first = true;
     float points = 1.0/(float)resolution;
@@ -1506,6 +1570,7 @@ void DisplayCore::fillBezier(
         sy = ey;
     }
     fillTriangle(x0, y0, sx, sy, x3, y3, color);
+    endBuffer();
 }
 
 #if defined(__PIC32MX__) || defined(__PIC32MZ__)

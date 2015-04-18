@@ -43,6 +43,14 @@ Depends: libdisplaycore-core, libdisplaycore-driver-analogtouch
 Description: Picadillo-35T driver for DisplayCore
  The DisplayCore driver for the Picadillo-35T board
 
+Package: libdisplaycore-driver-sdl
+Architecture: all
+Provides: SDL.h
+XBSC-Subgroup: Drivers
+Depends: libdisplaycore-core
+Description: SDL driver for DisplayCore
+ Create rich Linux GUI applications.
+
 Package: libdisplaycore-driver-nativefb
 Architecture: all
 Provides: NativeFB.h

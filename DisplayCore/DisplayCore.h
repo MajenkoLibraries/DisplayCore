@@ -236,8 +236,10 @@ class DisplayCore : public Print
 
 #if ARDUINO >= 100
         virtual size_t write(uint8_t c);
+        virtual size_t write(const uint8_t *buffer, size_t size);
 #else
         virtual void write(uint8_t c);
+        virtual void write(const uint8_t *buffer, size_t size);
 #endif
 
         /*! The text cursor X position */
@@ -304,7 +306,6 @@ class DisplayCore : public Print
         /*! A pointer to the currently selected font table */
         const uint8_t *font;
 
-    private:
         uint16_t winx0;
         uint16_t winy0;
         uint16_t winx1;

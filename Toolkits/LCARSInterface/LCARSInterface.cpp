@@ -73,13 +73,14 @@ namespace LCARS {
     }
 
     void HBar::draw(DisplayCore *dev, int16_t x, int16_t y) {
+        dev->startBuffer();
         drawOuterQuadrant(dev, 10, y + 10, 10, 0x01, leftColor);
         drawOuterQuadrant(dev, 10, y + 9, 10, 0x08, leftColor);
         dev->fillRectangle(10, y + 0, 20, 20, leftColor);
-        dev->fillRectangle(35, y + 0, dev->getWidth() - 70, 20, midColor);
-        drawOuterQuadrant(dev, dev->getWidth() - 10, y + 10, 10, 0x02, rightColor);
-        drawOuterQuadrant(dev, dev->getWidth() - 10, y + 10, 10, 0x04, rightColor);
-        dev->fillRectangle(dev->getWidth() - 30, y + 0, 20, 20, rightColor);
+        dev->fillRectangle(35, y + 0, 730, 20, midColor);
+        drawOuterQuadrant(dev, 790, y + 10, 10, 0x02, rightColor);
+        drawOuterQuadrant(dev, 790, y + 10, 10, 0x04, rightColor);
+        dev->fillRectangle(770, y + 0, 20, 20, rightColor);
         dev->setTextColor(Yellow, Color::Black);
         dev->setFont(Fonts::LCARS24);
         if (leftText != NULL) {
@@ -87,24 +88,26 @@ namespace LCARS {
             dev->print(leftText);
         }
         if (midText != NULL) {
-            dev->setCursor(dev->getWidth()/2 - dev->stringWidth(midText)/2, y - 3);
+            dev->setCursor(400 - dev->stringWidth(midText)/2, y - 3);
             dev->print(midText);
         }
         if (rightText != NULL) {
-            dev->setCursor(dev->getWidth() - 35 - dev->stringWidth(rightText), y - 3);
+            dev->setCursor(765 - dev->stringWidth(rightText), y - 3);
             dev->print(rightText);
         }
+        dev->endBuffer();
     }
 
     void HBarBend::draw(DisplayCore *dev, int16_t x, int16_t y) {
         if ((bendType & BendUp) && (bendType & BendLeft)) {
+            dev->startBuffer();
             // Bend portion
             if (!movedMid || _redraw) {
                 dev->fillRectangle(0, y, 80, bendSize, leftColor);                                  // Left bend extension
-                dev->fillRectangle(50, y + bendSize, 30, 50, leftColor);                       // Left bend fill
+                dev->fillRectangle(50, y + 20, bendSize + 10, 50, leftColor);                       // Left bend fill
                 drawOuterQuadrant(dev, 50, y + bendSize - 1, 50, 0x8, leftColor);                   // Left bend outside
                 drawInnerQuadrant(dev, 100, y + bendSize + 19, 20, 0x8, leftColor);                 // Left bend inside
-                dev->fillRectangle(dev->getWidth() - 25, y + bendSize + 40, 25, 10, endColor);                       // End bit
+                dev->fillRectangle(775, y + bendSize + 40, 25, 10, endColor);                       // End bit
                 dev->setFont(Fonts::LCARS16);
                 dev->setTextColor(Color::Black, leftColor);
                 dev->setCursor(75 - (dev->stringWidth(text)), y + 5);
@@ -116,18 +119,20 @@ namespace LCARS {
             dev->fillRectangle(80 + midPos + 20, y + bendSize + 40, 5, 10, Color::Black);            // Left gap
             dev->fillRectangle(85 + midPos + 20, y + bendSize + 40, midSize - 10, 10, midColor);     // Mid section
             dev->fillRectangle(75 + midPos + 20 + midSize, y + bendSize + 40, 5, 10, Color::Black);  // Right gap
-            dev->fillRectangle(80 + midPos + 20 + midSize, y + bendSize + 40, dev->getWidth() - 130 - midPos - midSize, 10, rightColor);    // RIght section
+            dev->fillRectangle(80 + midPos + 20 + midSize, y + bendSize + 40, 670 - midPos - midSize, 10, rightColor);    // RIght section
             movedMid = false;
             _redraw = false;
+            dev->endBuffer();
             return;
         }
 
         if ((bendType & BendDown) && (bendType & BendLeft)) {
+            dev->startBuffer();
             dev->fillRectangle(80, y, midPos + 20, 10, leftColor);
             dev->fillRectangle(80 + midPos + 20, y, 5, 10, Color::Black);
             dev->fillRectangle(85 + midPos + 20, y, midSize - 10, 10, midColor);
             dev->fillRectangle(75 + midPos + 20 + midSize, y, 5, 10, Color::Black);  // Right gap
-            dev->fillRectangle(80 + midPos + 20 + midSize, y, dev->getWidth() - 130 - midPos - midSize, 10, rightColor);
+            dev->fillRectangle(80 + midPos + 20 + midSize, y, 670 - midPos - midSize, 10, rightColor);
 
             // Bend portion
             if (!movedMid || _redraw) {
@@ -135,7 +140,7 @@ namespace LCARS {
                 drawInnerQuadrant(dev, 100, y + 30, 20, 0x1, leftColor);
                 drawOuterQuadrant(dev, 50, y + 50, 50, 0x1, leftColor);
                 dev->fillRectangle(0, y + 50, 80, bendSize, leftColor);
-                dev->fillRectangle(dev->getWidth() - 25, y, 25, 10, endColor);
+                dev->fillRectangle(775, y, 25, 10, endColor);
                 dev->setFont(Fonts::LCARS16);
                 dev->setTextColor(Color::Black, leftColor);
                 dev->setCursor(75 - (dev->stringWidth(text)), y + 28 + bendSize);
@@ -143,6 +148,7 @@ namespace LCARS {
             }
             movedMid = false;
             _redraw = false;
+            dev->endBuffer();
             return;
         }
     }
@@ -150,8 +156,8 @@ namespace LCARS {
     void HBarBend::setValue(uint16_t x) {
         if (x != _value) {
             movedMid = true;
-            if (x > _dev->getWidth() - 130 - midSize) {
-                x = _dev->getWidth() - 130 - midSize;
+            if (x > 670 - midSize) {
+                x = 670 - midSize;
             }
             _value = x;
         }
@@ -191,14 +197,17 @@ namespace LCARS {
     }
 
     void Block::draw(DisplayCore *dev, int16_t x, int16_t y) {
+        dev->startBuffer();
         dev->fillRectangle(x, y, _width, _height, _color);
         dev->setTextColor(Color::Black, _color);
         dev->setFont(Fonts::LCARS16);
         dev->setCursor(x + _width - 5 - dev->stringWidth(_text), y + _height - 22);
         dev->print(_text);
+        dev->endBuffer();
     }
 
     void StaticText::draw(DisplayCore *dev, int16_t x, int16_t y) {
+        dev->startBuffer();
         dev->setTextColor(_color, Color::Black);
         dev->setFont(_font);
         switch (_align) {
@@ -214,6 +223,7 @@ namespace LCARS {
                 break;
         }
         dev->print(_text);
+        dev->endBuffer();
     }
 
 
@@ -254,6 +264,7 @@ namespace LCARS {
     }
 
     void MiniScope::draw(DisplayCore *dev, int16_t x, int16_t y) {
+        dev->startBuffer();
         for (int i = 0; i < 276*84; i++) {
             scratchpad[i] = 0;
         }
@@ -281,9 +292,11 @@ namespace LCARS {
         dev->openWindow(x, y, 276, 84);
         dev->windowData(scratchpad, 276*84);
         dev->closeWindow();
+        dev->endBuffer();
     }
 
     void RectButton::draw(DisplayCore *dev, int16_t x, int16_t y) {
+        dev->startBuffer();
         if (_active) {
             dev->fillRectangle(x, y, _w, _h, _col_hi);
             dev->setTextColor(Color::Black, _col_hi);
@@ -300,9 +313,11 @@ namespace LCARS {
             _y + _h/2 - dev->stringHeight(_text)/2
         );
         dev->print(_text);
+        dev->endBuffer();
     }
 
     void OvalButton::draw(DisplayCore *dev, int16_t x, int16_t y) {
+        dev->startBuffer();
         uint16_t col = _col_on;
         if (_active) {
             col = _col_hi;
@@ -321,9 +336,11 @@ namespace LCARS {
         int h = _dev->stringHeight(_text);
         dev->setCursor(_x + 85 - w, _y + 15 - h / 2);
         dev->print(_text);
+        dev->endBuffer();
     }
 
     void ExpandedOvalButton::draw(DisplayCore *dev, int16_t x, int16_t y) {
+        dev->startBuffer();
         uint16_t col = _col_on;
         if (_active) {
             col = _col_hi;
@@ -343,13 +360,14 @@ namespace LCARS {
         int h = _dev->stringHeight(_text);
         dev->setCursor(_x + 80 - w, _y + 25 - h / 2);
         dev->print(_text);
-        _dev->setTextColor(col, Color::Black);
-        _dev->setCursor(_x + 90, _y);
-        _dev->print(_title);
-        _dev->setFont(Fonts::LCARS20);
-        _dev->setCursor(_x + 90, _y + 30);
-        _dev->setTextColor(_col_st, Color::Black);
-        _dev->print(getValue() == 0 ? _off_text : _on_text);
+        dev->setTextColor(col, Color::Black);
+        dev->setCursor(_x + 90, _y);
+        dev->print(_title);
+        dev->setFont(Fonts::LCARS20);
+        dev->setCursor(_x + 90, _y + 30);
+        dev->setTextColor(_col_st, Color::Black);
+        dev->print(getValue() == 0 ? _off_text : _on_text);
+        dev->endBuffer();
     }
 
     void MessageLog::setValue(int v) {
@@ -400,6 +418,7 @@ namespace LCARS {
     }
 
     void MessageLog::draw(DisplayCore *dev, int16_t x, int16_t y) {
+        dev->startBuffer();
         dev->setFont(Fonts::LCARS16);
         if (_full) {
             dev->fillRectangle(x, y, 420, 76, Color::Black);
@@ -417,6 +436,7 @@ namespace LCARS {
         dev->setCursor(x, y + 57);
         dev->setTextColor(lcol, Color::Black);
         dev->print(_data[3]);
+        dev->endBuffer();
     }
 
     size_t MessageLog::write(uint8_t v) {
@@ -471,6 +491,7 @@ namespace LCARS {
     }
 
     void VScale::draw(DisplayCore *dev, int16_t x, int16_t y) {
+        dev->startBuffer();
         // If a full redraw then do everything
         if (!_valueChanged) {
         }
@@ -494,6 +515,7 @@ namespace LCARS {
             
             dev->drawLine(x + off, y + 202 - (i<<1), x+20-off, y + 202 - (i << 1), col);
         }
+        dev->endBuffer();
     }
 
 };
