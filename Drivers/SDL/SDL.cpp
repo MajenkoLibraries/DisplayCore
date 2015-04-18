@@ -14,12 +14,19 @@ void SDL::initializeDevice() {
     }
     
     _display = SDL_SetVideoMode(_width, _height, 16, config);
+	atexit(SDL_Quit);
+	_min_x = _width;
+	_min_y = _height;
+	_max_x = 0;
+	_max_y = 0;
 }
 
 void SDL::setPixel(int16_t x, int16_t y, uint16_t c) {
     if (x < 0 || y < 0 || x >= _width || y >= _height) {
         return;
     }
+
+	setBound(x, y);
 
     if (SDL_MUSTLOCK(_display)) 
         if (SDL_LockSurface(_display) < 0) 
@@ -44,7 +51,14 @@ void SDL::startBuffer() {
 void SDL::endBuffer() {
     _buffered--;
     if (_buffered <= 0) {
-        SDL_UpdateRect(_display, 0, 0, _width, _height);
+	if (_min_x <= _max_x && _min_y <= _max_y) {
+		SDL_UpdateRect(_display, _min_x, _min_y, _max_x - _min_x + 1, _max_y - _min_y + 1);
+	}
+	_min_x = _width;
+	_min_y = _height;
+	_max_x = 0;
+	_max_y = 0;
+	
         _buffered = 0;
     }
 }
@@ -65,6 +79,7 @@ uint16_t SDL::colorAt(int16_t x, int16_t y) {
     if (SDL_MUSTLOCK(_display))
         SDL_UnlockSurface(_display);
 
+
     return c;
 }
 
@@ -81,18 +96,20 @@ boolean SDLTouch::isPressed() {
 }
 
 uint16_t SDLTouch::x() {
-    return _x;
+	return _x;
+    return (uint16_t)((float)_x * _scale_x) + _offset_x;
 }
 
 uint16_t SDLTouch::y() {
-    return _y;
+	return _y;
+    return (uint16_t)((float)_y * _scale_y) + _offset_y;
 }
 
 void SDLTouch::sample() {
     SDL_Event event;
     SDL_PollEvent(&event);
     if (event.type == SDL_QUIT) {
-        SDL_Quit();
+//        SDL_Quit();
         exit(0);
     }
 
@@ -125,5 +142,28 @@ void SDL::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t col
     r.w = w;
     r.h = h;
 
+	setBound(x, y);
+	setBound(x + w, y + h);
+
     SDL_FillRect(_display, &r, color);
+}
+
+void SDL::flip() {
+	SDL_Flip(_display);
+}
+
+void SDL::setBound(int x, int y) {
+	if (x < _min_x) _min_x = x;
+	if (x > _max_x) _max_x = x;
+	if (y < _min_y) _min_y = y;
+	if (y > _max_y) _max_y = y;
+}
+
+
+void SDL::hideCursor() {
+	SDL_ShowCursor(0);
+}
+
+void SDL::showCursor() {
+	SDL_ShowCursor(1);
 }

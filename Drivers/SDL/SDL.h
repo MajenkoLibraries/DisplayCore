@@ -50,8 +50,6 @@ class SDLTouch : public Touch {
 
         void initializeDevice() {}
         
-    friend SDL;
-
     private:
         uint16_t _x;
         uint16_t _y;
@@ -95,6 +93,11 @@ class SDL : public DisplayCore {
         void startBuffer();
         void endBuffer();
 
+	void flip();
+
+	void hideCursor();
+	void showCursor();
+
     private:
         uint16_t _width;
         uint16_t _height;
@@ -103,8 +106,13 @@ class SDL : public DisplayCore {
         SDL_Surface *_display;
 
         int32_t _buffered;
+	int _min_x;
+	int _min_y;
+	int _max_x;
+	int _max_y;
 
-    friend SDLTouch;
+	void setBound(int x, int y);
+
 };
 
 #endif
