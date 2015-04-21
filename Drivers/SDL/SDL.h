@@ -73,6 +73,7 @@ class SDL : public DisplayCore {
         static const uint8_t Doublebuffered = 0x02;
 
         SDL(uint16_t w, uint16_t h, uint8_t t) : DisplayCore(), _width(w), _height(h), _type(t) {}
+        SDL(uint8_t t) : DisplayCore(), _width(0), _height(0), _type(t) {}
 
         void initializeDevice();
         void setPixel(int16_t x, int16_t y, uint16_t c);

@@ -12,6 +12,14 @@ void SDL::initializeDevice() {
     if (_type & Doublebuffer) {
         config |= SDL_DOUBLEBUF;
     }
+
+	const SDL_VideoInfo* info = SDL_GetVideoInfo();
+	if (_width == 0) {
+		_width = info->current_w;
+	}
+	if (_height == 0) {
+		_height = info->current_h;
+	}
     
     _display = SDL_SetVideoMode(_width, _height, 16, config);
 	atexit(SDL_Quit);
