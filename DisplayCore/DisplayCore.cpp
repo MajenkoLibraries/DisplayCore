@@ -1600,6 +1600,10 @@ void Widget::handleTouch() {
         return;
     }
 
+    if (!isEnabled()) {
+        return;
+    }
+
     boolean pressed = _ts->isPressed();
 
     if (pressed) {
@@ -1756,4 +1760,15 @@ uint16_t DisplayCore::getWidth() {
 
 uint16_t DisplayCore::getHeight() {
     return _height;
+}
+
+void Widget::setEnabled(boolean e) {
+    if (e != _enabled) {
+        _redraw = true;
+    }
+    _enabled = e;
+}
+
+boolean Widget::isEnabled() {
+    return _enabled;
 }

@@ -485,6 +485,7 @@ class Widget : public Image {
 
         boolean _active;
         boolean _touch;
+        boolean _enabled;
 
         void (*_press)(Event *);
         void (*_release)(Event *);
@@ -494,7 +495,7 @@ class Widget : public Image {
 
     public:
         Widget(Touch &t, DisplayCore &d, int x, int y) : 
-            _ts(&t), _dev(&d), _x(x), _y(y), _redraw(true), _touch(false), 
+            _ts(&t), _dev(&d), _x(x), _y(y), _redraw(true), _touch(false), _enabled(true),
             _press(NULL), _release(NULL), _drag(NULL), _tap(NULL), _repeat(NULL),
             Image() {}
         virtual void setValue(int v);
@@ -529,6 +530,9 @@ class Widget : public Image {
         void drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform, uint16_t t);
 
         virtual void redraw();
+
+        virtual void setEnabled(boolean e);
+        virtual boolean isEnabled();
 
 };
 
