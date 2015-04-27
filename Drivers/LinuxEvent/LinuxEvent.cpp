@@ -2,40 +2,21 @@
 
 void LinuxEvent::initializeDevice() {
     char temp[100];
-    int i = 0;
-    while (1) {
-        sprintf(temp, "/sys/class/input/event%d/device/name", i);
-        int idfd = ::open(temp, O_RDONLY);
-        if (idfd < 0) {
-            fprintf(stderr, "LinuxEvent Error: Unable to find device '%s'.\r\n", _name);
-            exit(10);
-        }
-        memset(temp, 0, 100);
-        if (!::read(idfd, temp, 100)) {
-            fprintf(stderr, "LinuxEvent Error: Unable to read from '%s'.\r\n", temp);
-            ::close(idfd);
-            exit(10);
-        }
-        ::close(idfd);
-        while (temp[strlen(temp)-1] < ' ') {
-            temp[strlen(temp)-1] = 0;
-        }
 
-        if (strcmp(temp, _name) == 0) {
-            _devid = i;
-            break;
-        }
-        i++;
+    _maxfd = 0;
+
+    for (int i = 0; i < _MAX_IN_DEV; i++) {
+        _fd[i] = -1;
     }
 
-    sprintf(temp, "/dev/input/event%d", _devid);
+    for (int i = 0; i < _MAX_IN_DEV; i++) {
+        sprintf(temp, "/dev/input/event%d", i);
+        _fd[i] = ::open(temp, O_RDONLY);
+        if (_fd[i] > _maxfd) {
+            _maxfd = _fd[i];
+        }
+    }
     
-    _fd = open(temp, O_RDONLY);
-    if (_fd < 0) {
-        fprintf(stderr, "LinuxEvent Error: Unable to open %s for reading.\r\n", temp);
-        exit(10);
-    }
-
     _pos.x = 0;
     _pos.y = 0;
     _pressed = false;
@@ -45,8 +26,8 @@ void LinuxEvent::initializeDevice() {
 }
 
 uint16_t LinuxEvent::x() {
-    int x = _pos.x + _offset_x;
-    int y = _pos.y + _offset_y;
+    int x = (_pos.x * _width / 4095) + _offset_x;
+    int y = (_pos.y * _height / 4095) + _offset_y;
 
     switch (_rotation) {
         case 0:
@@ -62,8 +43,8 @@ uint16_t LinuxEvent::x() {
 }
 
 uint16_t LinuxEvent::y() {
-    int x = _pos.x + _offset_x;
-    int y = _pos.y + _offset_y;
+    int x = (_pos.x * _width / 4095) + _offset_x;
+    int y = (_pos.y * _height / 4095) + _offset_y;
 
     switch (_rotation) {
         case 0:
@@ -88,33 +69,56 @@ void LinuxEvent::sample() {
     struct timeval tv;
     fd_set rfds;
     FD_ZERO(&rfds);
-    FD_SET(_fd, &rfds);
+    for (int i = 0; i < _MAX_IN_DEV; i++) {
+        if (_fd[i] >= 0) {
+            FD_SET(_fd[i], &rfds);
+        }
+    }
     tv.tv_sec = 0;
     tv.tv_usec = 10;
 
-    int rv = select(_fd+1, &rfds, NULL, NULL, &tv);
-    while (rv) {
-        ::read(_fd, &edata, sizeof(struct event));
+    int rv = select(_maxfd+1, &rfds, NULL, NULL, &tv);
+    if (!rv) {
+        return;
+    }
 
-        if (edata.type == 3) { // touch event
-            if (edata.code == 0) { // X
-                _pos.x = edata.value * _width / 4095;
-            } else if (edata.code == 1) { // Y
-                _pos.y = edata.value * _height / 4095;
-            }
-            _pressed = true;
-        } else if (edata.type == 1) {
-            if (edata.code == 330) { // release event
-                _pressed = false;
+    for (int i = 0; i < _MAX_IN_DEV; i++) {
+        if (_fd[i] >= 0) {
+            if (FD_ISSET(_fd[i], &rfds)) {
+                ::read(_fd[i], &edata, sizeof(struct event));
+                while (edata.type != 0)  {
+                    switch (edata.type) {
+                        case 1: // Button change
+                            if (edata.code == 330) { // Mouse / TS
+                                _pressed = (edata.value == 1);
+                            } else {
+                                if (edata.value >= 1) {
+                                    _rxBuffer.write(edata.code);
+                                }
+                            }
+                            break;
+
+                        case 3: // Move
+                            if (edata.code == 0) { // X
+                                _pos.x = edata.value;
+                            } else if (edata.code == 1) { // Y
+                                _pos.y = edata.value;
+                            }
+                            break;
+                    }
+                    ::read(_fd[i], &edata, sizeof(struct event));
+                }
             }
         }
-
-        FD_ZERO(&rfds);
-        FD_SET(_fd, &rfds);
-        tv.tv_sec = 0;
-        tv.tv_usec = 10;
-        rv = select(_fd+1, &rfds, NULL, NULL, &tv);
     }
+}
+
+uint16_t LinuxEvent::rawX() {
+    return _pos.x;
+}
+
+uint16_t LinuxEvent::rawY() {
+    return _pos.y;
 }
 
 uint16_t LinuxEvent::pressure() {

@@ -175,3 +175,49 @@ void SDL::hideCursor() {
 void SDL::showCursor() {
 	SDL_ShowCursor(1);
 }
+
+void SDL::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+    _winx = x0;
+    _winy = y0;
+    _winw = x1;
+    _winh = y1;
+    _blitSfc = SDL_CreateRGBSurface(0, _winw, _winh, 16, 0b1111100000000000, 0b11111100000, 0b11111, 0);
+    _win_ptr = 0;
+    _win_px = 0;
+    _win_py = 0;
+}
+
+void SDL::windowData(uint16_t d) {
+    SDL_Rect r;
+    r.x = _win_px;
+    r.y = _win_py;
+    r.w = 1;
+    r.h = 1;
+    SDL_FillRect(_blitSfc, &r, d);
+    _win_px++;
+    if (_win_px == _winw) {
+        _win_py++;
+        _win_px = 0;
+    }
+    if (_win_py == _winh) {
+        _winh = 0;
+    }
+//    uint16_t *_buffer = (uint16_t *)_blitSfc->pixels;
+//    _buffer[_win_ptr++] = d;
+//    if (_win_ptr == (_winw * _winh)) {
+//        _win_ptr = 0;
+//    }
+}
+
+void SDL::windowData(uint16_t *d, uint32_t l) {
+    SDL_Surface *s = SDL_CreateRGBSurfaceFrom(d, _winw, _winh, 16, _winw*2, 0b1111100000000000, 0b11111100000, 0b11111, 0);
+    SDL_Rect r = {0, 0, _winw, _winh };
+    SDL_BlitSurface(s, NULL, _blitSfc, &r);
+    SDL_FreeSurface(s);
+}
+
+void SDL::closeWindow() {
+    SDL_Rect r = {_winx, _winy, _winw, _winh };
+    SDL_BlitSurface(_blitSfc, NULL, _display, &r);
+    SDL_FreeSurface(_blitSfc);
+}

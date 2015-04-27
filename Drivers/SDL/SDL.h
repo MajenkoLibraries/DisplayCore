@@ -44,6 +44,8 @@ class SDLTouch : public Touch {
 
         uint16_t x();
         uint16_t y();
+        uint16_t rawX() { return x(); }
+        uint16_t rawY() { return y(); }
 
         void setRotation(uint8_t r) {}
         void sample();
@@ -94,10 +96,16 @@ class SDL : public DisplayCore {
         void startBuffer();
         void endBuffer();
 
-	void flip();
+        void flip();
 
-	void hideCursor();
-	void showCursor();
+        void hideCursor();
+        void showCursor();
+
+        void openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
+        void windowData(uint16_t d);
+        void windowData(uint16_t *d, uint32_t l);
+        void closeWindow();
+
 
     private:
         uint16_t _width;
@@ -107,12 +115,23 @@ class SDL : public DisplayCore {
         SDL_Surface *_display;
 
         int32_t _buffered;
-	int _min_x;
-	int _min_y;
-	int _max_x;
-	int _max_y;
+        int _min_x;
+        int _min_y;
+        int _max_x;
+        int _max_y;
 
-	void setBound(int x, int y);
+        uint16_t _winx;
+        uint16_t _winy;
+        uint16_t _winw;
+        uint16_t _winh;
+
+        uint16_t _win_px;
+        uint16_t _win_py;
+
+        SDL_Surface *_blitSfc;
+        uint32_t _win_ptr;
+
+        void setBound(int x, int y);
 
 };
 

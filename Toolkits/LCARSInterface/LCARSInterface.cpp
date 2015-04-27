@@ -458,6 +458,7 @@ namespace LCARS {
     }
 
     void VScale::render() {
+        handleTouch();
         if (_lastRender == 0) {
             _lastRender = millis() / 10;
         }

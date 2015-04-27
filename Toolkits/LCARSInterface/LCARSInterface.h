@@ -257,7 +257,14 @@ namespace LCARS {
             uint32_t _lastRender;
 
         public:
-            VScale(Touch &ts, DisplayCore &dev, int x, int y, uint16_t lowCol, uint16_t hiCol, uint16_t overCol) : Widget(ts, dev, x, y), _lowCol(lowCol), _hiCol(hiCol), _overCol(overCol) { _valueChanged = false; }
+            VScale(Touch &ts, DisplayCore &dev, int x, int y, uint16_t lowCol, uint16_t hiCol, uint16_t overCol) : Widget(ts, dev, x, y), _lowCol(lowCol), _hiCol(hiCol), _overCol(overCol) { 
+                _valueChanged = false; 
+                _touch = true;
+                _sense_x = 0;
+                _sense_y = 0;
+                _sense_w = 20;
+                _sense_h = 202;
+            }
             
 
             void setValue(int v);

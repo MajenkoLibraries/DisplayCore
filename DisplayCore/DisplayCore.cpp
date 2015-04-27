@@ -1626,7 +1626,7 @@ void Widget::handleTouch() {
         _rt = millis();
         _rp = 0;
         _redraw = true;
-        draw(_dev, _x, _y);
+      //  draw(_dev, _x, _y);
 
         if (_press != NULL) {
             Event e = {this, _sx, _sy, _sx, _sy, EVENT_PRESS};
@@ -1643,7 +1643,7 @@ void Widget::handleTouch() {
         _ex = _tx - _x;
         _ey = _ty - _y;
         _redraw = true;
-        draw(_dev, _x, _y);
+     //   draw(_dev, _x, _y);
 
         if (_release != NULL) {
             _rx = _ex;
@@ -1665,7 +1665,7 @@ void Widget::handleTouch() {
     if ((pressed && !inBounds) && _active) {
         _active = false;
         _redraw = true;
-        draw(_dev, _x, _y);
+        //draw(_dev, _x, _y);
     }
     // Drag
     if ((pressed && inBounds) && _active) {
@@ -1771,4 +1771,8 @@ void Widget::setEnabled(boolean e) {
 
 boolean Widget::isEnabled() {
     return _enabled;
+}
+
+boolean Widget::isActive() {
+    return _active;
 }
