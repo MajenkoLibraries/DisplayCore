@@ -1,0 +1,59 @@
+#!/usr/bin/php
+<?php
+
+$animName = "";
+$width = -1;
+$height = -1;
+$frames = 0;
+
+array_shift($argv);
+
+$animData = array();
+
+while ($file = array_shift($argv)) {
+    if (count($argv) == 0) { // It was the last entry
+        $animName = $file;
+        break;
+    }
+    $img = ImageCreateFromPNG($file);
+
+    $frames++;
+
+    if ($width == -1) {
+        $width = ImageSX($img);
+        $height = ImageSY($img);
+    }
+
+    for ($y = 0; $y < $height; $y++) {
+        for ($x = 0; $x < $width; $x++) {
+            $rgb = ImageColorAt($img, $x, $y);
+            $r = ($rgb >> 16) & 0xFF;
+            $g = ($rgb >> 8) & 0xFF;
+            $b = $rgb & 0xFF;
+
+            $r = $r >> 3;
+            $g = $g >> 2;
+            $b = $b >> 3;
+
+            $oc = ($r << 11) | ($g << 5) | $b;
+            $animData[] = $oc;
+        }
+    }
+
+    ImageDestroy($img);
+
+}
+
+printf("const uint16_t *%s = {\n", $animName);
+printf("    %d, %d, %d, // Frames, width and height\n", $frames, $width, $height);
+$c = 0;
+printf("    ");
+foreach ($animData as $val) {
+    printf("0x%04x, ", $val);
+    $c++;
+    if ($c == 8) {
+        $c = 0;
+        printf("\n    ");
+    }
+}
+printf("\n};\n");
