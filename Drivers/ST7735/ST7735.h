@@ -61,6 +61,13 @@ class ST7735 : public DisplayCore {
         static const uint8_t MADCTL_RGB = 0x08;
         static const uint8_t MADCTL_MH  = 0x04;
 
+        static const uint8_t Bcmd[];
+        static const uint8_t Rcmd1[];
+        static const uint8_t Rcmd2red[];
+        static const uint8_t Rcmd2green[];
+        static const uint8_t Rcmd3[];
+        static const uint8_t Gcmd[];
+
 
 
 	public:
@@ -94,7 +101,7 @@ class ST7735 : public DisplayCore {
 
 	private:
 		void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-		void streamCommands(uint8_t *cmdlist);
+		void streamCommands(const uint8_t *cmdlist);
 		uint8_t colstart, rowstart;
         void command(uint8_t);
         void data(uint8_t);

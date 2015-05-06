@@ -1,7 +1,6 @@
 #include <ST7735.h>
 
-static uint8_t
-  Bcmd[] = {                  // Initialization commands for 7735B screens
+const uint8_t ST7735::Bcmd[] = {                  // Initialization commands for 7735B screens
     18,                       // 18 commands in list:
     ST7735_SWRESET,   DELAY,  //  1: Software reset, no args, w/delay
       50,                     //     50 ms delay
@@ -58,9 +57,9 @@ static uint8_t
     ST7735_NORON  ,   DELAY,  // 17: Normal display on, no args, w/delay
       10,                     //     10 ms delay
     ST7735_DISPON ,   DELAY,  // 18: Main screen turn on, no args, w/delay
-      255 },                  //     255 = 500 ms delay
+      255 };                  //     255 = 500 ms delay
 
-  Rcmd1[] = {                 // Init for 7735R, part 1 (red or green tab)
+const uint8_t ST7735::Rcmd1[] = {                 // Init for 7735R, part 1 (red or green tab)
     15,                       // 15 commands in list:
     ST7735_SWRESET,   DELAY,  //  1: Software reset, 0 args, w/delay
       150,                    //     150 ms delay
@@ -95,26 +94,27 @@ static uint8_t
     ST7735_MADCTL , 1      ,  // 14: Memory access control (directions), 1 arg:
       0xC8,                   //     row addr/col addr, bottom to top refresh
     ST7735_COLMOD , 1      ,  // 15: set color mode, 1 arg, no delay:
-      0x05 },                 //     16-bit color
+      0x05 };                 //     16-bit color
 
-  Rcmd2green[] = {            // Init for 7735R, part 2 (green tab only)
+const uint8_t ST7735::Rcmd2green[] = {            // Init for 7735R, part 2 (green tab only)
     2,                        //  2 commands in list:
     ST7735_CASET  , 4      ,  //  1: Column addr set, 4 args, no delay:
       0x00, 0x02,             //     XSTART = 0
       0x00, 0x7F+0x02,        //     XEND = 127
     ST7735_RASET  , 4      ,  //  2: Row addr set, 4 args, no delay:
       0x00, 0x01,             //     XSTART = 0
-      0x00, 0x9F+0x01 },      //     XEND = 159
-  Rcmd2red[] = {              // Init for 7735R, part 2 (red tab only)
+      0x00, 0x9F+0x01 };      //     XEND = 159
+
+const uint8_t ST7735::Rcmd2red[] = {              // Init for 7735R, part 2 (red tab only)
     2,                        //  2 commands in list:
     ST7735_CASET  , 4      ,  //  1: Column addr set, 4 args, no delay:
       0x00, 0x00,             //     XSTART = 0
       0x00, 0x7F,             //     XEND = 127
     ST7735_RASET  , 4      ,  //  2: Row addr set, 4 args, no delay:
       0x00, 0x00,             //     XSTART = 0
-      0x00, 0x9F },           //     XEND = 159
+      0x00, 0x9F };           //     XEND = 159
 
-  Rcmd3[] = {                 // Init for 7735R, part 3 (red or green tab)
+const uint8_t ST7735::Rcmd3[] = {                 // Init for 7735R, part 3 (red or green tab)
     4,                        //  4 commands in list:
     ST7735_GMCTRP1, 16      , //  1: Magical unicorn dust, 16 args, no delay:
       0x02, 0x1c, 0x07, 0x12,
@@ -129,9 +129,9 @@ static uint8_t
     ST7735_NORON  ,    DELAY, //  3: Normal display on, no args, w/delay
       10,                     //     10 ms delay
     ST7735_DISPON ,    DELAY, //  4: Main screen turn on, no args w/delay
-      100 },                  //     100 ms delay
+      100 };                  //     100 ms delay
 
-  Gcmd[] = {                  // Initialization commands for 7735B screens
+const uint8_t ST7735::Gcmd[] = {                  // Initialization commands for 7735B screens
     19,                       // 18 commands in list:
     ST7735_SWRESET,   DELAY,  //  1: Software reset, no args, w/delay
       50,                     //     50 ms delay
@@ -263,7 +263,7 @@ void ST7735::data(uint8_t dat) {
     _csp->lat.set = _csb;
 }
 
-void ST7735::streamCommands(uint8_t *cmdlist) {
+void ST7735::streamCommands(const uint8_t *cmdlist) {
     uint8_t  numCommands, numArgs;
     uint16_t ms;
 
