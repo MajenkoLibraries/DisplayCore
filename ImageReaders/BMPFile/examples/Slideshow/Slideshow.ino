@@ -36,18 +36,17 @@
  */
 
 #include <DSPI.h>
-#include <TFT.h>
+#include <Picadillo.h>
 #include <SD.h>
 #include <BMPFile.h>
+#include <Topaz.h>
 
 // Configure the display
-TFTPMP myPMP;
-HX8357 tft(&myPMP);
-
+Picadillo tft;
 
 void setup() {
-	analogWrite(PIN_BACKLIGHT, 255);
 	tft.initializeDevice();
+    tft.setBacklight(255);
 	tft.setRotation(0);
 	tft.fillScreen(Color::Black);
 	tft.setFont(Fonts::Topaz);
