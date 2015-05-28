@@ -46,6 +46,29 @@ class ILI9340 : public DisplayCore {
 
         static const uint8_t ILI9340_PIXFMT = 0x3A;
 
+        static const uint8_t ILI9340_FRMCTR1 = 0xB1;
+        static const uint8_t ILI9340_FRMCTR2 = 0xB2;
+        static const uint8_t ILI9340_FRMCTR3 = 0xB3;
+        static const uint8_t ILI9340_INVCTR = 0xB4;
+        static const uint8_t ILI9340_DFUNCTR = 0xB6;
+
+        static const uint8_t ILI9340_PWCTR1 = 0xC0;
+        static const uint8_t ILI9340_PWCTR2 = 0xC1;
+        static const uint8_t ILI9340_PWCTR3 = 0xC2;
+        static const uint8_t ILI9340_PWCTR4 = 0xC3;
+        static const uint8_t ILI9340_PWCTR5 = 0xC4;
+        static const uint8_t ILI9340_VMCTR1 = 0xC5;
+        static const uint8_t ILI9340_VMCTR2 = 0xC7;
+
+        static const uint8_t ILI9340_RDID1 = 0xDA;
+        static const uint8_t ILI9340_RDID2 = 0xDB;
+        static const uint8_t ILI9340_RDID3 = 0xDC;
+        static const uint8_t ILI9340_RDID4 = 0xDD;
+
+        static const uint8_t ILI9340_GMCTRP1 = 0xE0;
+        static const uint8_t ILI9340_GMCTRN1 = 0xE1;
+
+
         DSPI *_spi;
         uint8_t _cs;
         uint8_t _dc;
