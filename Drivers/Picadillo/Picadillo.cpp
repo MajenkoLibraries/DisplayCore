@@ -277,11 +277,11 @@ void Picadillo::windowData(uint16_t d) {
 }
 
 void Picadillo::windowData(uint16_t *d, uint32_t l) {
-    for (uint32_t i = 0; i < l; i++) {
-        while (PMMODEbits.BUSY == 1);
-        PMDIN = d[i];
-    }
-    return;
+//    for (uint32_t i = 0; i < l; i++) {
+//        while (PMMODEbits.BUSY == 1);
+//        PMDIN = d[i];
+//    }
+//    return;
     uint32_t toXfer = l * 2;
 
     uint16_t *data = d;

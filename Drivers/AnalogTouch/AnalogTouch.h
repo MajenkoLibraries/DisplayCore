@@ -19,6 +19,9 @@ class AnalogTouch : public Touch {
         int getSample(uint8_t);
         uint16_t x();
         uint16_t y();
+        uint16_t rawX() { return x(); };
+        uint16_t rawY() { return y(); };
+
         boolean isPressed();
 
         void initializeDevice();
