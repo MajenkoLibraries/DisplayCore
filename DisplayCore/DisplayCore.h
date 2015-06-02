@@ -344,8 +344,8 @@ class Touch {
          *  ==================
          *  Returns true if the touch screen is pressed, false otherwise.
          */
-        virtual uint16_t rawX() = 0;
-        virtual uint16_t rawY() = 0;
+        virtual uint16_t rawX() { return x(); }
+        virtual uint16_t rawY() { return y(); }
         virtual boolean isPressed() = 0;
         /*! Calculate the touch pressure
          *  ============================
