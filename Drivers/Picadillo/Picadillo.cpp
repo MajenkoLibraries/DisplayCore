@@ -359,8 +359,8 @@ uint16_t Picadillo::colorAt(int16_t x, int16_t y) {
 }
 void Picadillo::getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf) {
     uint32_t i = 0;
-    for (uint32_t py = 0; py < h; py++) {
-        for (uint32_t px = 0; px < w; px++) {
+    for (int16_t py = 0; py < h; py++) {
+        for (int16_t px = 0; px < w; px++) {
             buf[i++] = colorAt(x + px, y + py);
         }
     }

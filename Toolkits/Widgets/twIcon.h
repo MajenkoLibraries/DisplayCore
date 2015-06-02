@@ -7,8 +7,8 @@ class twIcon : public Widget {
     private:
         uint16_t _width;
         uint16_t _height;
-        const uint16_t *_icon;
         const char *_txt;
+        const uint16_t *_icon;
         const uint8_t *_font;
         uint16_t _textColor;
         uint16_t _bgColor;

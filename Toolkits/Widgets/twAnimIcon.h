@@ -12,8 +12,8 @@ struct tsAnimIconData {
 
 class twAnimIcon : public Widget {
     private:
-        const struct tsAnimIconData *_data;
         const char *_txt;
+        const struct tsAnimIconData *_data;
         const uint8_t *_font;
         uint16_t _textColor;
         uint16_t _bgColor;

@@ -496,10 +496,10 @@ class Widget : public Image {
         void (*_repeat)(Event *);
 
     public:
-        Widget(Touch &t, DisplayCore &d, int x, int y) : 
+        Widget(Touch &t, DisplayCore &d, int x, int y) : Image(),
             _ts(&t), _dev(&d), _x(x), _y(y), _redraw(true), _touch(false), _enabled(true),
-            _press(NULL), _release(NULL), _drag(NULL), _tap(NULL), _repeat(NULL),
-            Image() {}
+            _press(NULL), _release(NULL), _drag(NULL), _tap(NULL), _repeat(NULL)
+            {}
         virtual void setValue(int v);
         virtual int getValue();
         virtual void render();

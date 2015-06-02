@@ -368,14 +368,6 @@ void DisplayCore::fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1,
         return;
     }
 
-    int16_t
-        dx01 = x1 - x0,
-        dy01 = y1 - y0,
-        dx02 = x2 - x0,
-        dy02 = y2 - y0,
-        dx12 = x2 - x1,
-        dy12 = y2 - y1;
-
     // For upper part of triangle, find scanline crossings for segments
     // 0-1 and 0-2.  If y1=y2 (flat-bottomed triangle), the scanline y1
     // is included here (and second loop will be skipped, avoiding a /0
@@ -542,7 +534,6 @@ uint16_t DisplayCore::stringWidth(const char *text) {
  *      int height = stringHeight("The quick brown fox jumped over the lazy dog");
  */
 uint16_t DisplayCore::stringHeight(const char *text) {
-    uint16_t w = 0;
     if (font == NULL) {
         return 0;
     }
@@ -1167,7 +1158,7 @@ uint16_t DisplayCore::colorAt(int16_t x, int16_t y) {
 }
 
 void DisplayCore::getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf) {
-    for (uint32_t i = 0; i < w*h; i++) {
+    for (int16_t i = 0; i < w*h; i++) {
         buf[i] = bgColor;
     }
 }
@@ -1493,8 +1484,6 @@ uint32_t DisplayCore::color2rgb(uint16_t rgb) {
     uint8_t green = rgb >> 5 & 0b111111;
     uint8_t blue = rgb & 0b11111;
 
-    point3d xyz;
-
     red = red << 3;
     green = green << 2;
     blue = blue << 3;
@@ -1514,7 +1503,7 @@ void DisplayCore::drawBezier(
 
     boolean first = true;
     float points = 1.0/(float)resolution;
-    float t = 0.0, sx, sy, v1, v2, v3, v4;
+    float t = 0.0, sx = 0, sy = 0;
     float ex, ey;
 
 
@@ -1550,7 +1539,7 @@ void DisplayCore::fillBezier(
 
     boolean first = true;
     float points = 1.0/(float)resolution;
-    float t = 0.0, sx, sy, v1, v2, v3, v4;
+    float t = 0.0, sx = 0, sy = 0;
     float ex, ey;
 
 
