@@ -1,35 +1,68 @@
 #include <SSD1963.h>
 
 SSD1963::SSD1963(
-    uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
-    uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
-    uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
-    uint8_t d8, uint8_t d9, uint8_t d10, uint8_t d11,
-    uint8_t d12, uint8_t d13, uint8_t d14, uint8_t d15
-) {
-    pin_d0 = d0;
-    pin_d1 = d1;
-    pin_d2 = d2;
-    pin_d3 = d3;
-    pin_d4 = d4;
-    pin_d5 = d5;
-    pin_d6 = d6;
-    pin_d7 = d7;
-    pin_d8 = d8;
-    pin_d9 = d9;
-    pin_d10 = d10;
-    pin_d11 = d11;
-    pin_d12 = d12;
-    pin_d13 = d13;
-    pin_d14 = d14;
-    pin_d15 = d15;
-    pin_rs = rs;
-    pin_wr = wr;
-    pin_rd = rd;
-    pin_cs = cs;
-    pin_reset = reset;
+   uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
+   uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
+   uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
+   uint8_t d8, uint8_t d9, uint8_t d10, uint8_t d11,
+   uint8_t d12, uint8_t d13, uint8_t d14, uint8_t d15,
+   uint8_t tft_bus_width
+   ) {
+
+   pin_d0 = d0;
+   pin_d1 = d1;
+   pin_d2 = d2;
+   pin_d3 = d3;
+   pin_d4 = d4;
+   pin_d5 = d5;
+   pin_d6 = d6;
+   pin_d7 = d7;
+   pin_d8 = d8;
+   pin_d9 = d9;
+   pin_d10 = d10;
+   pin_d11 = d11;
+   pin_d12 = d12;
+   pin_d13 = d13;
+   pin_d14 = d14;
+   pin_d15 = d15;
+   pin_rs = rs;
+   pin_wr = wr;
+   pin_rd = rd;
+   pin_cs = cs;
+   pin_reset = reset;
+   bus_width = tft_bus_width;
 }
 
+SSD1963::SSD1963(
+   uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
+   uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
+   uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
+   uint8_t tft_bus_width
+   ) {
+
+   pin_d0 = d0;
+   pin_d1 = d1;
+   pin_d2 = d2;
+   pin_d3 = d3;
+   pin_d4 = d4;
+   pin_d5 = d5;
+   pin_d6 = d6;
+   pin_d7 = d7;
+   pin_d8 = NOT_A_PIN;
+   pin_d9 = NOT_A_PIN;
+   pin_d10 = NOT_A_PIN;
+   pin_d11 = NOT_A_PIN;
+   pin_d12 = NOT_A_PIN;
+   pin_d13 = NOT_A_PIN;
+   pin_d14 = NOT_A_PIN;
+   pin_d15 = NOT_A_PIN;
+   pin_rs = rs;
+   pin_wr = wr;
+   pin_rd = rd;
+   pin_cs = cs;
+   pin_reset = reset;
+   bus_width = tft_bus_width;
+}
 void SSD1963::initializeDevice() {
 
     pinMode(pin_rs, OUTPUT);
@@ -112,7 +145,10 @@ void SSD1963::initializeDevice() {
     data(0x00ff);
 
     command(SSD1963_SetLCDMode);
-    data(0x0000);
+   if (TFTBUS24 == bus_width)
+      data(0x0020);         // 24 bits. The SSD1963 controller can be connected to the TFT screen with 18 or 24 data lines.
+   else
+      data(0x0000);         // 18 bits. The SSD1963 controller can be connected to the TFT screen with 18 or 24 data lines.
     data(0x0000);
     data((HDP>>8)&0X00FF);  //Set HDP
     data(HDP&0X00FF);
@@ -130,7 +166,7 @@ void SSD1963::initializeDevice() {
     data(LPS&0X00FF);
     data(0x0000);
 
-    command(SSD1963_SetVertPeriod); 
+    command(SSD1963_SetVertPeriod);
     data((VT>>8)&0X00FF);   //Set VT
     data(VT&0X00FF);
     data((VPS>>8)&0X00FF);  //Set VPS
@@ -150,7 +186,10 @@ void SSD1963::initializeDevice() {
     data(0x0000);
 
     command(SSD1963_SetPixelDataInterface);
-    data(0x0003);
+   if (NOT_A_PIN == pin_d8)
+      data(0x0000);
+   else
+      data(0x0003);
 
     delay(5);
 
@@ -169,7 +208,7 @@ void SSD1963::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) 
             x1a = x1;
             y0a = y0;
             y1a = y1;
-  
+ 
             x0 = y0a;
             x1 = y1a;
             y0 = _width - x1a;
@@ -180,13 +219,13 @@ void SSD1963::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) 
             x1a = x1;
             y0a = y0;
             y1a = y1;
-        
+       
             x0 = _width - x1a;
             x1 = _width - x0a;
             y0 = _height - y1a;
             y1 = _height - y0a;
             break;
-  
+ 
 
         case 3:
             x0a = x0;
@@ -216,25 +255,51 @@ void SSD1963::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) 
 }
 
 void SSD1963::setPixel(int16_t x, int16_t y, uint16_t color) {
-	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
-		return;
+   if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height))
+      return;
 
-	setAddrWindow(x,y,x,y);
-    data(color);
+   setAddrWindow(x,y,x,y);
+   if (NOT_A_PIN == pin_d8)
+   {
+      uint8_t red = (color & 0xF800) >> 8;
+      red |= ((red & 0x08) ? 0x07 : 0x00);
+      data8(red);
+      uint8_t green = (color & 0x7E0) >> 3;
+      green |= ((green & 0x08) ? 0x07 : 0x00);
+      data8(green);
+      uint8_t blue = (color & 0x1F) << 3;
+      blue |= ((blue & 0x08) ? 0x07 : 0x00);
+      data8(blue);
+   }
+   else
+      data(color);
 }
 
 void SSD1963::fillScreen(uint16_t color) {
-	fillRectangle(0, 0,  _width, _height, color);
+   fillRectangle(0, 0,  _width, _height, color);
 }
 
 void SSD1963::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
     if (!clipToScreen(x, y, w, h)) {
         return;
     }
-	setAddrWindow(x, y, x+w-1, y+h-1);
-	for(uint32_t i = 0; i < w * h; i++) {
-        data(color);
-	}
+   setAddrWindow(x, y, x+w-1, y+h-1);
+   for(uint32_t i = 0; i < w * h; i++) {
+      if (NOT_A_PIN == pin_d8)
+      {
+         uint8_t red = (color & 0xF800) >> 8;
+         red |= ((red & 0x08) ? 0x07 : 0x00);
+         data8(red);
+         uint8_t green = (color & 0x7E0) >> 3;
+         green |= ((green & 0x08) ? 0x07 : 0x00);
+         data8(green);
+         uint8_t blue = (color & 0x1F) << 3;
+         blue |= ((blue & 0x08) ? 0x07 : 0x00);
+         data8(blue);
+      }
+      else
+         data(color);
+   }
 }
 
 void SSD1963::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
@@ -261,10 +326,23 @@ void SSD1963::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color
         }
     }
 
-	setAddrWindow(x, y, x+w-1, y);
-	while (w--) {
-        data(color);
-	}
+   setAddrWindow(x, y, x+w-1, y);
+   while (w--) {
+      if (NOT_A_PIN == pin_d8)
+      {
+         uint8_t red = (color & 0xF800) >> 8;
+         red |= ((red & 0x08) ? 0x07 : 0x00);
+         data8(red);
+         uint8_t green = (color & 0x7E0) >> 3;
+         green |= ((green & 0x08) ? 0x07 : 0x00);
+         data8(green);
+         uint8_t blue = (color & 0x1F) << 3;
+         blue |= ((blue & 0x08) ? 0x07 : 0x00);
+         data8(blue);
+      }
+      else
+         data(color);
+   }
 }
 
 void SSD1963::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
@@ -291,18 +369,31 @@ void SSD1963::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) 
         }
     }
 
-	setAddrWindow(x, y, x, y+h-1);
-	while (h--) {
-        data(color);
-	}
+   setAddrWindow(x, y, x, y+h-1);
+   while (h--) {
+      if (NOT_A_PIN == pin_d8)
+      {
+         uint8_t red = (color & 0xF800) >> 8;
+         red |= ((red & 0x08) ? 0x07 : 0x00);
+         data8(red);
+         uint8_t green = (color & 0x7E0) >> 3;
+         green |= ((green & 0x08) ? 0x07 : 0x00);
+         data8(green);
+         uint8_t blue = (color & 0x1F) << 3;
+         blue |= ((blue & 0x08) ? 0x07 : 0x00);
+         data8(blue);
+      }
+      else
+         data(color);
+   }
 }
 
 void SSD1963::setRotation(uint8_t m) {
-	rotation = m % 4; // can't be higher than 3
+   rotation = m % 4; // can't be higher than 3
 }
 
 void SSD1963::invertDisplay(boolean i) {
-	command(i ? SSD1963_EnterInvertMode : SSD1963_ExitInvertMode);
+   command(i ? SSD1963_EnterInvertMode : SSD1963_ExitInvertMode);
 }
 
 void SSD1963::displayOn() {
@@ -365,3 +456,5 @@ uint16_t SSD1963::colorAt(int16_t x, int16_t y) {
     command(0x2E);
     return read();
 }
+
+

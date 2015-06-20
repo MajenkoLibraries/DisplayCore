@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$options = "iw:";
+$options = "iw:vd:";
 $opts = getopt($options);
 
 foreach( $opts as $o => $a ) {
@@ -27,6 +27,12 @@ if (!file_exists($file)) {
 if (substr($file, -4, 4) != ".png") {
     print("$file doesn't have the extension .png\n");
     exit(10);
+}
+
+$bpp = 1;
+
+if (isset($opts['d'])) {
+    $bpp = $opts['d'];
 }
 
 $prefix = substr($file, 0, -4);
@@ -60,10 +66,17 @@ for ($y = 0; $y < $imageHeight; $y++) {
         $pno = $y * $imageWidth + $x;
 
         // Where in the font array are we supposed to be?
-        $charRow = floor($y / $charHeight);
-        $charCol = floor($x / $charWidth);
-        $charLine = $y % $charHeight;
-        $charPix = $x % $charWidth;
+        if (isset($opts['v'])) { // Vertical arrangement?
+            $charCol = floor($y / $charHeight);
+            $charRow = floor($x / $charWidth);
+            $charLine = $y % $charHeight;
+            $charPix = $x % $charWidth;
+        } else {
+            $charRow = floor($y / $charHeight);
+            $charCol = floor($x / $charWidth);
+            $charLine = $y % $charHeight;
+            $charPix = $x % $charWidth;
+        }
 
         $charNo = $charRow * $cpl + $charCol;
         $arrayOffset = $charNo * $charHeight;
@@ -74,15 +87,15 @@ for ($y = 0; $y < $imageHeight; $y++) {
         $rgb = imageColorsForIndex($img, $pix);
         $sdata = @$fontData[$arraySlice];
         $sdata += 0;
-        if (isset($opts["i"])) {
-            if (($rgb["red"] + $rgb["green"] + $rgb["blue"]) != 0) {
-                $sdata |= 1<<$charPix;
-            }
-        } else {
-            if (($rgb["blue"]) == 0) {
-                $sdata |= 1<<$charPix;
-            }
+        $brightness = ($rgb["red"] + $rgb["green"] + $rgb["blue"]) / 3;
+
+        if (isset($opts['i'])) {
+            $brightness = 255 - $brightness;
         }
+
+        $brightness = $brightness >> (8 - $bpp);
+
+        $sdata |= $brightness << ($charPix * $bpp);
         $fontData[$arraySlice] = $sdata;
     }
 }
@@ -96,15 +109,15 @@ fprintf($cpp, "\n");
 fprintf($cpp, "namespace Fonts {\n");
 fprintf($cpp, "\n");
 fprintf($cpp, "    const uint8_t " . $prefix . "[] = {\n");
-fprintf($cpp, "        0x%02X, 0x%02X, 0x00, 0xFF, 0x01,\n", $charHeight, $bpl);
+fprintf($cpp, "        0x%02X, 0x%02X, 0x00, 0xFF, 0x%02X,\n", $charHeight, $bpl * $bpp, $bpp);
 $slice = 0;
 for ($char = 0; $char < 256; $char++) {
     fprintf($cpp, "        0x%02X, ", $charWidth);
     for ($b = 0; $b < $charHeight; $b++) {
         $val = $fontData[$slice++];
-        for ($c = 0; $c < $bpl; $c++) {
+        for ($c = 0; $c < $bpl * $bpp; $c++) {
             fprintf($cpp, "0x%02x, ", 
-                ($val >> (($bpl - $c - 1) * 8)) & 0xFF
+                ($val >> ((($bpl * $bpp) - $c - 1) * 8)) & 0xFF
             );
         }
     }

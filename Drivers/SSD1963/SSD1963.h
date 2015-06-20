@@ -3,6 +3,10 @@
 
 #include <DisplayCore.h>
 
+// the SSD1963 controller can be connected to the TFT screen with 18 or 24 data lines. So we need to tell the constructor which one.
+static const uint8_t TFTBUS18 = 18;
+static const uint8_t TFTBUS24 = 24;
+
 class SSD1963 : public DisplayCore {
 
     private:
@@ -150,6 +154,8 @@ class SSD1963 : public DisplayCore {
         uint32_t mask_wr;
         uint32_t mask_rd;
 
+      uint8_t bus_width;
+
         uint8_t pin_rs;
         uint8_t pin_rd;
         uint8_t pin_wr;
@@ -173,7 +179,7 @@ class SSD1963 : public DisplayCore {
         uint8_t pin_d15;
 
 
-		void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
+      void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 
         uint8_t _brightness;
 
@@ -199,27 +205,40 @@ class SSD1963 : public DisplayCore {
             port_wr->lat.clr = mask_wr;
             port_wr->lat.set = mask_wr;
         }
+      inline void data8(uint8_t cmd) {
+         port_rs->lat.set = mask_rs;
+         (cmd & 0x0001) ? port_d0->lat.set = mask_d0 : port_d0->lat.clr = mask_d0;
+         (cmd & 0x0002) ? port_d1->lat.set = mask_d1 : port_d1->lat.clr = mask_d1;
+         (cmd & 0x0004) ? port_d2->lat.set = mask_d2 : port_d2->lat.clr = mask_d2;
+         (cmd & 0x0008) ? port_d3->lat.set = mask_d3 : port_d3->lat.clr = mask_d3;
+         (cmd & 0x0010) ? port_d4->lat.set = mask_d4 : port_d4->lat.clr = mask_d4;
+         (cmd & 0x0020) ? port_d5->lat.set = mask_d5 : port_d5->lat.clr = mask_d5;
+         (cmd & 0x0040) ? port_d6->lat.set = mask_d6 : port_d6->lat.clr = mask_d6;
+         (cmd & 0x0080) ? port_d7->lat.set = mask_d7 : port_d7->lat.clr = mask_d7;
+         port_wr->lat.clr = mask_wr;
+         port_wr->lat.set = mask_wr;
+      }
 
-        inline void data(uint16_t cmd) {
-            port_rs->lat.set = mask_rs;
-            (cmd & 0x0001) ? port_d0->lat.set = mask_d0 : port_d0->lat.clr = mask_d0;
-            (cmd & 0x0002) ? port_d1->lat.set = mask_d1 : port_d1->lat.clr = mask_d1;
-            (cmd & 0x0004) ? port_d2->lat.set = mask_d2 : port_d2->lat.clr = mask_d2;
-            (cmd & 0x0008) ? port_d3->lat.set = mask_d3 : port_d3->lat.clr = mask_d3;
-            (cmd & 0x0010) ? port_d4->lat.set = mask_d4 : port_d4->lat.clr = mask_d4;
-            (cmd & 0x0020) ? port_d5->lat.set = mask_d5 : port_d5->lat.clr = mask_d5;
-            (cmd & 0x0040) ? port_d6->lat.set = mask_d6 : port_d6->lat.clr = mask_d6;
-            (cmd & 0x0080) ? port_d7->lat.set = mask_d7 : port_d7->lat.clr = mask_d7;
-            (cmd & 0x0100) ? port_d8->lat.set = mask_d8 : port_d8->lat.clr = mask_d8;
-            (cmd & 0x0200) ? port_d9->lat.set = mask_d9 : port_d9->lat.clr = mask_d9;
-            (cmd & 0x0400) ? port_d10->lat.set = mask_d10 : port_d10->lat.clr = mask_d10;
-            (cmd & 0x0800) ? port_d11->lat.set = mask_d11 : port_d11->lat.clr = mask_d11;
-            (cmd & 0x1000) ? port_d12->lat.set = mask_d12 : port_d12->lat.clr = mask_d12;
-            (cmd & 0x2000) ? port_d13->lat.set = mask_d13 : port_d13->lat.clr = mask_d13;
-            (cmd & 0x4000) ? port_d14->lat.set = mask_d14 : port_d14->lat.clr = mask_d14;
-            (cmd & 0x8000) ? port_d15->lat.set = mask_d15 : port_d15->lat.clr = mask_d15;
-            port_wr->lat.clr = mask_wr;
-            port_wr->lat.set = mask_wr;
+      inline void data(uint16_t cmd) {
+         port_rs->lat.set = mask_rs;
+         (cmd & 0x0001) ? port_d0->lat.set = mask_d0 : port_d0->lat.clr = mask_d0;
+         (cmd & 0x0002) ? port_d1->lat.set = mask_d1 : port_d1->lat.clr = mask_d1;
+         (cmd & 0x0004) ? port_d2->lat.set = mask_d2 : port_d2->lat.clr = mask_d2;
+         (cmd & 0x0008) ? port_d3->lat.set = mask_d3 : port_d3->lat.clr = mask_d3;
+         (cmd & 0x0010) ? port_d4->lat.set = mask_d4 : port_d4->lat.clr = mask_d4;
+         (cmd & 0x0020) ? port_d5->lat.set = mask_d5 : port_d5->lat.clr = mask_d5;
+         (cmd & 0x0040) ? port_d6->lat.set = mask_d6 : port_d6->lat.clr = mask_d6;
+         (cmd & 0x0080) ? port_d7->lat.set = mask_d7 : port_d7->lat.clr = mask_d7;
+         (cmd & 0x0100) ? port_d8->lat.set = mask_d8 : port_d8->lat.clr = mask_d8;
+         (cmd & 0x0200) ? port_d9->lat.set = mask_d9 : port_d9->lat.clr = mask_d9;
+         (cmd & 0x0400) ? port_d10->lat.set = mask_d10 : port_d10->lat.clr = mask_d10;
+         (cmd & 0x0800) ? port_d11->lat.set = mask_d11 : port_d11->lat.clr = mask_d11;
+         (cmd & 0x1000) ? port_d12->lat.set = mask_d12 : port_d12->lat.clr = mask_d12;
+         (cmd & 0x2000) ? port_d13->lat.set = mask_d13 : port_d13->lat.clr = mask_d13;
+         (cmd & 0x4000) ? port_d14->lat.set = mask_d14 : port_d14->lat.clr = mask_d14;
+         (cmd & 0x8000) ? port_d15->lat.set = mask_d15 : port_d15->lat.clr = mask_d15;
+         port_wr->lat.clr = mask_wr;
+         port_wr->lat.set = mask_wr;
         }
 
         inline uint16_t read() {
@@ -283,20 +302,27 @@ class SSD1963 : public DisplayCore {
             return out;
         }
 
-	public:
+   public:
         /*! The width of the screen is 800 pixels */
         static const uint16_t Width      = 800;
         /*! The height of the screen is 480 pixels */
         static const uint16_t Height     = 480;
 
-        SSD1963(
-            uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
-            uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
-            uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
-            uint8_t d8, uint8_t d9, uint8_t d10, uint8_t d11,
-            uint8_t d12, uint8_t d13, uint8_t d14, uint8_t d15
-        );
+      SSD1963(
+         uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
+         uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
+         uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
+         uint8_t d8, uint8_t d9, uint8_t d10, uint8_t d11,
+         uint8_t d12, uint8_t d13, uint8_t d14, uint8_t d15,
+         uint8_t tft_bus_width = TFTBUS18
+         );
 
+      SSD1963(
+         uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
+         uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
+         uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
+         uint8_t tft_bus_width = TFTBUS18
+         );
 
         void fillScreen(uint16_t color);
         void setPixel(int16_t x, int16_t y, uint16_t color);
@@ -322,3 +348,5 @@ class SSD1963 : public DisplayCore {
 };
 
 #endif
+
+
