@@ -234,6 +234,22 @@ Depends: libdisplaycore-core
 Description: DisplayCore Image Filters
  A selection of Image Filters
 
+Package: libdisplaycore-font-avop
+Architecture: all
+XBSC-Subgroup: Fonts
+Provides: AVOP.h
+Depends: libdisplaycore-core
+Description: AVOP Japanese Font
+ A selection of Japanese characters. Note: not ASCII.
+
+Package: libdisplaycore-font-lcars
+Package: libdisplaycore-font-ataributtons
+Architecture: all
+XBSC-Subgroup: Fonts
+Provides: AtariButtons.h
+Depends: libdisplaycore-core
+Description: Atari 8-bit font in Buttons
+
 Package: libdisplaycore-font-lcars
 Architecture: all
 XBSC-Subgroup: Fonts
