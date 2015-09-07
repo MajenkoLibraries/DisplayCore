@@ -1,7 +1,7 @@
 #ifndef _FONTS_DEJAVUSANSMONO_H
 #define _FONTS_DEJAVUSANSMONO_H
 
-#include <TFT.h>
+#include <DisplayCore.h>
 
 namespace Fonts {
         extern const uint8_t DejaVuSansMono8[];

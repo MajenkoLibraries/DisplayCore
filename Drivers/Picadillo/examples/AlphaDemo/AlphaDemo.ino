@@ -51,8 +51,8 @@ BMP kitten1(kitten1_data);
 Picadillo tft;
 
 void setup() {
-	analogWrite(PIN_BACKLIGHT, 255);
 	tft.initializeDevice();
+    tft.setBacklight(255);
 	tft.setRotation(0);
 	tft.setFont(Fonts::Topaz);
 	tft.setTextColor(Color::White);

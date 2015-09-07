@@ -41,8 +41,8 @@
 Picadillo tft;
 
 void setup() {
-	analogWrite(PIN_BACKLIGHT, 255);
 	tft.initializeDevice();
+    tft.setBacklight(255);
 	tft.setRotation(1);
 	tft.fillScreen(Color::Black);
 	tft.setFont(Fonts::Topaz);

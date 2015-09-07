@@ -115,6 +115,16 @@ Description: SSD1289 3.2" TFT
  both direct port manipulation driver and PMP driver for
  blistering speed.
 
+Package: libdisplaycore-driver-ks0108
+Architecture: all
+Provides: KS0108.h
+XBSC-Subgroup: Drivers
+Depends: libdisplaycore-core
+Description: KS0108 GLCD Driver for DisplayCore
+ The KS0108 GLCD is a 64x64 1-bit GLCD system.  It is most often combined
+ into a multi-chip display to create 128x64, 192x64 and 256x64 displays.
+ Multiple forms of the class are provided for different chip arrangements.
+
 Package: libdisplaycore-driver-ssd1963
 Architecture: all
 Provides: SSD1963.h
@@ -242,7 +252,6 @@ Depends: libdisplaycore-core
 Description: AVOP Japanese Font
  A selection of Japanese characters. Note: not ASCII.
 
-Package: libdisplaycore-font-lcars
 Package: libdisplaycore-font-ataributtons
 Architecture: all
 XBSC-Subgroup: Fonts

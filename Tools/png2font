@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$options = "iw:vd:";
+$options = "iw:vd:c:o:n:";
 $opts = getopt($options);
 
 foreach( $opts as $o => $a ) {
@@ -15,7 +15,7 @@ foreach( $opts as $o => $a ) {
 $argv = array_merge( $argv );
 
 if (count($argv) < 2) {
-    print("Usage: png2font [-i] <filename>\n");
+    print("Usage: png2font [-i] [-w cpl] [-c chars] [-d bpp] [-o offset] [-n name] <filename>\n");
     exit(10);
 }
 $file = $argv[1];
@@ -35,7 +35,20 @@ if (isset($opts['d'])) {
     $bpp = $opts['d'];
 }
 
+$chars = 256;
+if (isset($opts['c'])) {
+    $chars = $opts['c'];
+}
+
+$offset = 0;
+if (isset($opts['o'])) {
+    $offset = $opts['o'];
+}
+
 $prefix = substr($file, 0, -4);
+if (isset($opts['n'])) {
+    $prefix = $opts['n'];
+}
 
 $img = imageCreateFromPng($file);
 
@@ -47,7 +60,7 @@ if (isset($opts['w'])) {
     $cpl = $opts['w']  + 0;
 }
 
-$lines = 256 / $cpl;
+$lines = $chars / $cpl;
 
 $charWidth = floor($imageWidth / $cpl);
 $charHeight = floor($imageHeight / $lines);
@@ -79,6 +92,12 @@ for ($y = 0; $y < $imageHeight; $y++) {
         }
 
         $charNo = $charRow * $cpl + $charCol;
+        if ($charNo < $offset) {
+            continue;
+        }
+
+        $charNo -= $offset;
+
         $arrayOffset = $charNo * $charHeight;
 
         $arraySlice = $arrayOffset + $charLine;

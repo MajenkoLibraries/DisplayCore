@@ -31,8 +31,8 @@ unsigned int cube2d[8][2];
 unsigned int oldCube2d[8][2];
 
 void setup() {
-	analogWrite(PIN_BACKLIGHT, 255);
 	tft.initializeDevice();
+    tft.setBacklight(255);
 	timer = millis()+1000;
 	frame = 0;
 	tft.fillScreen(Color::Black);

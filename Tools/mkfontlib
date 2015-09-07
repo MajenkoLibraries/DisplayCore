@@ -79,7 +79,7 @@ open(OUT, ">$out");
 print OUT "#ifndef _FONTS_" . uc($name) . "_H\n";
 print OUT "#define _FONTS_" . uc($name) . "_H\n";
 print OUT "\n";
-print OUT "#include <TFT.h>\n";
+print OUT "#include <DisplayCore.h>\n";
 print OUT "\n";
 print OUT "namespace Fonts {\n";
 while ($points <= $pend) {
@@ -92,9 +92,11 @@ print OUT "#endif\n";
 close(OUT);
 
 my $bitsperpixel = 1;
+$| = 1;
 
 $points = $pstart;
 while ($points <= $pend) {
+    print "Generating $points ... ";
 
     my $fontname = $name . $points;
     $out = $name . "/" . $fontname . ".cpp";
@@ -213,16 +215,17 @@ while ($points <= $pend) {
     close (OUT);
 
     $points++;
+    print "done\n";
 }
 
 mkdir("$name/examples");
 mkdir("$name/examples/Demo");
 open(OUT, ">$name/examples/Demo/Demo.ino");
 print OUT <<EOF
-#include <TFT.h>
+#include <Picadillo.h>
 #include <$name.h>
 
-PICadillo35t tft;
+Picadillo tft;
  
 void setup()
 {

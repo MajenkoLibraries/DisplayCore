@@ -24,10 +24,6 @@ const int backlight = PIN_BACKLIGHT;
 #define NOTE_AS4 466
 #define NOTE_B4  494
 
-void setBacklight(int val) {
-    analogWrite(PIN_BACKLIGHT, val);
-}
-
 void audioOn() {
     pinMode(PIN_AUDENB, OUTPUT);
     digitalWrite(PIN_AUDENB, LOW);
@@ -51,7 +47,6 @@ void error(char *message) {
 }
 
 void setup() {
-	setBacklight(0);
 	ts.initializeDevice();
 
 	// These set the touch screen resolution.
@@ -60,6 +55,7 @@ void setup() {
 	ts.offsetY(5);
 
 	tft.initializeDevice();
+	tft.setBacklight(0);
 	tft.setFont(Fonts::Topaz);
 	tft.setTextColor(Color::White, Color::Black);
 	tft.fillScreen(Color::Black);
@@ -140,14 +136,14 @@ void doContinue() {
 
 void fadeUp() {
 	for (int i = 0; i < 255; i++) {
-		setBacklight(i);
+		tft.setBacklight(i);
 		delay(1);
 	}	
 }
 
 void fadeDown() {
 	for (int i = 0; i < 255; i++) {
-		setBacklight(254 - i);
+		tft.setBacklight(254 - i);
 		delay(1);
 	}	
 }

@@ -40,7 +40,6 @@
 #include <BMPFile.h>
 #include <Topaz.h>
 
-//#include <TFT.h>
 #include <ST7735.h>		//change to match your LCD
 
 #define PIN_SD_SS 4
@@ -51,8 +50,8 @@ DSPI0 spi;
 ST7735 tft(spi, 10, 8, ST7735::BlackTab);			//Do your LCD's init here
 
 void setup() {
-	//analogWrite(PIN_BACKLIGHT, 255);
 	tft.initializeDevice();
+    tft.setBacklight(255);
 	tft.setRotation(0);
 	tft.fillScreen(Color::Black);
 	tft.setFont(Fonts::Topaz);

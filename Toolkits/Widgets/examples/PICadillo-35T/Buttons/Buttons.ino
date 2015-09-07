@@ -1,7 +1,7 @@
-#include <TFT.h>
+#include <Picadillo.h>
 #include <Widgets.h>
 
-PICadillo35t tft;
+Picadillo tft;
 AnalogTouch ts(LCD_XL, LCD_XR, LCD_YU, LCD_YD, 320, 480);
 
 twButton on(tft, ts, 0, 100, 160, 100, "ON");
@@ -18,8 +18,8 @@ twButton b3(tft, ts, 160, 280, 80, 80, "B");
 twButton b4(tft, ts, 240, 280, 80, 80, "C");
 
 void setup() {
-	analogWrite(PIN_BACKLIGHT, 255);
 	tft.initializeDevice();
+    tft.setBacklight(255);
 	ts.initializeDevice();
     ts.scaleX(4.3);
     ts.scaleY(3.3);

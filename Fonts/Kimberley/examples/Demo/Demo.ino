@@ -1,12 +1,12 @@
-#include <TFT.h>
+#include <Picadillo.h>
 #include <Kimberley.h>
 
-PICadillo35t tft;
+Picadillo tft;
  
 void setup()
 {
-	analogWrite(PIN_BACKLIGHT, 255);
 	tft.initializeDevice();
+    tft.setBacklight(255);
 	tft.setTextWrap(false);
 	tft.setRotation(1);
 	tft.setCursor(0, 0);

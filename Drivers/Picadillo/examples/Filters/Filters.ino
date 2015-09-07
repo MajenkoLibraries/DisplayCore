@@ -61,12 +61,12 @@ AdjustHSV hsv;
 Invert inv;
 
 void setup() {
-    analogWrite(PIN_BACKLIGHT, 255);
     ts.initializeDevice();
     ts.scaleX(4.3);
     ts.scaleY(3.3);
     ts.offsetY(5);
     tft.initializeDevice();
+    tft.setBacklight(255);
     tft.setRotation(0);
     tft.fillScreen(Color::Black);
     tft.setFont(Fonts::Arial16);

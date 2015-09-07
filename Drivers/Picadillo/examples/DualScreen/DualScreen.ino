@@ -35,15 +35,14 @@
  */
 
 #include <DSPI.h>
-#include <TFT.h>
+#include <Picadillo.h>
 
 // Configure the display
-PICadillo35t tft;
+Picadillo tft;
 TFTSoftSPI mySPI(11, 13, 10, 8);
 ST7735 tft2(&mySPI, ST7735::BlackTab);
 
 void setup() {
-	analogWrite(PIN_BACKLIGHT, 255);
 	tft.initializeDevice();
 	tft2.initializeDevice();
 	tft.setRotation(1);
@@ -54,6 +53,7 @@ void setup() {
 	tft2.setFont(Fonts::Topaz);
 	tft.setTextColor(Color::White, Color::Black);	
 	tft2.setTextColor(Color::White, Color::Black);	
+    tft.setBackloght(255);
 }
 
 void loop() {

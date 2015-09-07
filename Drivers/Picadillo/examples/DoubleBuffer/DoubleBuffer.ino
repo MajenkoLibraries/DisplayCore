@@ -57,8 +57,8 @@ extern uint16_t wall_565[] asm("_binary_objects_wall_565_start");
 Raw565 wall(wall_565, 128, 32);
 
 void setup() {
-    analogWrite(PIN_BACKLIGHT, 255);
     tft.initializeDevice();
+    tft.setBacklight(255);
     tft.setRotation(0);
     tft.fillScreen(Color::Black);
 

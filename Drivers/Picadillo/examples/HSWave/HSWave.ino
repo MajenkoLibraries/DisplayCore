@@ -51,8 +51,8 @@ void printCentered(uint16_t pos, char *data) {
 }
 
 void setup() {
-	analogWrite(PIN_BACKLIGHT, 255);
 	tft.initializeDevice();
+    tft.setBacklight(255);
 	tft.setRotation(0);
 	tft.fillScreen(Color::Black);
 	tft.setFont(Fonts::Topaz);
