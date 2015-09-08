@@ -1,5 +1,9 @@
 #include <Picadillo.h>
 
+// We can only compile this code if we have both a
+// DMA system and the Parallel Master Port.
+#if defined(DCH3CON) && defined(PMADDR)
+
 void Picadillo::writeCommand(uint16_t c) {
     while (PMMODEbits.BUSY == 1);
     PMADDR = 0x0000;
@@ -390,3 +394,5 @@ void Picadillo::setBacklight(uint8_t b) {
     _brightness = b;
     analogWrite(PIN_BACKLIGHT, _brightness);
 }
+
+#endif

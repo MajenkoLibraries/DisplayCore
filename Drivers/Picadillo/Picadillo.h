@@ -4,6 +4,9 @@
 #include <DisplayCore.h>
 #include <AnalogTouch.h>
 
+#if defined(DCH3CON) && defined(PMADDR)
+
+
 class Picadillo : public DisplayCore
 {
     private:
@@ -78,4 +81,5 @@ class Picadillo : public DisplayCore
         uint8_t _brightness;
 };
 
+#endif
 #endif
