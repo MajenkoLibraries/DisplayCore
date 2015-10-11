@@ -9,8 +9,6 @@ AnalogTouch ts(LCD_XL, LCD_XR, LCD_YU, LCD_YD, 320, 480);
 
 const int btnSize = 64;
 
-const int backlight = PIN_BACKLIGHT;
-
 #define NOTE_C4  262
 #define NOTE_CS4 277
 #define NOTE_D4  294
@@ -34,7 +32,7 @@ void audioOff() {
     digitalWrite(PIN_AUDENB, HIGH);
 }
 
-twButton cont(tft, ts, 75, 300, 170, 75, "CONTINUE");
+twButton cont(ts, tft, 75, 300, 170, 75, "CONTINUE");
 
 void error(char *message) {
 	tft.setFont(Fonts::Topaz);
@@ -43,7 +41,7 @@ void error(char *message) {
 	tft.setCursor(0, 0);
 	tft.print(message);
 	fadeUp();
-	while(1);
+    doContinue();
 }
 
 void setup() {
@@ -63,13 +61,13 @@ void setup() {
 	tft.setFont(Fonts::Topaz);
 	tft.setTextColor(Color::White, Color::Black);	
 	tft.setCursor(0, 0);
+    cont.setBevel(4);
+    cont.setTextColor(Color::Red, Color::Black);
+    cont.setFont(Fonts::Liberation20);
 	if (!SD.begin(PIN_SD_SS)) {
 		error("Unable to initialize SD card!");
 	}
 
-	cont.setBevel(4);
-	cont.setTextColor(Color::Red);
-	cont.setFont(Fonts::Liberation20);
 	drawLogo();
 	tinkle();
 	prims();
@@ -101,6 +99,11 @@ void tinkle() {
 	audioOff();
 }
 
+boolean continuePressed = false;
+
+void pressContinue(Event *e) {
+    continuePressed = true;
+}
 
 void doContinue() {
 	cont.render();
@@ -108,13 +111,16 @@ void doContinue() {
 	ts.sample();
 	int lx = ts.x();
 	int ly = ts.y();
-	while (cont.render() != true) {
+    cont.onTap(pressContinue);
+    cont.redraw();
+    continuePressed = false;
+	while (continuePressed == false) {
+        cont.render();
+		tft.fillTriangle(0, ly-4, 4, ly, 0, ly+4, Color::Black);		
+		tft.fillTriangle(319, ly-4, 319-4, ly, 319, ly+4, Color::Black);		
 
-		tft.fillTriangle(0, ly-4, 4, ly, 0, ly+4, Color::Gray40);		
-		tft.fillTriangle(319, ly-4, 319-4, ly, 319, ly+4, Color::Gray40);		
-
-		tft.fillTriangle(lx-4, 0, lx, 4, lx+4, 0, Color::Gray40);		
-		tft.fillTriangle(lx-4, 479, lx, 479-4, lx+4, 479, Color::Gray40);		
+		tft.fillTriangle(lx-4, 0, lx, 4, lx+4, 0, Color::Black);		
+		tft.fillTriangle(lx-4, 479, lx, 479-4, lx+4, 479, Color::Black);		
 
 		ts.sample();
 		lx = ts.x();
@@ -124,6 +130,8 @@ void doContinue() {
 
 		tft.fillTriangle(lx-4, 0, lx, 4, lx+4, 0, Color::White);		
 		tft.fillTriangle(lx-4, 479, lx, 479-4, lx+4, 479, Color::White);		
+
+        delay(3); // Small delay to keep the triangles visible
 	}
 	audioOn();
 	delay(10);
@@ -151,8 +159,8 @@ void fadeDown() {
 void drawLogo() {
 	File f = SD.open("/4dlogo.bmp");
 	if (!f) {
-		tft.print("Unable to open image file!!!");
-		while(1);
+		error("Unable to open image file!!!");
+        return;
 	}
 	tft.fillScreen(Color::Gray40);
 	BMPFile bmp(f);
