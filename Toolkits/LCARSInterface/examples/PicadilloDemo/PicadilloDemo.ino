@@ -85,6 +85,13 @@ LCARS::RectButton panel4(
     "ALSO ME"
 );
 
+LCARS::Block block(
+    ts, tft,
+    0, 292, 80, 28,
+    LCARS::DarkRed,
+    "LCARS"
+);
+
 LCARS::VScale scale(
     ts, tft,
     120, 90,
@@ -106,8 +113,44 @@ LCARS::ExpandedOvalButton toggle(
     "I AM ON"
 );
 
+LCARS::OvalButton zero(
+    ts, tft,
+    200, 240,
+    LCARS::DarkRed,
+    LCARS::DarkOrange,
+    LCARS::LightRed,
+    "0%"
+);
+
+LCARS::OvalButton fifty(
+    ts, tft,
+    310, 240,
+    LCARS::DarkRed,
+    LCARS::DarkOrange,
+    LCARS::LightRed,
+    "50%"
+);
+
+LCARS::OvalButton onehundred(
+    ts, tft,
+    200, 280,
+    LCARS::DarkRed,
+    LCARS::DarkOrange,
+    LCARS::LightRed,
+    "100%"
+);
+
+
 void setScaleValue(Event *e) {
     e->source->setValue(100 - (e->y / 2));
+}
+
+void setScaleValueFromButton(Event *e) {
+    scale.setValue(e->source->getUserValue());
+}
+
+void toggleButton(Event *e) {
+    e->source->setValue(1 - e->source->getValue());
 }
 
 void setup() {
@@ -130,6 +173,16 @@ void setup() {
 
     scale.onPress(setScaleValue);
     scale.onDrag(setScaleValue);
+
+    toggle.onTap(toggleButton);
+
+    zero.setUserValue(0);
+    fifty.setUserValue(50);
+    onehundred.setUserValue(100);
+
+    zero.onTap(setScaleValueFromButton);
+    fifty.onTap(setScaleValueFromButton);
+    onehundred.onTap(setScaleValueFromButton);
 }
 
 void loop() {
@@ -147,8 +200,14 @@ void loop() {
     panel3.render();
     panel4.render();
 
+    block.render();
+
     scale.render();
     toggle.render();
+
+    zero.render();
+    fifty.render();
+    onehundred.render();
     
     if (millis() - tick > 1000) {
         tick = millis();
