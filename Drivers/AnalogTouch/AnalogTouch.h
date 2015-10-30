@@ -22,6 +22,11 @@ class AnalogTouch : public Touch {
         uint16_t rawX() { return x(); };
         uint16_t rawY() { return y(); };
 
+        void offsetX(int16_t ox) { _offset_x = ox; }
+        void offsetY(int16_t oy) { _offset_y = oy; }
+        void scaleX(float sx) { _scale_x = sx; }
+        void scaleY(float sy) { _scale_y = sy; }
+
         boolean isPressed();
 
         void initializeDevice();

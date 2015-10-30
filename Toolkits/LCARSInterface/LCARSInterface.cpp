@@ -99,15 +99,17 @@ namespace LCARS {
     }
 
     void HBarBend::draw(DisplayCore *dev, int16_t x, int16_t y) {
+        int sw = dev->getWidth();
         if ((bendType & BendUp) && (bendType & BendLeft)) {
             dev->startBuffer();
+
             // Bend portion
             if (!movedMid || _redraw) {
                 dev->fillRectangle(0, y, 80, bendSize, leftColor);                                  // Left bend extension
-                dev->fillRectangle(50, y + 20, bendSize + 10, 50, leftColor);                       // Left bend fill
+                dev->fillRectangle(50, y + bendSize, 30, 50, leftColor);                       // Left bend fill
                 drawOuterQuadrant(dev, 50, y + bendSize - 1, 50, 0x8, leftColor);                   // Left bend outside
                 drawInnerQuadrant(dev, 100, y + bendSize + 19, 20, 0x8, leftColor);                 // Left bend inside
-                dev->fillRectangle(775, y + bendSize + 40, 25, 10, endColor);                       // End bit
+                dev->fillRectangle(sw-25, y + bendSize + 40, 25, 10, endColor);                       // End bit
                 dev->setFont(Fonts::LCARS16);
                 dev->setTextColor(Color::Black, leftColor);
                 dev->setCursor(75 - (dev->stringWidth(text)), y + 5);
@@ -119,7 +121,7 @@ namespace LCARS {
             dev->fillRectangle(80 + midPos + 20, y + bendSize + 40, 5, 10, Color::Black);            // Left gap
             dev->fillRectangle(85 + midPos + 20, y + bendSize + 40, midSize - 10, 10, midColor);     // Mid section
             dev->fillRectangle(75 + midPos + 20 + midSize, y + bendSize + 40, 5, 10, Color::Black);  // Right gap
-            dev->fillRectangle(80 + midPos + 20 + midSize, y + bendSize + 40, 670 - midPos - midSize, 10, rightColor);    // RIght section
+            dev->fillRectangle(80 + midPos + 20 + midSize, y + bendSize + 40, (sw-130) - midPos - midSize, 10, rightColor);    // RIght section
             movedMid = false;
             _redraw = false;
             dev->endBuffer();
@@ -132,7 +134,7 @@ namespace LCARS {
             dev->fillRectangle(80 + midPos + 20, y, 5, 10, Color::Black);
             dev->fillRectangle(85 + midPos + 20, y, midSize - 10, 10, midColor);
             dev->fillRectangle(75 + midPos + 20 + midSize, y, 5, 10, Color::Black);  // Right gap
-            dev->fillRectangle(80 + midPos + 20 + midSize, y, 670 - midPos - midSize, 10, rightColor);
+            dev->fillRectangle(80 + midPos + 20 + midSize, y, (sw-130) - midPos - midSize, 10, rightColor);
 
             // Bend portion
             if (!movedMid || _redraw) {
@@ -140,7 +142,7 @@ namespace LCARS {
                 drawInnerQuadrant(dev, 100, y + 30, 20, 0x1, leftColor);
                 drawOuterQuadrant(dev, 50, y + 50, 50, 0x1, leftColor);
                 dev->fillRectangle(0, y + 50, 80, bendSize, leftColor);
-                dev->fillRectangle(775, y, 25, 10, endColor);
+                dev->fillRectangle(sw-25, y, 25, 10, endColor);
                 dev->setFont(Fonts::LCARS16);
                 dev->setTextColor(Color::Black, leftColor);
                 dev->setCursor(75 - (dev->stringWidth(text)), y + 28 + bendSize);
@@ -155,9 +157,10 @@ namespace LCARS {
 
     void HBarBend::setValue(uint16_t x) {
         if (x != _value) {
+            int sw = _dev->getWidth();
             movedMid = true;
-            if (x > 670 - midSize) {
-                x = 670 - midSize;
+            if (x > (sw-150) - midSize) {
+                x = (sw-150) - midSize;
             }
             _value = x;
         }
