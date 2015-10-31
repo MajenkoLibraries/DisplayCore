@@ -157,6 +157,7 @@ public class TrueTypeRender extends JDialog {
                     "TrueType Font Files", "ttf");
                 fc.setFileFilter(filter);
                 int rv = fc.showOpenDialog(TrueTypeRender.this);
+System.err.println("FOO");
                 if (rv == JFileChooser.APPROVE_OPTION) {
                     ttfFile = fc.getSelectedFile();
                     lastOpenLocation = ttfFile.getParentFile();

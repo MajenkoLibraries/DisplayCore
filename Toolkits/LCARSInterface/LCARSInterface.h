@@ -244,7 +244,11 @@ namespace LCARS {
 
             void draw(DisplayCore *dev, int16_t x, int16_t y);
             void render();
-            size_t write(uint8_t v);
+#if ARDUINO >= 100
+            virtual size_t write(uint8_t v);
+#else
+            virtual void write(uint8_t v);
+#endif
     };
 
     class VScale : public Widget {

@@ -442,7 +442,11 @@ namespace LCARS {
         dev->endBuffer();
     }
 
+#if ARDUINO >= 100
     size_t MessageLog::write(uint8_t v) {
+#else
+    void MessageLog::write(uint8_t v) {
+#endif
         setValue((int)v);
         return 1;
     }
