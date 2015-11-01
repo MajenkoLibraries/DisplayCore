@@ -2,11 +2,20 @@ options.vgadbl.name=VGA Mode
 options.vgadbl.default=losgl
 options.vgadbl.purge=true
 
+options.vgadbl.vlodblds.name=Double Buffer 256x240
+options.vgadbl.vlodblds.flags=-DVGA_USE_DOUBLE_BUFFER=1::-DVGA_USE_HI_RES=0::-DVGA_USE_LO_RES=1::-DVGA_USE_DOUBLESCAN=1
+
+options.vgadbl.vlosglds.name=Single Buffer 256x240
+options.vgadbl.vlosglds.flags=-DVGA_USE_DOUBLE_BUFFER=0::-DVGA_USE_HI_RES=0::-DVGA_USE_LO_RES=1::-DVGA_USE_DOUBLESCAN=1
+
+options.vgadbl.vlosgl.name=Single Buffer 256x480
+options.vgadbl.vlosgl.flags=-DVGA_USE_DOUBLE_BUFFER=0::-DVGA_USE_HI_RES=0::-DVGA_USE_LO_RES=1
+
 options.vgadbl.losgl.name=Single Buffered 432x480
-options.vgadbl.losgl.flags=-DVGA_USE_DOUBLE_BUFFER=0::-DVGA_USE_HI_RES=0
+options.vgadbl.losgl.flags=-DVGA_USE_DOUBLE_BUFFER=0::-DVGA_USE_HI_RES=0::-DVGA_USE_LO_RES=0
 
 options.vgadbl.lodbl.name=Double Buffered 432x480
-options.vgadbl.lodbl.flags=-DVGA_USE_DOUBLE_BUFFER=1::-DVGA_USE_HI_RES=0
+options.vgadbl.lodbl.flags=-DVGA_USE_DOUBLE_BUFFER=1::-DVGA_USE_HI_RES=0::-DVGA_USE_LO_RES=0
 
 options.vgadbl.hisgl.name=Single Buffered 864x480
-options.vgadbl.hisgl.flags=-DVGA_USE_DOUBLE_BUFFER=0::-DVGA_USE_HI_RES=1
+options.vgadbl.hisgl.flags=-DVGA_USE_DOUBLE_BUFFER=0::-DVGA_USE_HI_RES=1::-DVGA_USE_LO_RES=0

@@ -21,6 +21,7 @@ uint32_t vgaBufSize;
 
 static const uint32_t VGA_TICK = 42; //49;
 volatile uint32_t vgaScanLine = 0;
+volatile uint32_t vgaMilliCount = 0;
 
 void __USER_ISR __attribute((no_auto_psr)) vgaProcess() {
     static uint32_t ramPos = 0;
@@ -30,54 +31,56 @@ void __USER_ISR __attribute((no_auto_psr)) vgaProcess() {
     // The current portion of a scan line
     static uint32_t vgaScanPhase = 0;
 
-    TMR2 = 0;
-    IFS0bits.T2IF = 0;
+    TMR5 = 0;
+    IFS0bits.T5IF = 0;
 
-    switch (vgaScanPhase) {
-        case 0: // Start of visible area
+    if (vgaScanPhase == 0) {
             if (vgaScanLine < 480) {
                 DCH0SSA = ((uint32_t)&vgaBuffer[ramPos]) & 0x1FFFFFFF;
                 DCH0ECONbits.CFORCE = 1;
                 DCH0CONbits.CHEN = 1;
-                ramPos += vgaWidth;
+#if VGA_USE_DOUBLESCAN
+                if (vgaScanLine & 1) 
+#endif
+                    ramPos += vgaWidth;
             }
-            PR2 = VGA_TICK * 40; // 40 "ticks" later...
+            PR5 = VGA_TICK * 40; // 40 "ticks" later...
             vgaScanPhase++;
-            break;
-        case 1: // Start of front porch
+            return;
+    } else if (vgaScanPhase == 1) {
             SPI4BUF = 0;
-            PR2 = VGA_TICK * 1; // One tick later...
+            PR5 = VGA_TICK * 1; // One tick later...
             vgaScanPhase++;
-            break;
-        case 2: // Start of pulse
+            return;
+    } else if (vgaScanPhase == 2) {
             HSYNC_ON
-            PR2 = VGA_TICK * 6; // 6 ticks later...
+            PR5 = VGA_TICK * 6; // 6 ticks later...
             vgaScanPhase++;
-            break;
-        case 3: // Start of back porch
+            return;
+    } else if (vgaScanPhase == 3) {
             HSYNC_OFF
-            PR2 = VGA_TICK * 3; // 3 ticks later it's back to the start.
+            PR5 = VGA_TICK * 3; // 3 ticks later it's back to the start.
             vgaScanPhase = 0;
             vgaScanLine++;
-            break;
-    }
-    switch (vgaScanLine) {
-        case 0: // Visible area
-            break;
-        case 480: // Start of front porch
-            break;
-        case 490: // Start of pulse
-            ramPos = 0;
-            VSYNC_ON
-            break;
-        case 492: // Start of back porch
-            VSYNC_OFF
-            break;
-        case 525: // End of frame
-            vgaScanLine = 0;
-            break;
     }
 
+
+    if (vgaScanLine == 490) {
+        ramPos = 0;
+        VSYNC_ON
+        while (TMR4 >= 312) {
+            vgaMilliCount++;
+            TMR4 -= 312;
+        }
+    } else if (vgaScanLine == 492) {
+        VSYNC_OFF
+    } else if (vgaScanLine == 525) {
+        vgaScanLine = 0;
+    }
+}
+
+uint32_t VGA::millis() {
+    return vgaMilliCount;
 }
 
 void VGA::initializeDevice() {
@@ -103,13 +106,13 @@ void VGA::initializeDevice() {
     _vsync_port->tris.clr = _vsync_pin;
 
     // First we need to set up a timer that will trigger at the different times.
-    T2CONbits.TCKPS = 0; // No prescaler
-    PR2 = 0xFFFF;
+    T5CONbits.TCKPS = 0; // No prescaler
+    PR5 = 0xFFFF;
 
-    setIntVector(_TIMER_2_VECTOR, vgaProcess);
-    setIntPriority(_TIMER_2_VECTOR, 6, 0);
-    clearIntFlag(_TIMER_2_IRQ);
-    setIntEnable(_TIMER_2_IRQ);
+    setIntVector(_TIMER_5_VECTOR, vgaProcess);
+    setIntPriority(_TIMER_5_VECTOR, 7, 3);
+    clearIntFlag(_TIMER_5_IRQ);
+    setIntEnable(_TIMER_5_IRQ);
 
     // Now congfigure SPI4 for display data transmission.
     SPI4CON = 0;
@@ -117,6 +120,8 @@ void VGA::initializeDevice() {
     SPI4CONbits.STXISEL = 0b11; // Interrupt when one byte in buffer
 #if VGA_USE_HI_RES
     SPI4BRG = 0; // This will set how big each pixel is.
+#elif VGA_USE_LO_RES
+    SPI4BRG = 2;
 #else
     SPI4BRG = 1; // This will set how big each pixel is.
 #endif
@@ -142,14 +147,23 @@ void VGA::initializeDevice() {
     vgaHeight = Height;
     vgaBufSize = vgaWidth * vgaHeight;
 
-    clearIntEnable(_CORE_TIMER_IRQ);
-//    setIntPriority(_CORE_TIMER_VECTOR, 5, 0);
 
     VSYNC_OFF
     HSYNC_OFF
 
     DMACONbits.ON = 1;
-    T2CONbits.ON = 1; // Turn on the timer
+    T5CONbits.ON = 1; // Turn on the timer
+
+    // Unfortunately the core timer really plays havoc with the VGA timing.
+    // So we have to disable it. That means no millis() and no delay().
+    // Makes things a little more interesting...
+    clearIntEnable(_CORE_TIMER_IRQ);
+    
+    // To compensate we'll create our own millis system that is keyed to the
+    // display vertical sync.
+    T4CONbits.TCKPS = 7; // 256:1 prescale
+    TMR4 = 0;
+    T4CONbits.ON = 1;
 }
 
 VGA::VGA(uint8_t hsync, uint8_t vsync) {

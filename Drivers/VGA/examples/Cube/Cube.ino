@@ -55,9 +55,14 @@ void printcube() {
 		cube2d[i][1] = (unsigned int)((cube3d[i][1] * view_plane / cube3d[i][2]) + (vpos));
 	}
 
-	draw_cube(cube2d, Color::White);
-	draw_cube(oldCube2d, Color::Black);
-	draw_cube(cube2d, Color::White);
+#ifdef VGA_USE_DOUBLE_BUFFER
+    tft.flip();
+    tft.fillScreen(Color::Black);
+#else
+    draw_cube(cube2d, Color::White);
+    draw_cube(oldCube2d, Color::Black);
+#endif
+    draw_cube(cube2d, Color::White);
 
 	for (byte i = 0; i < 8; i++) {
 		oldCube2d[i][0] = cube2d[i][0];

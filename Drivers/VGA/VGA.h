@@ -11,14 +11,34 @@
 #define VGA_USE_HI_RES 0
 #endif
 
+#ifndef VGA_USE_LO_RES
+#define VGA_USE_LO_RES 0
+#endif
+
+#ifndef VGA_USE_DOUBLESCAN
+#define VGA_USE_DOUBLESCAN 0
+#endif
+
+#ifdef __PIC32MZ__
+#define _TIMER_5_IRQ _TIMER_5_VECTOR
+#define _SPI4_TX_IRQ _SPI4_TX_VECTOR
+#endif
+
 class VGA : public DisplayCore {
     public:
 #if VGA_USE_HI_RES
         static const uint16_t Width = (108*8);
+#elif VGA_USE_LO_RES
+        static const uint16_t Width = (32*8);
 #else
         static const uint16_t Width = (54*8);
 #endif
+
+#if VGA_USE_DOUBLESCAN
+        static const uint16_t Height = 240;
+#else
         static const uint16_t Height = 480;
+#endif
     private:
         static const uint32_t clockOffset = 10;
 
@@ -46,9 +66,9 @@ class VGA : public DisplayCore {
         static const uint32_t vgaVert[];
         static const uint32_t vgaOffset = 45;
 
-        volatile uint8_t _buffer0[((Width/8)+1) * Height];
+        volatile uint8_t _buffer0[((Width/8)+1) * Height] __attribute__((aligned(4)));
 #if VGA_USE_DOUBLE_BUFFER
-        volatile uint8_t _buffer1[((Width/8)+1) * Height];
+        volatile uint8_t _buffer1[((Width/8)+1) * Height] __attribute__((aligned(4)));
 #endif
 
         volatile uint8_t *activeBuffer;
@@ -77,6 +97,8 @@ class VGA : public DisplayCore {
         void flip();
 
         void fillScreen(uint16_t c);
+
+        uint32_t millis();
 
 };
 
