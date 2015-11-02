@@ -7,16 +7,12 @@
 #define VGA_USE_DOUBLE_BUFFER 0
 #endif
 
-#ifndef VGA_USE_HI_RES
-#define VGA_USE_HI_RES 0
+#ifndef VGA_USE_H_RES
+#define VGA_USE_H_RES 0
 #endif
 
-#ifndef VGA_USE_LO_RES
-#define VGA_USE_LO_RES 0
-#endif
-
-#ifndef VGA_USE_DOUBLESCAN
-#define VGA_USE_DOUBLESCAN 0
+#ifndef VGA_USE_V_RES
+#define VGA_USE_V_RES 0
 #endif
 
 #ifdef __PIC32MZ__
@@ -26,32 +22,23 @@
 
 class VGA : public DisplayCore {
     public:
-#if VGA_USE_HI_RES
-        static const uint16_t Width = (108*8);
-#elif VGA_USE_LO_RES
-        static const uint16_t Width = (32*8);
-#else
-        static const uint16_t Width = (54*8);
-#endif
-
-#if VGA_USE_DOUBLESCAN
-        static const uint16_t Height = 240;
-#else
-        static const uint16_t Height = 480;
-#endif
+        static const uint16_t Width = 768 / (VGA_USE_H_RES + 1);
+        static const uint16_t Height = 480 / (VGA_USE_V_RES + 1);
     private:
         static const uint32_t clockOffset = 10;
 
         // All these are in clock cycles
         // For an 80 MHz chip each clock cycle is 13ns.
 
+        static const uint32_t hoff = 10;
+
         // VGA timings specify:
         // Front porch = 636ns = 49 cycles
-        static const uint32_t vgaHFP = 49 + 20;
+        static const uint32_t vgaHFP = 49 + 20 + hoff;
         // Pulse width = 3813ns = 293 cycles (240)
         static const uint32_t vgaHSP = 293;  // HSync pulse == 293 clock cycles
         // Back porch = 1907ns = 147 cycles
-        static const uint32_t vgaHBP = 147; // Back porch == 147 clock cycles
+        static const uint32_t vgaHBP = 147 - hoff; // Back porch == 147 clock cycles
         // Whole line is 31778ns = 2444 cycles.
         static const uint32_t vgaHDP = 2444 - vgaHBP - vgaHSP - vgaHFP - 200; // Display period == 1956 clock cycles
 

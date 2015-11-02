@@ -8,6 +8,7 @@ static const uint8_t CMD_SET_PIX = 133;
 static const uint8_t CMD_CLR_PIX = 134;
 static const uint8_t CMD_SET_LINE = 135;
 static const uint8_t CMD_CLR_LINE = 136;
+static const uint8_t CMD_SET_BAUD = 137;
 
 void VLCD::initializeDevice() {
     initializeDevice(Serial);
@@ -23,6 +24,14 @@ void VLCD::push(uint8_t v) {
     _ser->write(CMD_PUSH);
     _ser->write('a' + (v & 0x0F));
     _ser->write('a' + ((v >> 4) & 0x0F));
+}
+
+void VLCD::setBaud(uint32_t b) {
+    push(b);
+    push(b >> 8);
+    push(b >> 16);
+    push(b >> 24);
+    _ser->write(CMD_SET_BAUD);
 }
 
 void VLCD::setPixel(int16_t x, int16_t y, uint16_t c) {

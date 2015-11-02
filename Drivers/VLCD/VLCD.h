@@ -55,6 +55,8 @@ class VLCD : public DisplayCore {
         void setForeground(uint16_t c);
         void setBackground(uint16_t c);
 
+        void setBaud(uint32_t b);
+
         uint16_t getWidth() { return _width; }
         uint16_t getHeight() { return _height; }
 

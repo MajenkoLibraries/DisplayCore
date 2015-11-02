@@ -19,7 +19,7 @@ uint32_t vgaWidth;
 uint32_t vgaHeight;
 uint32_t vgaBufSize;
 
-static const uint32_t VGA_TICK = 42; //49;
+static const uint32_t VGA_TICK = 21; //49;
 volatile uint32_t vgaScanLine = 0;
 volatile uint32_t vgaMilliCount = 0;
 
@@ -39,27 +39,27 @@ void __USER_ISR __attribute((no_auto_psr)) vgaProcess() {
                 DCH0SSA = ((uint32_t)&vgaBuffer[ramPos]) & 0x1FFFFFFF;
                 DCH0ECONbits.CFORCE = 1;
                 DCH0CONbits.CHEN = 1;
-#if VGA_USE_DOUBLESCAN
+#if VGA_USE_V_RES == 1
                 if (vgaScanLine & 1) 
 #endif
                     ramPos += vgaWidth;
             }
-            PR5 = VGA_TICK * 40; // 40 "ticks" later...
+            PR5 = VGA_TICK * 80; // 40 "ticks" later...
             vgaScanPhase++;
             return;
     } else if (vgaScanPhase == 1) {
             SPI4BUF = 0;
-            PR5 = VGA_TICK * 1; // One tick later...
+            PR5 = VGA_TICK * 2; // One tick later...
             vgaScanPhase++;
             return;
     } else if (vgaScanPhase == 2) {
             HSYNC_ON
-            PR5 = VGA_TICK * 6; // 6 ticks later...
+            PR5 = VGA_TICK * 12; // 6 ticks later...
             vgaScanPhase++;
             return;
     } else if (vgaScanPhase == 3) {
             HSYNC_OFF
-            PR5 = VGA_TICK * 3; // 3 ticks later it's back to the start.
+            PR5 = VGA_TICK * 6; // 3 ticks later it's back to the start.
             vgaScanPhase = 0;
             vgaScanLine++;
     }
@@ -67,11 +67,8 @@ void __USER_ISR __attribute((no_auto_psr)) vgaProcess() {
 
     if (vgaScanLine == 490) {
         ramPos = 0;
+        vgaMilliCount += 15;
         VSYNC_ON
-        while (TMR4 >= 312) {
-            vgaMilliCount++;
-            TMR4 -= 312;
-        }
     } else if (vgaScanLine == 492) {
         VSYNC_OFF
     } else if (vgaScanLine == 525) {
@@ -118,13 +115,7 @@ void VGA::initializeDevice() {
     SPI4CON = 0;
     SPI4CONbits.MSTEN = 1;
     SPI4CONbits.STXISEL = 0b11; // Interrupt when one byte in buffer
-#if VGA_USE_HI_RES
-    SPI4BRG = 0; // This will set how big each pixel is.
-#elif VGA_USE_LO_RES
-    SPI4BRG = 2;
-#else
-    SPI4BRG = 1; // This will set how big each pixel is.
-#endif
+    SPI4BRG = VGA_USE_H_RES; // This will set how big each pixel is.
     SPI4CONbits.ON = 1;
 
     // And now a DMA channel for transferring the data
@@ -158,12 +149,6 @@ void VGA::initializeDevice() {
     // So we have to disable it. That means no millis() and no delay().
     // Makes things a little more interesting...
     clearIntEnable(_CORE_TIMER_IRQ);
-    
-    // To compensate we'll create our own millis system that is keyed to the
-    // display vertical sync.
-    T4CONbits.TCKPS = 7; // 256:1 prescale
-    TMR4 = 0;
-    T4CONbits.ON = 1;
 }
 
 VGA::VGA(uint8_t hsync, uint8_t vsync) {
