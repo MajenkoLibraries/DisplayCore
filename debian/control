@@ -1,24 +1,27 @@
 Source: libdisplaycore
 Section: libraries
-Priority: extra
-XBSC-Group: DisplayCore
 XBSC-Family: all
+Priority: extra
 Maintainer: Matt Jenkins <matt@majenko.co.uk>
 Build-Depends: debhelper (>= 8.0.0)
 Standards-Version: 3.9.4
 
 Package: libdisplaycore-core
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 Provides: DisplayCore.h
 Description: DisplayCore core files
- These are the main core files for the DisplayCore system. 
+ These are the main core files for the DisplayCore system.
  All the other libraries rely on these files.
 
 Package: libdisplaycore-driver-framebuffer332
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
-Provides: Framebuffer332.h
 Depends: libdisplaycore-core
+Provides: Framebuffer332.h
 Description: DisplayCore RGB332 Framebuffer
  The RGB332 Framebuffer is a virtual display / image driver
  which allows you to draw "off screen" then render the finished
@@ -26,60 +29,74 @@ Description: DisplayCore RGB332 Framebuffer
  consisting of 3 bits of red, 3 bits of green, and 2 bits of blue.
 
 Package: libdisplaycore-driver-framebuffer565
+Section: libraries
 Architecture: all
-Provides: Framebuffer565.h
-Depends: libdisplaycore-core
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
+Depends: libdisplaycore-core
+Provides: Framebuffer565.h
 Description: DisplayCore RGB565 Framebuffer
  The RGB565 Framebuffer is a virtual display / image driver
  which allows you to draw "off screen" then render the finished
  image to the screen at will.
 
 Package: libdisplaycore-driver-picadillo
+Section: libraries
 Architecture: all
-Provides: Picadillo.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core, libdisplaycore-driver-analogtouch
+Provides: Picadillo.h
 Description: Picadillo-35T driver for DisplayCore
  The DisplayCore driver for the Picadillo-35T board
 
 Package: libdisplaycore-driver-sdl
+Section: libraries
 Architecture: all
-Provides: SDL.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
+Provides: SDL.h
 Description: SDL driver for DisplayCore
  Create rich Linux GUI applications.
 
 Package: libdisplaycore-driver-nativefb
+Section: libraries
 Architecture: all
-Provides: NativeFB.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
+Provides: NativeFB.h
 Description: Native Framebuffer (Linux) Driver
  Direct access to the Linux framebuffer device for Raspberry Pi etc.
 
 Package: libdisplaycore-driver-vlcd
+Section: libraries
 Architecture: all
-Provides: VLCD.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
+Provides: VLCD.h
 Description: VirtualLCD Driver for DisplayCore
  Use UECIDE's VirtualLCD plugin as a display device for DisplayCore
 
 Package: libdisplaycore-driver-vga
+Section: libraries
 Architecture: all
-Provides: VGA.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
+Provides: VGA.h
 Description: VGA Driver for DisplayCore
  Generate a crude VGA signal through SPI4.
 
 Package: libdisplaycore-driver-pg25664cg
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
-Provides: PG25664CG.h
 Depends: libdisplaycore-core
+Provides: PG25664CG.h
 Description: PG25664CG OLED Driver for DisplayCore
  The PG25664CG is a 256x64 OLED display based on the SSD1322
  display chip. It provides 4-bit grayscale operation with
@@ -87,28 +104,34 @@ Description: PG25664CG OLED Driver for DisplayCore
  8KB internal buffer for ease of operation.
 
 Package: libdisplaycore-driver-lm6800
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
-Provides: LM6800.h
 Depends: libdisplaycore-core
+Provides: LM6800.h
 Description: LM6800 driver for DisplayCore
  The LM6800 is a four-chip KS0108 based LCD with 2-to-4
  decoder for the chip select lines. A third chip select line
  acts as a global enable/disable line for the entire display.
 
 Package: libdisplaycore-driver-st7735
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
-Provides: ST7735.h
 Depends: libdisplaycore-core
+Provides: ST7735.h
 Description: ST7735 driver for DisplayCore
  The ST7735 is used by the Adafruit 1.8" TFT shields.
 
 Package: libdisplaycore-driver-ssd1289
+Section: libraries
 Architecture: all
-Provides: SSD1289.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
+Provides: SSD1289.h
 Description: SSD1289 3.2" TFT
  Generic SSD1289 based TFT screen (240x320) such as the
  SainSmart TFT_320QVT or the iTead ITDB02-3.2S. Supports
@@ -116,253 +139,313 @@ Description: SSD1289 3.2" TFT
  blistering speed.
 
 Package: libdisplaycore-driver-ks0108
+Section: libraries
 Architecture: all
-Provides: KS0108.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
+Provides: KS0108.h
 Description: KS0108 GLCD Driver for DisplayCore
  The KS0108 GLCD is a 64x64 1-bit GLCD system.  It is most often combined
  into a multi-chip display to create 128x64, 192x64 and 256x64 displays.
  Multiple forms of the class are provided for different chip arrangements.
 
 Package: libdisplaycore-driver-ssd1963
+Section: libraries
 Architecture: all
-Provides: SSD1963.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
+Provides: SSD1963.h
 Description: SSD1963 7" TFT
  Generic Chinese SSD1963 based TFT screen (800x480)
 
 Package: libdisplaycore-driver-bd663474
+Section: libraries
 Architecture: all
-Provides: BD663474.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
+Provides: BD663474.h
 Description: BD663474 driver for DisplayCore
  The BD663474 is used by the WaveShare LCD22 TFT.
 
 Package: libdisplaycore-driver-ili9163
+Section: libraries
 Architecture: all
-Provides: ILI9163.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
+Provides: ILI9163.h
 Description: ILI9163 driver for DisplayCore
  The ILI9163 is used by the ultra-cheap 128x128 displays
  on eBay
 
 Package: libdisplaycore-driver-ili9340
+Section: libraries
 Architecture: all
-Provides: ILI9340.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
+Provides: ILI9340.h
 Description: ILI9340 driver for DisplayCore
  The ILI9340 is used by the Adafruit 2.2" TFT shields.
 
 Package: libdisplaycore-driver-ili9481
+Section: libraries
 Architecture: all
-Provides: ILI9481.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
+Provides: ILI9481.h
 Description: ILI9481 driver for DisplayCore
  The ILI9481 is used by a number of generic 3.2"
  320x480 TFT screens.  It's a 16-bit parallel interface.
 
 Package: libdisplaycore-driver-goldelox
+Section: libraries
 Architecture: all
-Provides: Goldelox.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
+Provides: Goldelox.h
 Description: 4D Goldelox driver for DisplayCore
  The Goldelox is a display driver chip for small displays from
  4D Systems.  This library communicates using the SCE2 protocol
  through a serial port.
 
 Package: libdisplaycore-driver-xpt2046
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
-Provides: XPT2046.h
 Depends: libdisplaycore-core
+Provides: XPT2046.h
 Description: XPT2046 touchscreen driver
  SPI connected XPT2046 resistive touch panel controller
 
 Package: libdisplaycore-driver-linuxevent
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
-Provides: LinuxEvent.h
 Depends: libdisplaycore-core
+Provides: LinuxEvent.h
 Description: Linux Event driver
  Receive touchscreen events through the Linux /dev/input/event*
  framework.
 
 Package: libdisplaycore-driver-analogtouch
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
-Provides: AnalogTouch.h
 Depends: libdisplaycore-core
+Provides: AnalogTouch.h
 Description: Analog Resistive Touchscreen driver for DisplayCore
  Utilizes the internal ADC of the PIC32 to interface with a standard
  4-wire resistive touch panel.
 
 Package: libdisplaycore-image-bmp
+Section: libraries
 Architecture: all
-Provides: BMP.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Image
 Depends: libdisplaycore-core
+Provides: BMP.h
 Description: DisplayCore BMP Flash renderer
  Display a BMP file stored in internal Flash
 
 Package: libdisplaycore-image-binaryvector
+Section: libraries
 Architecture: all
-Provides: BinaryVector.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Image
 Depends: libdisplaycore-core
+Provides: BinaryVector.h
 Description: Binary Vector drawing image class
  Compose simple vector images using the standard DisplayCore
  drawing routines.
 
 Package: libdisplaycore-image-bmpfile
+Section: libraries
 Architecture: all
-Provides: BMPFile.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Image
 Depends: libdisplaycore-core
+Provides: BMPFile.h
 Description: DisplayCore BMP File renderer
  Display a BMP file stored on SD card
 
 Package: libdisplaycore-image-raw565
+Section: libraries
 Architecture: all
-Provides: Raw565.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Image
 Depends: libdisplaycore-core
+Provides: Raw565.h
 Description: DisplayCore RGB565 Flash renderer
  Display a raw RGB565 file stored in internal Flash
 
 Package: libdisplaycore-filters
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Filters
-Provides: Filters.h
 Depends: libdisplaycore-core
+Provides: Filters.h
 Description: DisplayCore Image Filters
  A selection of Image Filters
 
 Package: libdisplaycore-font-avop
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: AVOP.h
 Depends: libdisplaycore-core
+Provides: AVOP.h
 Description: AVOP Japanese Font
  A selection of Japanese characters. Note: not ASCII.
 
 Package: libdisplaycore-font-ataributtons
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: AtariButtons.h
 Depends: libdisplaycore-core
+Provides: AtariButtons.h
 Description: Atari 8-bit font in Buttons
 
 Package: libdisplaycore-font-lcars
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: LCARS.h
 Depends: libdisplaycore-core
+Provides: LCARS.h
 Description: LCARS font for DisplayCore
  The classic LCARS StarTrek font in 4-bit depth
  anti-aliased rendering.
 
 Package: libdisplaycore-font-comfortaa
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: ComfortAA.h
 Depends: libdisplaycore-core
+Provides: ComfortAA.h
 Description: Comfort Anti-Aliased font for DisplayCore
  The Comfort font is heavily anti-aliased for a very clean
  look.  It is rendered in 4-bit (16 colour) mode.
 
 Package: libdisplaycore-font-comic
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: Comic.h
 Depends: libdisplaycore-core
+Provides: Comic.h
 Description: Comic book font for DisplayCore
  Comic book font
 
 Package: libdisplaycore-font-doorly
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: Doorly.h
 Depends: libdisplaycore-core
+Provides: Doorly.h
 Description: Doorly font for DisplayCore
  Font by Patrick Doorly
 
 Package: libdisplaycore-font-squircle
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: Squircle.h
 Depends: libdisplaycore-core
+Provides: Squircle.h
 Description: Squircle font for DisplayCore
  Larger rounded (yet square) font.
 
 Package: libdisplaycore-font-xterm
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: XTerm.h
 Depends: libdisplaycore-core
+Provides: XTerm.h
 Description: XTerm font for DisplayCore
  Small but clean font.
 
 Package: libdisplaycore-font-lcdish
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: LCDish.h
 Depends: libdisplaycore-core
+Provides: LCDish.h
 Description: HD44780 LCD font for DisplayCore
  Make your screen look like it's displaying text on a
  HD44780 LCD display
 
 Package: libdisplaycore-font-dos
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: DOS.h
 Depends: libdisplaycore-core
+Provides: DOS.h
 Description: DOS VGA font for DisplayCore
  The classic VGA font
 
 Package: libdisplaycore-font-arial
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: Arial.h
 Depends: libdisplaycore-core
+Provides: Arial.h
 Description: Arial font for DisplayCore
  The classic Arial font
 
 Package: libdisplaycore-font-arialbold
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: ArialBold.h
 Depends: libdisplaycore-core
+Provides: ArialBold.h
 Description: ArialBold font for DisplayCore
  The classic ArialBold font
 
 Package: libdisplaycore-font-dejavusans
+Section: libraries
 Architecture: all
-Provides: DejaVuSans.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: DejaVuSans.h
 Description: DejaVuSans font for DisplayCore
  DejaVuSans font from Linux
 
 Package: libdisplaycore-font-dejavusansmono
+Section: libraries
 Architecture: all
-Provides: DejaVuSansMono.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: DejaVuSansMono.h
 Description: Monospaced DejaVuSans font for DisplayCore
  DejaVuSans-Mono font from Linux
 
 Package: libdisplaycore-font-englibesh
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: EngliBesh.h
 Depends: libdisplaycore-core
+Provides: EngliBesh.h
 Description: EngliBesh font for DisplayCore
  This font is an English version of the Star Wars alphabet known as
  "Aurebesh" or "Aurek-Besh". After doing research for my Galactic Basic
@@ -370,126 +453,168 @@ Description: EngliBesh font for DisplayCore
  Aurebesh. I figured this font would be a good way to spice up good ole
  English with a touch of Star Wars. This font might be useful for
  someone making a fanfilm who wants to give their text that Aurebesh
- look but still have readable English. 
+ look but still have readable English.
 
 Package: libdisplaycore-font-hazard
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: Hazard.h
 Depends: libdisplaycore-core
+Provides: Hazard.h
 Description: Hazard symbols font for DisplayCore
  A selection of hazard and other symbols for DisplayCore
 
 Package: libdisplaycore-font-kimberley
+Section: libraries
 Architecture: all
-Provides: Kimberley.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: Kimberley.h
 Description: Kimberley font for DisplayCore
  Kimberley font for DisplayCore
 
 Package: libdisplaycore-font-liberation
+Section: libraries
 Architecture: all
-Provides: Liberation.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: Liberation.h
 Description: Liberation font for DisplayCore
  Liberation is a 2 bit-per-pixel font for DisplayCore
 
 Package: libdisplaycore-font-ocraextended
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
-Provides: OCRAExtended.h
 Depends: libdisplaycore-core
+Provides: OCRAExtended.h
 Description: OCR A Extended font for DisplayCore
  The classic OCR A Optical Character Recognition font for DisplayCore
 
 Package: libdisplaycore-font-oldstandard
+Section: libraries
 Architecture: all
-Provides: OldStandard.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: OldStandard.h
 Description: OldStandard font for DisplayCore
  OldStandard is a serif typeface for DisplayCore
 
 Package: libdisplaycore-font-open24display
+Section: libraries
 Architecture: all
-Provides: Open24Display.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: Open24Display.h
 Description: Open24Display font for DisplayCore
  Simple 7-segment display font for DisplayCore
 
 Package: libdisplaycore-font-sheepsans
+Section: libraries
 Architecture: all
-Provides: SheepSans.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: SheepSans.h
 Description: SheepSans font for DisplayCore
  SheepSans font for DisplayCore
 
 Package: libdisplaycore-font-topaz
+Section: libraries
 Architecture: all
-Provides: Topaz.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: Topaz.h
 Description: Topaz font for DisplayCore
  Topaz is famous for being the main default font on the Commodore
  Amiga computers.  Only in size 8.
 
 Package: libdisplaycore-font-acorn
+Section: libraries
 Architecture: all
-Provides: Acorn.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: Acorn.h
 Description: Acorn font for DisplayCore
  The classic font from Acorn Electron and BBC Micro computers.
 
 Package: libdisplaycore-font-aquarius
+Section: libraries
 Architecture: all
-Provides: Aquarius.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: Aquarius.h
 Description: Aquarius font for DisplayCore
  8-bit font with lots of block drawing characters.
 
 Package: libdisplaycore-font-atari
+Section: libraries
 Architecture: all
-Provides: Atari.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: Atari.h
 Description: Atari font for DisplayCore
  The classic font from Atari 8-bit computers.
 
 Package: libdisplaycore-font-sinclair
+Section: libraries
 Architecture: all
-Provides: Sinclair.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: Sinclair.h
 Description: Sinclair font for DisplayCore
  The classic font from Sinclair ZX Spectrum computers.
 
 Package: libdisplaycore-font-ubuntu
+Section: libraries
 Architecture: all
-Provides: Topaz.h
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
+Provides: Topaz.h
 Description: Ubuntu font for DisplayCore
  The standard font from Ubuntu.
 
 Package: libdisplaycore-toolkit-widgets
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Widgets
-Provides: Widgets.h
 Depends: libdisplaycore-core
+Provides: Widgets.h
 Description: Simple Widget toolkit library for DisplayCore
  Allows direct drawing of simple buttons and horizontal scales.
 
 Package: libdisplaycore-toolkit-lcarsinterface
+Section: libraries
 Architecture: all
+XBSC-Group: DisplayCore
 XBSC-Subgroup: Toolkits
-Provides: LCARSInterface.h
 Depends: libdisplaycore-core, libdisplaycore-font-lcars, libaverage
+Provides: LCARSInterface.h
 Description: LCARS-like interface widgets
  Widgets (both static and active) designed to look like
  the LCARS system from Star Trek.
+
+Package: libdisplaycore-toolkit-gciwidget
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Toolkits
+Depends: DisplayCore, libsd-chipkit
+Provides: gciWidget.h
+Description: gciWidget DisplayCore toolkit library
+
+
+
