@@ -1,6 +1,8 @@
 #ifndef _PICADILLO_H
 #define _PICADILLO_H
 
+#ifdef _BOARD_PICADILLO_35T_
+
 #include <DisplayCore.h>
 #include <AnalogTouch.h>
 
@@ -78,4 +80,5 @@ class Picadillo : public DisplayCore
         uint8_t _brightness;
 };
 
+#endif
 #endif

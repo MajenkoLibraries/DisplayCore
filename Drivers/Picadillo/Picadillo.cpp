@@ -1,7 +1,8 @@
-#include <Picadillo.h>
 
 // We can only compile this code if we have both a
 // DMA system and the Parallel Master Port.
+#ifdef _BOARD_PICADILLO_35T_
+#include <Picadillo.h>
 
 void Picadillo::writeCommand(uint16_t c) {
     while (PMMODEbits.BUSY == 1);
@@ -394,3 +395,4 @@ void Picadillo::setBacklight(uint8_t b) {
     analogWrite(PIN_BACKLIGHT, _brightness);
 }
 
+#endif
