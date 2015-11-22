@@ -636,5 +636,25 @@ Recommends: libdisplaycore-toolkit-monoicon
 Provides: Brankic.h
 Description: Brankic Mono Icon library for Display Core
 
+Package: libdisplaycore-icons-iconic
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Icons
+Depends: libdisplaycore
+Recommends: libdisplaycore-toolkit-monoicon
+Provides: Iconic.h
+Description: Iconic library
+
+Package: libdisplaycore-icons-picol
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Icons
+Depends: libdisplaycore
+Recommends: libdisplaycore-toolkit-monoicon
+Provides: PICOL.h
+Description: PICOL library
+
 
 
