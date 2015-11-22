@@ -1,0 +1,76 @@
+#!/usr/bin/php
+<?php
+
+$in = @$argv[1];
+if ($in == "") {
+    printf("Usage: png2cmask <name>\n");
+    exit(10);
+}
+
+mkdir($in);
+$header = fopen($in . "/" . $in . ".h", "w");
+
+fprintf($header, "#include <stdint.h>\n\n");
+
+fprintf($header, "#ifndef _%s_H\n", $in);
+fprintf($header, "#define _%s_H\n", $in);
+
+fprintf($header, "namespace %s {\n", $in);
+
+
+$dir = opendir(".");
+$files = array();
+while ($file = readdir($dir)) {
+    if (preg_match("/^(.*)\.png$/", $file, $m)) {
+        $files[] = $m[1];
+    }
+}
+closedir($dir);
+
+sort($files);
+
+foreach ($files as $base) {
+
+    $img = @ImageCreateFromPng($base . ".png");
+
+    if (!$img) {
+        continue;
+    }
+
+    $width = ImageSX($img);
+    $height = ImageSY($img);
+
+    printf("Width: %d Height: %d\n", $width, $height);
+
+    $name = str_replace("-", " ", $base);
+    $name = str_replace("_", " ", $name);
+    $name = ucwords($name);
+    $name = str_replace(" ", "", $name);
+
+    printf("Name: %s\n", $name);
+    fprintf($header, "    extern const uint8_t %s[];\n", $name);
+
+    $cpp = fopen($in . "/" . $name . ".cpp", "w");
+    fprintf($cpp, "#include <%s.h>\n\n", $in);
+    fprintf($cpp, "namespace %s {\n", $in);
+    fprintf($cpp, "  const uint8_t %s[] = {\n", $name);
+    fprintf($cpp, "    %d, %d, // width, height\n", $width, $height);
+
+    for ($y = 0; $y < $height; $y++) {
+        fprintf($cpp, "    ");
+        for ($x = 0; $x < $width; $x++) {
+            $rgba = ImageColorsForIndex($img, ImageColorAt($img, $x, $y));
+            fprintf($cpp, "%3d, ", 127 - $rgba['alpha']);
+        }
+        fprintf($cpp, "\n");
+    }
+            
+    fprintf($cpp, "  };\n");
+    fprintf($cpp, "};\n");
+    fclose($cpp);
+}
+
+fprintf($header, "};\n");
+fprintf($header, "#endif\n");
+fclose($header);
+
