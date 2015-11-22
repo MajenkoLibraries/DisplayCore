@@ -616,5 +616,25 @@ Depends: DisplayCore, libsd-chipkit
 Provides: gciWidget.h
 Description: gciWidget DisplayCore toolkit library
 
+Package: libdisplaycore-toolkit-monoicon
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Toolkits
+Depends: libdisplaycore
+Recommends: libdisplaycore-icons-brankic
+Provides: MonoIcon.h
+Description: MonoIcon library for DisplayCore
+
+Package: libdisplaycore-icons-brankic
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Icons
+Depends: libdisplaycore
+Recommends: libdisplaycore-toolkit-monoicon
+Provides: Brankic.h
+Description: Brankic Mono Icon library for Display Core
+
 
 

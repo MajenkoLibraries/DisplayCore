@@ -1,4 +1,5 @@
 #include <DisplayCore.h>
+#include <stdarg.h>
 
 /*! Utility function to convert a 24-bit RGB value into a 16-bit RGB value. */
 uint16_t rgb(uint32_t c) {
@@ -1595,6 +1596,26 @@ void Widget::handleTouch() {
 
     boolean pressed = _ts->isPressed();
 
+    if (pressed != _dbPressed) {
+        _dbPressed = pressed;
+        if (!_dbPressed) {
+            _dbStart = 0;
+        } else {
+            _dbStart = millis();
+        }
+    }
+
+    if (_dbStart == 0) {
+        pressed = false;
+    } else {
+        if (millis() - _dbStart > 50) {
+            pressed = true;
+        } else {
+            pressed = false;
+        }
+    }
+        
+
     if (pressed) {
         _tx = _ts->x();
         _ty = _ts->y();
@@ -1765,3 +1786,61 @@ boolean Widget::isEnabled() {
 boolean Widget::isActive() {
     return _active;
 }
+
+Form::Form(int num...) {
+    va_list args;
+    _size = num;
+    _list = (Widget **)malloc(sizeof(Widget) * _size);
+    va_start(args, num);
+    for (int i = 0; i < _size; i++) {
+        _list[i] = va_arg(args, Widget *);
+    }
+
+}
+
+Form::~Form() {
+    free(_list);
+}
+
+void Form::render() {
+    for (int i = 0; i < _size; i++) {
+        _list[i]->render();
+    }
+}
+
+void Form::redraw() {
+    for (int i = 0; i < _size; i++) {
+        _list[i]->redraw();
+    }
+}
+
+void Form::onPress(void (*func)(Event *)) {
+    for (int i = 0; i < _size; i++) {
+        _list[i]->onPress(func);
+    }
+}
+
+void Form::onRelease(void (*func)(Event *)) {
+    for (int i = 0; i < _size; i++) {
+        _list[i]->onRelease(func);
+    }
+}
+
+void Form::onTap(void (*func)(Event *)) {
+    for (int i = 0; i < _size; i++) {
+        _list[i]->onTap(func);
+    }
+}
+
+void Form::onDrag(void (*func)(Event *)) {
+    for (int i = 0; i < _size; i++) {
+        _list[i]->onDrag(func);
+    }
+}
+
+void Form::onRepeat(void (*func)(Event *)) {
+    for (int i = 0; i < _size; i++) {
+        _list[i]->onRepeat(func);
+    }
+}
+

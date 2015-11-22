@@ -470,6 +470,8 @@ class Widget : public Image {
         int _value;
         uint32_t _user;
         boolean _redraw;
+        uint32_t _dbStart;
+        boolean _dbPressed;
 
         int _sx;
         int _sy;
@@ -546,9 +548,21 @@ class Widget : public Image {
 // render the whole form processing any events that may occur within that
 // form.
 class Form {
+    private:
+        Widget **_list;
+        int _size;
+
     public:
-        Form() {}
-        ~Form() {}
+        Form(int num...);
+        ~Form();
+        void render();
+        void redraw();
+        // Event registering functions
+        void onPress(void (*func)(Event *));
+        void onRelease(void (*func)(Event *));
+        void onDrag(void (*func)(Event *));
+        void onTap(void (*func)(Event *));
+        void onRepeat(void (*func)(Event *));
 };
 
 

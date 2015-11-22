@@ -57,3 +57,9 @@ libdisplaycore-font-lcdish
 libdisplaycore-font-squircle
 libdisplaycore-font-xterm
 libdisplaycore-toolkit-lcarsinterface
+libdisplaycore-driver-ks0108
+libdisplaycore-driver-sdl
+libdisplaycore-font-ataributtons
+libdisplaycore-font-avop
+libdisplaycore-toolkit-gciwidget
+
