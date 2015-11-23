@@ -24,7 +24,6 @@ namespace Ecqlipse48 {
     extern const uint8_t AdobePremierePro[];
     extern const uint8_t AdobeSoundbooth[];
     extern const uint8_t AdvancedVisualCustomKick[];
-    extern const uint8_t Alcohol120%[];
     extern const uint8_t AnyDvd[];
     extern const uint8_t AresP2p[];
     extern const uint8_t Attachment[];
