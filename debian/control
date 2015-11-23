@@ -656,5 +656,55 @@ Recommends: libdisplaycore-toolkit-monoicon
 Provides: PICOL.h
 Description: PICOL library
 
+Package: libdisplaycore-icons-ecqlipse32
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Icons
+Depends: libdisplaycore
+Recommends: libdisplaycore-toolkit-monoicon
+Provides: Ecqlipse32.h
+Description: Ecqlipse32 library
+
+Package: libdisplaycore-icons-ecqlipse48
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Icons
+Depends: libdisplaycore
+Recommends: libdisplaycore-toolkit-monoicon
+Provides: Ecqlipse48.h
+Description: Ecqlipse48 library
+
+Package: libdisplaycore-icons-gentleface32
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Icons
+Depends: libdisplaycore
+Recommends: libdisplaycore-toolkit-monoicon
+Provides: Gentleface32.h
+Description: Gentleface32 library
+
+Package: libdisplaycore-icons-gentleface48
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Icons
+Depends: libdisplaycore
+Recommends: libdisplaycore-toolkit-monoicon
+Provides: Gentleface48.h
+Description: Gentleface48 library
+
+Package: libdisplaycore-icons-tutorial9mono
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Icons
+Depends: libdisplaycore
+Recommends: libdisplaycore-toolkit-monoicon
+Provides: Tutorial9Mono.h
+Description: Tutorial9Mono library
+
 
 
