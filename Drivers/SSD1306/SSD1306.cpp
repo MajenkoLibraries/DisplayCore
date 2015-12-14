@@ -169,3 +169,14 @@ void SSD1306::updateDisplay() {
     }
 }
 
+void SSD1306::fillScreen(uint16_t color) {
+    if (color) { 
+        memset(_buffer, 0xFF, 128*8);
+    } else {
+        memset(_buffer, 0x00, 128*8);
+    }
+
+    if (_buffered == 0) {
+        updateDisplay();
+    }
+}

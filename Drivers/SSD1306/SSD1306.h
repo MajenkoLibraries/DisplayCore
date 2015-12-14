@@ -50,7 +50,7 @@ class SSD1306 : public DisplayCore {
         int _vdd;
         int _vbat;
         int _reset;
-        bool _buffered;
+        int _buffered;
 
         uint8_t _buffer[8*128]; // 8 pages of 128 bytes.
         void updateDisplay();
@@ -66,7 +66,7 @@ class SSD1306 : public DisplayCore {
     public:
         SSD1306(DSPI &spi, int cs, int dc, int vdd, int vbat, int reset = -1) : 
             _spi(&spi), _cs(cs), _dc(dc), _vdd(vdd), _vbat(vbat), _reset(reset),
-            _buffered(false) {
+            _buffered(0) {
                 _width = 128;
                 _height = 32;
         }
@@ -80,10 +80,12 @@ class SSD1306 : public DisplayCore {
         void setRotation(uint8_t r) {}
         void invertDisplay(boolean i) {}
 
-        void startBuffer() { _buffered = true; }
-        void endBuffer() { _buffered = false; updateDisplay(); }
+        void startBuffer() { _buffered++; }
+        void endBuffer() { _buffered--; if (_buffered == 0) {updateDisplay();} }
 
         uint16_t getWidth() { return 128; }
         uint16_t getHeight() { return 32; }
+
+        void fillScreen(uint16_t color);
 };
 
