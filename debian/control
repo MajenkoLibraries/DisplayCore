@@ -706,5 +706,16 @@ Recommends: libdisplaycore-toolkit-monoicon
 Provides: Tutorial9Mono.h
 Description: Tutorial9Mono library
 
+Package: libdisplaycore-driver-ssd1306
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Drivers
+Depends: libdisplaycore, libdspi-chipkit
+Recommends: libdisplaycore-fonts-squircle
+Provides: SSD1306.h
+Description: SSD1306 library (Basic IO Shield)
+ The SSD1306 is the OLED display used by the Digilent Basic IO Shield.
+
 
 
