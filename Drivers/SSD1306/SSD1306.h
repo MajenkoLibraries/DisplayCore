@@ -34,14 +34,14 @@
 class SSD1306 : public DisplayCore {
 
     private:
-        const int DC_DATA = HIGH;
-        const int DC_COMMAND = LOW;
+        static const int DC_DATA = HIGH;
+        static const int DC_COMMAND = LOW;
 
-        const int CMD_SEG_REMAP         = 0xA1;
-        const int CMD_COM_DIR           = 0xC8;
-        const int CMD_COM_CONFIG        = 0xDA;
-        const int CMD_DISP_ON           = 0xAF;
-        const int CMD_DISP_OFF          = 0xAE;
+        static const int CMD_SEG_REMAP         = 0xA1;
+        static const int CMD_COM_DIR           = 0xC8;
+        static const int CMD_COM_CONFIG        = 0xDA;
+        static const int CMD_DISP_ON           = 0xAF;
+        static const int CMD_DISP_OFF          = 0xAE;
 
 
         DSPI *_spi;
