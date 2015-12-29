@@ -62,4 +62,14 @@ libdisplaycore-driver-sdl
 libdisplaycore-font-ataributtons
 libdisplaycore-font-avop
 libdisplaycore-toolkit-gciwidget
+libdisplaycore-driver-ssd1306
+libdisplaycore-icons-brankic
+libdisplaycore-icons-ecqlipse32
+libdisplaycore-icons-ecqlipse48
+libdisplaycore-icons-gentleface32
+libdisplaycore-icons-gentleface48
+libdisplaycore-icons-iconic
+libdisplaycore-icons-picol
+libdisplaycore-icons-tutorial9mono
+libdisplaycore-toolkit-monoicon
 
