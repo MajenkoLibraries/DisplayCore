@@ -83,6 +83,62 @@ void SSD1306::initializeDevice() {
     displayOn();
 }
 
+void SSD1306_BB::initializeDevice() {
+    pinMode(_cs, OUTPUT);
+    digitalWrite(_cs, HIGH);
+    pinMode(_dc, OUTPUT);
+    digitalWrite(_dc, DC_COMMAND);
+    pinMode(_vdd, OUTPUT);
+    digitalWrite(_vdd, LOW);
+    pinMode(_vbat, OUTPUT);
+    digitalWrite(_vbat, LOW);
+    pinMode(_mosi_pin, OUTPUT);
+    pinMode(_sck_pin, OUTPUT);
+
+    _mosi_port = getPortInformation(_mosi_pin, &_mosi_mask);
+    _sck_port = getPortInformation(_sck_pin, &_sck_mask);
+
+    // Start off by powering the thing up.  Step one is
+    // turn on the VDD supply.
+    digitalWrite(_vdd, HIGH);
+    delay(1);
+
+    displayOff();
+
+    // Then do a reset if we control the reset pin:
+
+    if (_reset >= 0) {
+        pinMode(_reset, OUTPUT);
+        digitalWrite(_reset, HIGH);
+        delay(20);
+        digitalWrite(_reset, LOW);
+        delay(20);
+        digitalWrite(_reset, HIGH);
+    }
+
+    // Now configure the charge pump:
+
+    command(0x8D, 0x14);
+    command(0xD9, 0xF1);
+
+    // Now VBAT needs to be turned on:
+
+    digitalWrite(_vbat, HIGH);
+    delay(100);
+
+    // Invert the display
+    command(CMD_SEG_REMAP);
+    command(CMD_COM_DIR);
+
+    // Sequential COM
+    command(CMD_COM_CONFIG);
+    command(0x20);
+
+    // Display on
+
+    displayOn();
+}
+
 #define C2B(X, Y) (((Y) << 7) + (X))
 
 void SSD1306::setPixel(int16_t x, int16_t y, uint16_t color) {
@@ -126,11 +182,26 @@ void SSD1306::command(uint8_t c) {
     digitalWrite(_cs, HIGH);
 }
 
+void SSD1306_BB::command(uint8_t c) {
+    digitalWrite(_dc, DC_COMMAND);
+    digitalWrite(_cs, LOW);
+    sendByte(c);
+    digitalWrite(_cs, HIGH);
+}
+
 void SSD1306::command(uint8_t c1, uint8_t c2) {
     digitalWrite(_dc, DC_COMMAND);
     digitalWrite(_cs, LOW);
     _spi->transfer(c1);
     _spi->transfer(c2);
+    digitalWrite(_cs, HIGH);
+}
+
+void SSD1306_BB::command(uint8_t c1, uint8_t c2) {
+    digitalWrite(_dc, DC_COMMAND);
+    digitalWrite(_cs, LOW);
+    sendByte(c1);
+    sendByte(c2);
     digitalWrite(_cs, HIGH);
 }
 
@@ -143,10 +214,26 @@ void SSD1306::command(uint8_t c1, uint8_t c2, uint8_t c3) {
     digitalWrite(_cs, HIGH);
 }
 
+void SSD1306_BB::command(uint8_t c1, uint8_t c2, uint8_t c3) {
+    digitalWrite(_dc, DC_COMMAND);
+    digitalWrite(_cs, LOW);
+    sendByte(c1);
+    sendByte(c2);
+    sendByte(c3);
+    digitalWrite(_cs, HIGH);
+}
+
 void SSD1306::data(uint8_t c) {
     digitalWrite(_dc, DC_DATA);
     digitalWrite(_cs, LOW);
     _spi->transfer(c);
+    digitalWrite(_cs, HIGH);
+}
+
+void SSD1306_BB::data(uint8_t c) {
+    digitalWrite(_dc, DC_DATA);
+    digitalWrite(_cs, LOW);
+    sendByte(c);
     digitalWrite(_cs, HIGH);
 }
 
@@ -178,5 +265,17 @@ void SSD1306::fillScreen(uint16_t color) {
 
     if (_buffered == 0) {
         updateDisplay();
+    }
+}
+
+void SSD1306_BB::sendByte(uint8_t b) {
+    for (int i = 0; i < 8; i++) {
+        if (b & (1 << (7-i))) {
+            _mosi_port->lat.set = _mosi_mask;
+        } else {
+            _mosi_port->lat.clr = _mosi_mask;
+        }
+        _sck_port->lat.set = _sck_mask;
+        _sck_port->lat.clr = _sck_mask;
     }
 }
