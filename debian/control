@@ -717,5 +717,14 @@ Provides: SSD1306.h
 Description: SSD1306 library (Basic IO Shield)
  The SSD1306 is the OLED display used by the Digilent Basic IO Shield.
 
+Package: libdisplaycore-drivers-hx8347d
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Drivers
+Depends: libdisplaycore, libdspi-chipkit
+Provides: HX8347D.h
+Description: HX8347D library
+
 
 
