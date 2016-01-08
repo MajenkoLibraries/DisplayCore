@@ -46,16 +46,16 @@ class PG25664CG : public DisplayCore {
         virtual void data(uint8_t);
 
     public:
-        boolean _buffered;
+        int _buffered;
 
         PG25664CG(uint8_t dc, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
                 uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7) :
                 pin_dc(dc), pin_wr(wr), pin_rd(rd), pin_cs(cs), pin_res(reset),
                 pin_d0(d0), pin_d1(d1), pin_d2(d2), pin_d3(d3),
                 pin_d4(d4), pin_d5(d5), pin_d6(d6), pin_d7(d7),
-                _buffered(false) {}
+                _buffered(0) {}
 
-        PG25664CG() : _buffered(false) {}
+        PG25664CG() : _buffered(0) {}
 
         void startDisplay();
 

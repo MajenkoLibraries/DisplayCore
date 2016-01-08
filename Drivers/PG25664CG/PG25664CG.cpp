@@ -127,7 +127,7 @@ void PG25664CG::fillScreen(uint16_t c) {
     for (int x = 0; x < 8192; x++) {
         _buffer[x] = pd;
     }
-    if (!_buffered) {
+    if (_buffered <= 0) {
         update();
     }
 }
@@ -154,18 +154,21 @@ void PG25664CG::setPixel(int16_t x, int16_t y, uint16_t c) {
         b |= ((c & 0x0f) << 4);
     }
     _buffer[dx + (y * 128)] = b;
-    if (!_buffered) {
+    if (_buffered <= 0) {
         update();
     }
 }
 
 void PG25664CG::startBuffer() {
-    _buffered = true;
+    _buffered++;
 }
 
 void PG25664CG::endBuffer() {
-    _buffered = false;
-    update();
+    _buffered--;
+    if (_buffered <= 0) {
+        _buffered = 0;
+        update();
+    }
 }
 
 
