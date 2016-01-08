@@ -25,6 +25,9 @@ void HX8347D::initializeDevice()
     _dc_port = getPortInformation(_dc, &_dc_mask);
     _cs_port = getPortInformation(_cs, &_cs_mask);
 
+    _spi->begin();
+    _spi->setSpeed(20000000UL);
+
     pinMode(_dc, OUTPUT);
     pinMode(_cs, OUTPUT);
     digitalWrite(_dc, HIGH);
