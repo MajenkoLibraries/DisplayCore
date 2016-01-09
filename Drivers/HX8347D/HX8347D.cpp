@@ -195,51 +195,53 @@ void HX8347D::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color)
 
 void HX8347D::setRotation(uint8_t m) 
 {
-//	writeCommand(HX8357_SET_ADDRESS_MODE);
-//	rotation = m % 4; // can't be higher than 3
-//	switch (rotation) 
-//	{
-//		case 0:
-//			//PORTRAIT
-//			writeData(0x0000);
-//			_width  = HX8347D::Width;
-//			_height = HX8347D::Height;
-//			break;
-//		case 1:
-//		    //LANDSCAPE
-//			writeData(0x0060);
-//			_width  = HX8347D::Height;
-//			_height = HX8347D::Width;
-//			break;
-//		case 2:	
-//			//UPSIDE DOWN PORTRAIT
-//			writeData(0x00C0);
-//			_width  = HX8347D::Width;
-//			_height = HX8347D::Height;
-//			break;
-//		case 3:
-//			//UPSIDE DOWN LANDSCAPE
-//			writeData(0x00A0);
-//			_width  = HX8347D::Height;
-//			_height = HX8347D::Width;
-//			break;
-//	}
+// 0x80 = up/down flip
+// 0x40 = left/right flip
+// 0x20 = portrait/landscape
+	rotation = m % 4; // can't be higher than 3
+	switch (rotation) 
+	{
+		case 0:
+			//PORTRAIT
+            setRegister(0x16, 0x18);
+			_width  = HX8347D::Width;
+			_height = HX8347D::Height;
+			break;
+		case 1:
+		    //LANDSCAPE
+            setRegister(0x16, 0x18 | 0x40 | 0x20);
+			_width  = HX8347D::Height;
+			_height = HX8347D::Width;
+			break;
+		case 2:	
+			//UPSIDE DOWN PORTRAIT
+            setRegister(0x16, 0x18 | 0x80 | 0x40);
+			_width  = HX8347D::Width;
+			_height = HX8347D::Height;
+			break;
+		case 3:
+			//UPSIDE DOWN LANDSCAPE
+            setRegister(0x16, 0x18 | 0x80 | 0x20);
+			_width  = HX8347D::Height;
+			_height = HX8347D::Width;
+			break;
+	}
     clearClipping();
 }
 
 void HX8347D::invertDisplay(boolean i) 
 {
-//	writeCommand(i ? HX8357_INVON : HX8357_INVOFF);
+    setRegister(0x01,i ? 0x02 : 0x00);
 }
 
 void HX8347D::displayOn() 
 {
-//	writeCommand(HX8357_DISPLAYON);
+    setRegister(0x01,0x00);
 }
 
 void HX8347D::displayOff() 
 {
-//	writeCommand(HX8357_DISPLAYOFF);
+    setRegister(0x01,0xC0);
 }
 
 void HX8347D::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
