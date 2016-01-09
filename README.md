@@ -25,26 +25,39 @@ Display drivers and tested devices:
     * WaveShare LCD22
   * Goldelox
     * uOLED-128-G2
+  * HX8347D
+    * WaveShare 2.8" Touchscreen TFT (SPI)
   * ILI9163
     * Generic 1.44" SPI 128*128 V1.1
   * ILI9340
     * Adafruit 2.2" TFT
   * ILI9481
     * HY-3.2TFT
+  * KS0108
+    * Monochrome graphical LCDs
   * LM6800
     * 4-chip based KS0108
+  * NativeFB
+    * Linux framebuffer device (Pi, Armadillo, etc)
   * PG25664CG
     * 256x64 grey-scale OLED
   * Picadillo
     * Picadillo-35T
+  * SDL
+    * Simple DirectMedia Layer (Linux X windows interface)
   * SSD1289
     * TFT_320QVT
+  * SSD1306
+    * Basic IO Shield OLED and PmodOLED
   * SSD1963_7
     * Unbranded 7" TFT
   * ST7735
     * Adafruit 1.8" TFT
+  * VGA
+    * Emulated VGA device using SPI and DMA
   * VLCD
     * UECIDE VirtualLCD
+
 
 Framebuffer drivers:
 
@@ -53,6 +66,12 @@ Framebuffer drivers:
 
 Touch screen drivers:
 
-  * AnalogTouch - Uses the PIC's internal ADC to read a 4-wire resistive
+  * AnalogTouch 
+    * Uses the PIC's internal ADC to read a 4-wire resistive
     touch panel.
+  * LinuxEvent
+    * Read mouse and keyboard events from the Linux input system
   * XPT2046
+    * Common SPI touchscreen controller
+
+  
