@@ -117,7 +117,6 @@ void turnKnob(Event *e) {
 
 void loop() {
 	ts.sample();
-    AnalogTouch ts(LCD_XL, LCD_XR, LCD_YU, LCD_YD, 320, 480);
 
     meter.render();
     angular.render();
