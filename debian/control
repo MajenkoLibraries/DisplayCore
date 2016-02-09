@@ -612,7 +612,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Toolkits
-Depends: DisplayCore, libsd-chipkit
+Depends: libdisplaycore-core, libsd-chipkit
 Provides: gciWidget.h
 Description: gciWidget DisplayCore toolkit library
 
@@ -621,7 +621,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Toolkits
-Depends: libdisplaycore
+Depends: libdisplaycore-core
 Recommends: libdisplaycore-icons-brankic
 Provides: MonoIcon.h
 Description: MonoIcon library for DisplayCore
@@ -631,7 +631,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Icons
-Depends: libdisplaycore
+Depends: libdisplaycore-core
 Recommends: libdisplaycore-toolkit-monoicon
 Provides: Brankic.h
 Description: Brankic Mono Icon library for Display Core
@@ -641,7 +641,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Icons
-Depends: libdisplaycore
+Depends: libdisplaycore-core
 Recommends: libdisplaycore-toolkit-monoicon
 Provides: Iconic.h
 Description: Iconic library
@@ -651,7 +651,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Icons
-Depends: libdisplaycore
+Depends: libdisplaycore-core
 Recommends: libdisplaycore-toolkit-monoicon
 Provides: PICOL.h
 Description: PICOL library
@@ -661,7 +661,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Icons
-Depends: libdisplaycore
+Depends: libdisplaycore-core
 Recommends: libdisplaycore-toolkit-monoicon
 Provides: Ecqlipse32.h
 Description: Ecqlipse32 library
@@ -671,7 +671,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Icons
-Depends: libdisplaycore
+Depends: libdisplaycore-core
 Recommends: libdisplaycore-toolkit-monoicon
 Provides: Ecqlipse48.h
 Description: Ecqlipse48 library
@@ -681,7 +681,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Icons
-Depends: libdisplaycore
+Depends: libdisplaycore-core
 Recommends: libdisplaycore-toolkit-monoicon
 Provides: Gentleface32.h
 Description: Gentleface32 library
@@ -691,7 +691,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Icons
-Depends: libdisplaycore
+Depends: libdisplaycore-core
 Recommends: libdisplaycore-toolkit-monoicon
 Provides: Gentleface48.h
 Description: Gentleface48 library
@@ -701,7 +701,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Icons
-Depends: libdisplaycore
+Depends: libdisplaycore-core
 Recommends: libdisplaycore-toolkit-monoicon
 Provides: Tutorial9Mono.h
 Description: Tutorial9Mono library
@@ -711,7 +711,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
-Depends: libdisplaycore, libdspi-chipkit
+Depends: libdisplaycore-core, libdspi-chipkit
 Recommends: libdisplaycore-fonts-squircle
 Provides: SSD1306.h
 Description: SSD1306 library (Basic IO Shield)
@@ -722,7 +722,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
-Depends: libdisplaycore, libdspi-chipkit
+Depends: libdisplaycore-core, libdspi-chipkit
 Provides: HX8347D.h
 Description: HX8347D library
 
