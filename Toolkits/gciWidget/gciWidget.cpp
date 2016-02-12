@@ -100,6 +100,7 @@ void gciWidget::draw(DisplayCore *dev, int16_t x, int16_t y) {
 }
 
 uint32_t gciWidget::getFrames() {
+    load();
     return swaple(_header.frames);
 }
 
