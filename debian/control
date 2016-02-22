@@ -712,7 +712,7 @@ Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core, libdspi-chipkit
-Recommends: libdisplaycore-fonts-squircle
+Recommends: libdisplaycore-font-squircle
 Provides: SSD1306.h
 Description: SSD1306 library (Basic IO Shield)
  The SSD1306 is the OLED display used by the Digilent Basic IO Shield.
@@ -725,6 +725,15 @@ XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core, libdspi-chipkit
 Provides: HX8347D.h
 Description: HX8347D library
+
+Package: libdisplaycore-font-display7seg
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Display7Seg.h
+Description: Display7Seg font
 
 
 
