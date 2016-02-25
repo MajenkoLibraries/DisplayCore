@@ -121,6 +121,19 @@ class SSD1306_BB : public SSD1306 {
         virtual void initializeDevice();
 };
 
+#if defined(_BOARD_CMOD_)
+class SSD1306_CMOD_J1 : public SSD1306 {
+    public:
+        SSD1306_CMOD_J1() : SSD1306(new DSPI0(), 24, 7, 8, 30, 6) {}
+};
+
+class SSD1306_CMOD_J2 : public SSD1306_BB {
+    public:
+        SSD1306_CMOD_J2() : SSD1306_BB(20, 34, 22, 33, 17, 32, 36) {}
+};
+
+#endif
+
 #if defined(_BOARD_PRO_MX7_) || defined(_BOARD_PRO_MX4_) || defined (_BOARD_PRO_MX3_)
 
 class SSD1306_PMOD_A : public SSD1306_BB {
