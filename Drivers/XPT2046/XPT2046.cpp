@@ -60,8 +60,8 @@ int XPT2046::getSample(uint8_t pin) {
     for (int i = 0; i < XPT2046_SMPSIZE; i++) {
         digitalWrite(_cs, LOW);
         _spi->transfer(pin);
-        uint16_t in = _spi->transfer(0x00) << 8;
-        in |= _spi->transfer(0x00);
+        uint16_t in = _spi->transfer((uint8_t)0x00) << 8;
+        in |= _spi->transfer((uint8_t)0x00);
         digitalWrite(_cs, HIGH);
         samples[i] = in >> 3;
         smpTot += (in >> 3);

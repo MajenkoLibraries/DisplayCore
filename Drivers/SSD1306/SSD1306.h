@@ -121,6 +121,36 @@ class SSD1306_BB : public SSD1306 {
         virtual void initializeDevice();
 };
 
+// These should work with any Uno32-like board with the PMOD shield attached
+// Not all boards will have SPI in the same place, so we shall just
+// bit-bang everything regardless.
+
+class SSD1306_UMOD_JA : public SSD1306_BB {
+    public:
+        SSD1306_UMOD_JA() : SSD1306_BB(27, 29, 26, 30, 33, 32, 31) {}
+};
+    
+class SSD1306_UMOD_JB : public SSD1306_BB {
+    public:
+        SSD1306_UMOD_JB() : SSD1306_BB(1, 38, 7, 36, 37, 10, 34) {}
+};
+    
+//class SSD1306_UMOD_JC : public SSD1306 {
+//    public:
+//        SSD1306_UMOD_JC() : SSD1306_BB([2], [4], [1], [7], [10], [9], [8]) {}
+//};
+    
+class SSD1306_UMOD_JD : public SSD1306_BB {
+    public:
+        SSD1306_UMOD_JD() : SSD1306_BB(40, 19, 16, 42, 5, 3, 41) {}
+};
+    
+class SSD1306_UMOD_JE : public SSD1306_BB {
+    public:
+        SSD1306_UMOD_JE() : SSD1306_BB(6, 22, 14, 18, 24, 35, 9) {}
+};
+    
+
 #if defined(_BOARD_CMOD_)
 class SSD1306_CMOD_J1 : public SSD1306 {
     public:
