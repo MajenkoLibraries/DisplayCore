@@ -2,6 +2,7 @@
 #include <HX8347D.h>
 
 void HX8347D::writeCommand(uint8_t c) {
+    _spi->setSpeed(100000000UL);
     _dc_port->lat.clr = _dc_mask;
     _cs_port->lat.clr = _cs_mask;
     _spi->transfer(c);
@@ -9,6 +10,7 @@ void HX8347D::writeCommand(uint8_t c) {
 }
 
 void HX8347D::writeData(uint8_t c) {
+    _spi->setSpeed(100000000UL);
     _dc_port->lat.set = _dc_mask;
     _cs_port->lat.clr = _cs_mask;
     _spi->transfer(c);
@@ -26,7 +28,7 @@ void HX8347D::initializeDevice()
     _cs_port = getPortInformation(_cs, &_cs_mask);
 
     _spi->begin();
-    _spi->setSpeed(20000000UL);
+    _spi->setSpeed(100000000UL);
 
     pinMode(_dc, OUTPUT);
     pinMode(_cs, OUTPUT);
@@ -80,7 +82,7 @@ void HX8347D::initializeDevice()
     setRegister(0x1A,0x01); //BT (VGH~15V,VGL~-10V,DDVDH~5V)
     setRegister(0x24,0x2F); //VMH(VCOM High voltage ~3.2V)
     setRegister(0x25,0x57); //VML(VCOM Low voltage -1.2V)
-    //****VCOM offset**///
+
     setRegister(0x23,0x88); //for Flicker adjust //can reload from OTP
     //Power on Setting
     setRegister(0x18,0x34); //I/P_RADJ,N/P_RADJ, Normal mode 60Hz
@@ -143,9 +145,9 @@ void HX8347D::setPixel(int16_t x, int16_t y, uint16_t color)
 		return;
     if ((x < _clip_x0) || (x > _clip_x1) || (y < _clip_y0) || (y > _clip_y1)) 
         return;
-	setAddrWindow(x,y,x+1,y+1);
-    writeData(color >> 8);
-    writeData(color & 0xFF);
+    openWindow(x, y, 1, 1);
+    windowData(color);
+    closeWindow();
 }
 
 void HX8347D::fillScreen(uint16_t color) 
@@ -251,14 +253,16 @@ void HX8347D::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
 }
 
 void HX8347D::windowData(uint16_t d) {
-    _spi->transfer(d >> 8);
-    _spi->transfer(d & 0xFF);
+    _spi->setSpeed(100000000UL);
+    _spi->transfer((uint8_t)(d >> 8));
+    _spi->transfer((uint8_t)(d & 0xFF));
 }
 
 void HX8347D::windowData(uint16_t *d, uint32_t l) {
+    _spi->setSpeed(100000000UL);
     for (uint32_t i = 0; i < l; i++) {
-        _spi->transfer(d[i] >> 8);
-        _spi->transfer(d[i] & 0xFF);
+        _spi->transfer((uint8_t)(d[i] >> 8));
+        _spi->transfer((uint8_t)(d[i] & 0xFF));
     }
 }
 
