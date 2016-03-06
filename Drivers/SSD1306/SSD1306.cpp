@@ -146,6 +146,8 @@ void SSD1306::setPixel(int16_t x, int16_t y, uint16_t color) {
     uint8_t pixel;
     uint8_t mask;
 
+    translateCoordinates(&x, &y);
+
     if((x < 0) ||(x >= 128) || (y < 0) || (y >= 32))
         return;
 
@@ -278,4 +280,29 @@ void SSD1306_BB::sendByte(uint8_t b) {
         _sck_port->lat.set = _sck_mask;
         _sck_port->lat.clr = _sck_mask;
     }
+}
+
+void SSD1306::setRotation(uint8_t r) {
+
+    rotation = r & 0x03;
+
+    switch (r & 0x03) {
+        case 0:
+            _width = 128;
+            _height = 32;
+            break;
+        case 1:
+            _width = 32;
+            _height = 128;
+            break;
+        case 2:
+            _width = 128;
+            _height = 32;
+            break;
+        case 3:
+            _width = 32;
+            _height = 128;
+            break;
+    }
+    clearClipping();
 }

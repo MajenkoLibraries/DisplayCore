@@ -89,14 +89,14 @@ class SSD1306 : public DisplayCore {
         void displayOn();
         void displayOff();
 
-        void setRotation(uint8_t r) {}
+        void setRotation(uint8_t r);
         void invertDisplay(boolean i) {}
 
         void startBuffer() { _buffered++; }
         void endBuffer() { _buffered--; if (_buffered == 0) {updateDisplay();} }
 
-        uint16_t getWidth() { return 128; }
-        uint16_t getHeight() { return 32; }
+        uint16_t getWidth() { return _width; }
+        uint16_t getHeight() { return _height; }
 
         void fillScreen(uint16_t color);
 };
