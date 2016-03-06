@@ -56,3 +56,13 @@ void MonoIcon::draw(DisplayCore *dev, int16_t x, int16_t y) {
 //    dev->windowData(buffer, _sense_w * _sense_h);
 //    dev->closeWindow();
 }
+
+void MonoIcon::setColor(uint16_t c) {
+    _color = c;
+    redraw();
+}
+
+void MonoIcon::setIcon(const uint8_t *i) {
+    _icon = i;
+    redraw();
+}

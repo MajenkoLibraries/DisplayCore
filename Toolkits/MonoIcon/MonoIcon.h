@@ -27,6 +27,8 @@ class MonoIcon : public Widget {
             }
 
         void draw(DisplayCore *dev, int16_t x, int16_t y);
+        void setColor(uint16_t c);
+        void setIcon(const uint8_t *i);
 };
 
 #endif
