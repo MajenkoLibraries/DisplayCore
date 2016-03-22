@@ -32,12 +32,15 @@
  * Primitives demonstration
  * 
  * Displays random primitives.
+ *
+ * IMPORTANT: This requires the "replacement" hardware SD library
  */
 
 #include <DSPI.h>
 #include <Picadillo.h>
 #include <SD.h>
 #include <BMPFile.h>
+#include <Topaz.h>
 
 // Configure the display
 Picadillo tft;
