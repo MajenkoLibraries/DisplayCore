@@ -164,6 +164,61 @@ void DisplayCore::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint1
     endBuffer();
 }
 
+/*! Draw a thick straight line
+ *  ====================
+ *  This function uses Bresenham's algorithm to draw a straight line.  The line
+ *  starts at coordinates (x0, y0) and extends to coordinates (x1, y1).  The line
+ *  is drawn in color (color).
+ *
+ *  Thickness is added using the highly inefficient "cheating" method of drawing
+ *  circles instead of pixels.
+ *
+ *  Example:
+ *
+ *      tft.drawLine(10, 10, 40, 60, 4, Color::Green);
+ */
+// bresenham's algorithm - thx wikpedia
+void DisplayCore::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int width, uint16_t color) {
+    startBuffer();
+    int16_t steep = abs(y1 - y0) > abs(x1 - x0);
+    if (steep) {
+        swap(x0, y0);
+        swap(x1, y1);
+    }
+
+    if (x0 > x1) {
+        swap(x0, x1);
+        swap(y0, y1);
+    }
+
+    int16_t dx, dy;
+    dx = x1 - x0;
+    dy = abs(y1 - y0);
+
+    int16_t err = dx / 2;
+    int16_t ystep;
+
+    if (y0 < y1) {
+        ystep = 1;
+    } else {
+        ystep = -1;
+    }
+
+    for (; x0<=x1; x0++) {
+        if (steep) {
+            fillCircle(y0, x0, width / 2, color);
+        } else {
+            fillCircle(x0, y0, width / 2, color);
+        }
+        err -= dy;
+        if (err < 0) {
+            y0 += ystep;
+            err += dx;
+        }
+    }
+    endBuffer();
+}
+
 /*! Set clipping boundaries
  *  =======================
  *  The clipping boundaries limit where a pixel can be drawn on the screen. It allows
