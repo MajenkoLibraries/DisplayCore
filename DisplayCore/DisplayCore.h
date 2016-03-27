@@ -25,11 +25,48 @@ struct coord {
     int y;
 };
 
+class point3d {
+    public:
+        float x;
+        float y;
+        float z;
+        point3d() : x(0), y(0), z(0) {}
+        point3d(float _x,float _y, float _z) : x(_x), y(_y), z(_z) {}
+
+        point3d operator -(point3d other) {
+            return point3d(x - other.x, y - other.y, z - other.z);
+        }
+        point3d operator +(point3d other) {
+            return point3d(x + other.x, y + other.y, z + other.z);
+        }
+        point3d operator *(point3d other) {
+            return point3d(
+                y * other.z - z * other.x,
+                z * other.x - x * other.z,
+                x * other.y - y * other.x
+            );
+        }
+        point3d operator *(float other) {
+            return point3d(
+                y * other,
+                z * other,
+                x * other
+            );
+        }
+        float dot(point3d other) {
+            return x*other.x + y*other.y + z*other.z;
+        }
+};
+
+typedef struct {
+    point3d a;
+    point3d b;
+} ray;
+
 typedef struct {
     float x;
     float y;
-    float z;
-} point3d;
+} point2d;
 
 typedef struct {
     union {
@@ -53,6 +90,14 @@ class DisplayCore : public Print
         virtual void fillCircle(int x0, int y0, int r, color_t color);
         virtual void drawLine(int x0, int y0, int x1, int y1, color_t color);
         virtual void drawLine(int x0, int y0, int x1, int y1, int width, color_t color);
+
+        void drawLine3D(int x1, int y1, int z1, const int x2, const int y2, const int z2, color_t color);
+        point2d map3Dto2D(point3d &p);
+
+
+        void fillPolygon(point2d *nodes, int numpoints, color_t color);
+        void fillPolygon3D(point3d *nodes, int numpoints, color_t color);
+
         virtual void drawRectangle(int x, int y, int w, int h, color_t color);
         virtual void drawRoundRect(int x, int y, int w, int h, int r, color_t color);
         virtual void fillRoundRect(int x, int y, int w, int h, int r, color_t color);
@@ -119,9 +164,31 @@ class DisplayCore : public Print
          *  
          *  Example:
          *  
-         *      tft.drawPixel(100, 100, Color::Green);
+         *      tft.setPixel(100, 100, Color::Green);
          */
         virtual void setPixel(int x, int y, color_t color) = 0;
+        /*! Draw a pixel in 3D space
+         *  ========================
+         *  Maps a point in 3D space into a 2D viewport and sets that pixel
+         *  to the specified colour.
+         *
+         *  Example: 
+         *      
+         *      tft.setPixel(100, 100, 100, Color::Green);
+         */
+        virtual void setPixel(int x, int y, int z, color_t color);
+        /*! Set viewport location
+         *  =====================
+         *  Sets the distance of the 3D viewport from the viewer
+         *
+         *  Example:
+         *
+         *      tft.setViewport(240);
+         */
+        void setCamera(point3d pos, point3d angle) { _camera = pos; _camang = angle; }
+        void setFOV(int fov) { _fov = fov; }
+        int getFOV() { return _fov; }
+    
         /*! Draw a horizontal line
          *  ======================
          *  A horizontal line of width (w) is drawn from point (x,y) in colour (color);
@@ -303,6 +370,10 @@ class DisplayCore : public Print
         int _clip_x1;
         int _clip_y0;
         int _clip_y1;
+
+        point3d _camera;
+        point3d _camang;
+        int _fov;
 
     protected:
         /*! A pointer to the currently selected font table */
@@ -565,6 +636,34 @@ class Form {
         void onDrag(void (*func)(Event *));
         void onTap(void (*func)(Event *));
         void onRepeat(void (*func)(Event *));
+};
+
+struct triangle {
+    point3d a;
+    point3d b;
+    point3d c;
+    color_t color;
+};
+
+class Scene {
+    private:
+        triangle *_triangles;
+        int _numtriangles;
+        point3d _camera;
+        point3d _camang;
+
+        point3d translatePoint(point3d p);
+
+    public:
+        Scene(triangle *t, int numt) : _triangles(t), _numtriangles(numt) {}
+        void setCameraPosition(point3d c) { _camera = c; }
+        void setCameraAngle(point3d a) { _camang = a; }
+        void setCameraPosition(int x, int y, int z) { _camera.x = x; _camera.y = y; _camera.z = z; }
+        void setCameraAngle(int x, int y, int z) { _camang.x = x; _camang.y = y; _camang.z = z; }
+
+        void render(DisplayCore *dev);
+        void render(DisplayCore &dev) { render(&dev); }
+
 };
 
 

@@ -1899,3 +1899,321 @@ void Form::onRepeat(void (*func)(Event *)) {
     }
 }
 
+point2d DisplayCore::map3Dto2D(point3d &d) {
+    point2d p2d;
+
+    p2d.x = d.x * _fov / d.z + (getWidth() / 2);
+    p2d.y = d.y * _fov / d.z + (getHeight() / 2);
+
+    return p2d;
+}
+    
+
+void DisplayCore::setPixel(int x, int y, int z, color_t c) {
+    point3d p3d = {x, y, z};
+    point2d p2d = map3Dto2D(p3d);
+    setPixel(p2d.x, p2d.y, c);
+}
+
+void DisplayCore::drawLine3D(int x1, int y1, int z1, const int x2, const int y2, const int z2, color_t color) {
+    int i, dx, dy, dz, l, m, n, x_inc, y_inc, z_inc, err_1, err_2, dx2, dy2, dz2;
+    int point[3];
+    
+    point[0] = x1;
+    point[1] = y1;
+    point[2] = z1;
+    dx = x2 - x1;
+    dy = y2 - y1;
+    dz = z2 - z1;
+    x_inc = (dx < 0) ? -1 : 1;
+    l = abs(dx);
+    y_inc = (dy < 0) ? -1 : 1;
+    m = abs(dy);
+    z_inc = (dz < 0) ? -1 : 1;
+    n = abs(dz);
+    dx2 = l << 1;
+    dy2 = m << 1;
+    dz2 = n << 1;
+    
+    if ((l >= m) && (l >= n)) {
+        err_1 = dy2 - l;
+        err_2 = dz2 - l;
+        for (i = 0; i < l; i++) {
+            setPixel(point[0], point[1], point[2], color);
+            if (err_1 > 0) {
+                point[1] += y_inc;
+                err_1 -= dx2;
+            }
+            if (err_2 > 0) {
+                point[2] += z_inc;
+                err_2 -= dx2;
+            }
+            err_1 += dy2;
+            err_2 += dz2;
+            point[0] += x_inc;
+        }
+    } else if ((m >= l) && (m >= n)) {
+        err_1 = dx2 - m;
+        err_2 = dz2 - m;
+        for (i = 0; i < m; i++) {
+            setPixel(point[0], point[1], point[2], color);
+            if (err_1 > 0) {
+                point[0] += x_inc;
+                err_1 -= dy2;
+            }
+            if (err_2 > 0) {
+                point[2] += z_inc;
+                err_2 -= dy2;
+            }
+            err_1 += dx2;
+            err_2 += dz2;
+            point[1] += y_inc;
+        }
+    } else {
+        err_1 = dy2 - n;
+        err_2 = dx2 - n;
+        for (i = 0; i < n; i++) {
+            setPixel(point[0], point[1], point[2], color);
+            if (err_1 > 0) {
+                point[1] += y_inc;
+                err_1 -= dz2;
+            }
+            if (err_2 > 0) {
+                point[0] += x_inc;
+                err_2 -= dz2;
+            }
+            err_1 += dy2;
+            err_2 += dx2;
+            point[2] += z_inc;
+        }
+    }
+    setPixel(point[0], point[1], point[2], color);
+}
+
+void DisplayCore::fillPolygon(point2d *nodes, int numpoints, color_t color) {
+    int i;
+    int nodeX[20];
+    int nodeCount;
+
+    int startY = getHeight();
+    int endY = 0;
+
+    for (i = 0; i < numpoints; i++) {
+        if (nodes[i].y < startY) startY = nodes[i].y;
+        if (nodes[i].y > endY) endY = nodes[i].y;
+    }
+
+    for (int pixelY = startY; pixelY < endY; pixelY++) {
+        int j = numpoints - 1;
+        nodeCount=0; 
+        for (i = 0; i < numpoints; i++) {
+            if ((nodes[i].y < pixelY && nodes[j].y >= pixelY) || (nodes[j].y < pixelY && nodes[i].y >= pixelY)) {
+                nodeX[nodeCount++] = nodes[i].x + (pixelY - nodes[i].y) / (nodes[j].y - nodes[i].y) * (nodes[j].x - nodes[i].x);
+            }
+            j = i;
+        }
+        i = 0;
+        while (i < nodeCount - 1) {
+            if (nodeX[i] > nodeX[i  +1]) {
+                int swap = nodeX[i]; 
+                nodeX[i] = nodeX[i + 1]; 
+                nodeX[i + 1] = swap; 
+                if (i) i--; 
+            } else {
+              i++; 
+            }
+        }
+
+        //  Fill the pixels between node pairs.
+        for (i = 0; i < nodeCount; i += 2) {
+            if (nodeX[i] >= getWidth()) {
+                break;
+            }
+
+            if (nodeX[i + 1] > 0) {
+                if (nodeX[i] < 0) {
+                    nodeX[i] = 0;
+                }
+
+                if (nodeX[i + 1] > getWidth()) {
+                    nodeX[i + 1] = getWidth();
+                }
+
+                drawHorizontalLine(nodeX[i], pixelY, nodeX[i+1] - nodeX[i], color);
+            }
+        }
+    }
+}
+
+void DisplayCore::fillPolygon3D(point3d *nodes, int numpoints, color_t color) {
+    point2d p2d[numpoints];
+    for (int i = 0; i < numpoints; i++) {
+        p2d[i] = map3Dto2D(nodes[i]);
+    }
+    fillPolygon(p2d, numpoints, color);
+}
+
+point3d Scene::translatePoint(point3d p) {
+    point3d d;
+    d.x = cosf(_camang.y*PI/180) * ( sinf(_camang.z*PI/180) * (p.y - _camera.y) + cosf(_camang.z*PI/180) *
+             (p.x - _camera.x) ) - sinf(_camang.y*PI/180) * (p.z - _camera.z);
+    d.y = sinf(_camang.x*PI/180) * ( cosf(_camang.y*PI/180) * (p.z - _camera.z) + sinf(_camang.y*PI/180) *
+             (sinf(_camang.z*PI/180) * (p.y - _camera.y) + cosf(_camang.z*PI/180) * (p.x - _camera.x)) ) +
+             cosf(_camang.x*PI/180) * ( cosf(_camang.z*PI/180) * (p.y - _camera.y) - sinf(_camang.z*PI/180) * (p.x - _camera.x) );
+    d.z = cosf(_camang.x*PI/180) * ( cosf(_camang.y*PI/180) * (p.z - _camera.z) + sinf(_camang.y*PI/180) *
+             (sinf(_camang.z*PI/180) * (p.y - _camera.y) + cosf(_camang.z*PI/180) * (p.x - _camera.x)) ) -
+             sinf(_camang.x*PI/180) * ( cosf(_camang.z*PI/180) * (p.y - _camera.y) - sinf(_camang.z*PI/180) * (p.x - _camera.x) );
+    
+    return d;
+}
+
+static inline bool isInsideTriangle(point2d s, point2d a, point2d b, point2d c) {
+    int as_x = s.x-a.x;
+    int as_y = s.y-a.y;
+
+    bool s_ab = (b.x-a.x)*as_y-(b.y-a.y)*as_x > 0;
+
+    if((c.x-a.x)*as_y-(c.y-a.y)*as_x > 0 == s_ab) return false;
+
+    if((c.x-b.x)*(s.y-b.y)-(c.y-b.y)*(s.x-b.x) > 0 != s_ab) return false;
+
+    return true;
+}
+
+bool intersect3D_RayTriangle(ray R, triangle T, point3d *I) {
+    point3d    u, v, n;              // triangle vectors
+    point3d    dir, w0, w;           // ray vectors
+    float     r, a, b;              // params to calc ray-plane intersect
+
+    // get triangle edge vectors and plane normal
+    u = T.b - T.a;
+    v = T.c - T.a;
+//    n = u * v;
+
+
+    n.x = u.y * v.z - u.z * v.x;
+//               n.y = u.z * v.x - u.x * v.z;
+//               n.z = u.x * v.y - u.y * v.x;
+
+
+    if (n.x == 0 && n.y == 0 && n.z == 0)
+        return false;                  // do not deal with this case
+
+    dir = R.b - R.a;              // ray direction vector
+    w0 = R.a - T.a;
+    a = -n.dot(w0);
+    b = n.dot(dir);
+    if (fabs(b) < 0.000001) {     // ray is  parallel to triangle plane
+        if (a == 0)                 // ray lies in triangle plane
+            return true;
+        else return false;              // ray disjoint from plane
+    }
+
+    // get intersect point of ray with triangle plane
+    r = a / b;
+    if (r < 0.0)                    // ray goes away from triangle
+        return false;                   // => no intersect
+    // for a segment, also test if (r > 1.0) => no intersect
+
+    *I = dir * r + R.a;            // intersect point of ray and plane
+
+    // is I inside T?
+    float    uu, uv, vv, wu, wv, D;
+    uu = u.dot(u);
+    uv = u.dot(v);
+    vv = v.dot(v);
+    w = *I - T.a;
+    wu = w.dot(u);
+    wv = w.dot(v);
+    D = uv * uv - uu * vv;
+
+    // get and test parametric coords
+    float s, t;
+    s = (uv * wv - vv * wu) / D;
+    if (s < 0.0 || s > 1.0)         // I is outside T
+        return false;
+    t = (uv * wu - uu * wv) / D;
+    if (t < 0.0 || (s + t) > 1.0)  // I is outside T
+        return false;
+
+    return true;                       // I is in T
+}
+
+void Scene::render(DisplayCore *dev) {
+    // Storage for the translated triangles
+    triangle trans[_numtriangles];
+
+    // Translate all the triangles
+    for (int i = 0; i < _numtriangles; i++) {
+        trans[i].a = translatePoint(_triangles[i].a);
+        trans[i].b = translatePoint(_triangles[i].b);
+        trans[i].c = translatePoint(_triangles[i].c);
+        trans[i].color = _triangles[i].color;
+    }
+
+    // Now sort them from front to back.
+
+    for (int i = 0; i < _numtriangles - 1; i++) {
+        for (int j = 0; j < _numtriangles - 1; j++) {
+            int lowz = (trans[j].a.z + trans[j].b.z + trans[j].c.z) / 3;
+            int hiz = (trans[j + 1].a.z + trans[j + 1].b.z + trans[j + 1].c.z) / 3;
+
+            if (lowz > hiz) {
+                triangle t = trans[j];
+                trans[j] = trans[j + 1];
+                trans[j + 1] = t;
+            }
+        }
+    }
+
+/*
+    // Now find the triangles that aren't occluded.
+    bool isOccluded[_numtriangles];
+
+    for (int i = 0; i < _numtriangles; i++) {
+        isOccluded[i] = false;
+
+        // The 2D coordinates for this triangle:
+        point2d a = dev->map3Dto2D(trans[i].a);
+        point2d b = dev->map3Dto2D(trans[i].b);
+        point2d c = dev->map3Dto2D(trans[i].c);
+
+        // Scan through the triangles we have already checked
+        bool oca = false;
+        bool ocb = false;
+        bool occ = false;
+        for (int j = 0; j < i; j++) {
+            // The 2D coordinates of the test triangle
+            point2d ta = dev->map3Dto2D(trans[j].a);
+            point2d tb = dev->map3Dto2D(trans[j].b);
+            point2d tc = dev->map3Dto2D(trans[j].c);
+
+            // Test the three points to see if they are inside the triangle
+            if (isInsideTriangle(a, ta, tb, tc)) {
+                oca = true;
+            }
+            if (isInsideTriangle(b, ta, tb, tc)) {
+                ocb = true;
+            }
+            if (isInsideTriangle(c, ta, tb, tc)) {
+                occ = true;
+            }
+
+            if (oca && ocb && occ) {
+                isOccluded[i] = true;
+                break;
+            }
+        }
+    }
+    // Now draw them from the back to the front.
+*/
+    for (int i = _numtriangles - 1; i >= 0; i--) {
+//        if (!isOccluded[i]) {
+            point2d a = dev->map3Dto2D(trans[i].a);
+            point2d b = dev->map3Dto2D(trans[i].b);
+            point2d c = dev->map3Dto2D(trans[i].c);
+            point2d tri[3] = {a, b, c};
+            dev->fillPolygon(tri, 3, trans[i].color);
+//        }
+    }
+}
