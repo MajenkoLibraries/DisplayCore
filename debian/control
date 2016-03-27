@@ -272,7 +272,7 @@ Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Image
-Depends: libdisplaycore-core
+Depends: libdisplaycore-core, libdisplaycore-image-bmp
 Provides: BMPFile.h
 Description: DisplayCore BMP File renderer
  Display a BMP file stored on SD card
