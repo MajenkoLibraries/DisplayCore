@@ -12,18 +12,18 @@ class AnalogTouch : public Touch {
         static const uint8_t ANALOGTOUCH_SMPSIZE = 50;
 
     public: 
-        AnalogTouch(uint8_t xl, uint8_t xr, uint8_t yu, uint8_t yd, uint16_t w, uint16_t h) : Touch(w, h), 
+        AnalogTouch(uint8_t xl, uint8_t xr, uint8_t yu, uint8_t yd, int w, int h) : Touch(w, h), 
             _xl(xl), _xr(xr), _yu(yu), _yd(yd) {}
 
         void sample();
         int getSample(uint8_t);
-        uint16_t x();
-        uint16_t y();
-        uint16_t rawX() { return x(); };
-        uint16_t rawY() { return y(); };
+        int x();
+        int y();
+        int rawX() { return x(); };
+        int rawY() { return y(); };
 
-        void offsetX(int16_t ox) { _offset_x = ox; }
-        void offsetY(int16_t oy) { _offset_y = oy; }
+        void offsetX(int ox) { _offset_x = ox; }
+        void offsetY(int oy) { _offset_y = oy; }
         void scaleX(float sx) { _scale_x = sx; }
         void scaleY(float sy) { _scale_y = sy; }
 
@@ -31,9 +31,9 @@ class AnalogTouch : public Touch {
 
         void initializeDevice();
 
-        uint16_t pressure();
+        int pressure();
 
-        void setRotation(uint8_t r);
+        void setRotation(int r);
 
     private:
         struct coord _pos;
@@ -44,10 +44,10 @@ class AnalogTouch : public Touch {
         uint8_t _yd;
         float _scale_x;
         float _scale_y;
-        int16_t _offset_x;
-        int16_t _offset_y;
-        uint16_t _pressure;
-        uint8_t _rotation;
+        int _offset_x;
+        int _offset_y;
+        int _pressure;
+        int _rotation;
 };
 
 #endif

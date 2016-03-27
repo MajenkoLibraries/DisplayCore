@@ -190,7 +190,7 @@ const uint8_t ST7735::Gcmd[] = {                  // Initialization commands for
     ST7735_DISPON ,   DELAY,  // 18: Main screen turn on, no args, w/delay
       255 };                  //     255 = 500 ms delay
 
-inline uint16_t swapcolor(uint16_t x) { 
+inline color_t swapcolor(color_t x) { 
 	return (x << 11) | (x & 0x07E0) | (x >> 11);
 }
 
@@ -289,7 +289,7 @@ void ST7735::streamCommands(const uint8_t *cmdlist) {
     }
 }
 
-void ST7735::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void ST7735::setAddrWindow(int x0, int y0, int x1, int y1) {
 	command(ST7735_CASET);
 	data(0x00);
 	data(x0+colstart);
@@ -305,7 +305,7 @@ void ST7735::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
 	command(ST7735_RAMWR); // write to RAM
 }
 
-void ST7735::setPixel(int16_t x, int16_t y, uint16_t color) {
+void ST7735::setPixel(int x, int y, color_t color) {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return;
 	setAddrWindow(x,y,x+1,y+1);
@@ -314,11 +314,11 @@ void ST7735::setPixel(int16_t x, int16_t y, uint16_t color) {
     data(color & 0xFF);
 }
 
-void ST7735::fillScreen(uint16_t color) {
+void ST7735::fillScreen(color_t color) {
 	fillRectangle(0, 0,  _width, _height, color);
 }
 
-void ST7735::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+void ST7735::fillRectangle(int x, int y, int w, int h, color_t color) {
 	if((x >= _width) || (y >= _height)) 
 		return;
 	if((x + w - 1) >= _width)  
@@ -338,7 +338,7 @@ void ST7735::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t 
 	}
 }
 
-void ST7735::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
+void ST7735::drawHorizontalLine(int x, int y, int w, color_t color) {
 	// Rudimentary clipping
 
     if (x < 0) {
@@ -363,7 +363,7 @@ void ST7735::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color)
 	}
 }
 
-void ST7735::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
+void ST7735::drawVerticalLine(int x, int y, int h, color_t color) {
     if (y < 0) {
         h += y;
         y = 0;
@@ -389,7 +389,7 @@ void ST7735::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
 	}
 }
 
-void ST7735::setRotation(uint8_t m) {
+void ST7735::setRotation(int m) {
 	command(ST7735_MADCTL);
 	rotation = m % 4; // can't be higher than 3
 	switch (rotation) {

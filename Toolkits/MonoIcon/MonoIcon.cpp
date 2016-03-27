@@ -1,6 +1,6 @@
 #include <MonoIcon.h>
 
-void MonoIcon::draw(DisplayCore *dev, int16_t x, int16_t y) {
+void MonoIcon::draw(DisplayCore *dev, int x, int y) {
 
     int voff = 0;
 
@@ -11,7 +11,7 @@ void MonoIcon::draw(DisplayCore *dev, int16_t x, int16_t y) {
     int fg_y = (_sense_h/2 - fg_h/2) - voff;;
 
 
-    uint16_t buffer[_sense_w * _sense_h];
+    color_t buffer[_sense_w * _sense_h];
     Framebuffer565 fb(_sense_w, _sense_h, buffer);
 
     int th = 0;
@@ -38,8 +38,8 @@ void MonoIcon::draw(DisplayCore *dev, int16_t x, int16_t y) {
                 fb.setPixel(px, py, _bg[py * _sense_w + px]);
             } else {
                 int alpha = _icon[(py - fg_y) * fg_w + (px - fg_x)];
-                uint16_t bg = _bg[py * _sense_w + px];
-                uint16_t col = mix(bg, _color, alpha * 2);
+                color_t bg = _bg[py * _sense_w + px];
+                color_t col = mix(bg, _color, alpha * 2);
                 fb.setPixel(px, py, col);
             }
         }
@@ -57,7 +57,7 @@ void MonoIcon::draw(DisplayCore *dev, int16_t x, int16_t y) {
 //    dev->closeWindow();
 }
 
-void MonoIcon::setColor(uint16_t c) {
+void MonoIcon::setColor(color_t c) {
     _color = c;
     redraw();
 }

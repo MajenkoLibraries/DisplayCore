@@ -8,7 +8,7 @@ class Contrast : public Filter {
         int16_t _c;
     public:
         Contrast() : Filter() {};
-        uint16_t function(uint16_t);
+        color_t function(color_t);
         void adjustContrast(int16_t c) { _c = c; };
 };
 

@@ -1,6 +1,6 @@
 #include <Framebuffer565.h>
 
-Framebuffer565::Framebuffer565(int16_t w, int16_t h, uint16_t *b) {
+Framebuffer565::Framebuffer565(int w, int h, color_t *b) {
     _width = w;
     _height = h;
     _buf = b;
@@ -10,7 +10,7 @@ void Framebuffer565::initializeDevice() {
     fillScreen(0);
 }
 
-void Framebuffer565::setPixel(int16_t x, int16_t y, uint16_t color) {
+void Framebuffer565::setPixel(int x, int y, color_t color) {
     translateCoordinates(&x, &y);
 
     if (x < 0 || x >= _width || y < 0 || y >= _height) {
@@ -19,16 +19,16 @@ void Framebuffer565::setPixel(int16_t x, int16_t y, uint16_t color) {
     _buf[x + y * _width] = color;
 }
 
-void Framebuffer565::fillScreen(uint16_t color) {
+void Framebuffer565::fillScreen(color_t color) {
     for (uint32_t x = 0; x < _width * _height; x++) {
         _buf[x] = color;
     }
 }
 
-void Framebuffer565::draw(DisplayCore *dev, int16_t x, int16_t y) {
+void Framebuffer565::draw(DisplayCore *dev, int x, int y) {
     if (_filter != NULL) {
         uint32_t p = 0;
-        uint16_t line[getWidth()];
+        color_t line[getWidth()];
         for (int py = 0; py < getHeight(); py++) {
             for (int px = 0; px < getWidth(); px++) {
                 line[px] = _filter->process(_buf[p]);
@@ -40,19 +40,19 @@ void Framebuffer565::draw(DisplayCore *dev, int16_t x, int16_t y) {
         }
     } else {
         dev->openWindow(x, y, getWidth(), getHeight());
-        dev->windowData((uint16_t *)_buf, (uint32_t)getWidth() * (uint32_t)getHeight());
+        dev->windowData((color_t *)_buf, (uint32_t)getWidth() * (uint32_t)getHeight());
         dev->closeWindow();
     }
 }
 
-void Framebuffer565::draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t t) {
+void Framebuffer565::draw(DisplayCore *dev, int x, int y, color_t t) {
     uint32_t p = 0;
-    uint16_t line[getWidth()];
+    color_t line[getWidth()];
 
     for (int py = 0; py < getHeight(); py++) {
         boolean haveTrans = false;
         for (int px = 0; px < getWidth(); px++) {
-            uint16_t col = _buf[p];
+            color_t col = _buf[p];
             if (col == t) {
                 haveTrans = true;
                 line[px] = col;
@@ -78,7 +78,7 @@ void Framebuffer565::draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t t) {
     }
 }
 
-void Framebuffer565::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform) {
+void Framebuffer565::drawTransformed(DisplayCore *dev, int x, int y, int transform) {
     uint32_t p = 0;
     for (int py = 0; py < getHeight(); py++) {
         for (int px = 0; px < getWidth(); px++) {
@@ -101,7 +101,7 @@ void Framebuffer565::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uin
     }
 }
 
-void Framebuffer565::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform, uint16_t t) {
+void Framebuffer565::drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t) {
     uint32_t p = 0;
     for (int py = 0; py < getHeight(); py++) {
         for (int px = 0; px < getWidth(); px++) {

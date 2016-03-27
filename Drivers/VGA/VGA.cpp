@@ -171,7 +171,7 @@ VGA::VGA(uint8_t hsync, uint8_t vsync) {
     _vsync_pin = digitalPinToBitMask(vsync);
 }
 
-void VGA::setPixel(int16_t x, int16_t y, uint16_t c) {
+void VGA::setPixel(int x, int y, color_t c) {
     if (x < 0 || y < 0 || x >= Width || y >= Height) {
         return;
     }
@@ -201,7 +201,7 @@ void VGA::flip() {
 #endif
 }
 
-void VGA::fillScreen(uint16_t c) {
+void VGA::fillScreen(color_t c) {
     if (c) {
         for (uint32_t line = 0; line < Height; line++) {
             memset((void *)activeBuffer + (line * ((Width/8)+1)), 0xFF, (Width/8));

@@ -34,7 +34,7 @@ void VLCD::setBaud(uint32_t b) {
     _ser->write(CMD_SET_BAUD);
 }
 
-void VLCD::setPixel(int16_t x, int16_t y, uint16_t c) {
+void VLCD::setPixel(int x, int y, color_t c) {
     push(x);
     push(y);
     if (c) {
@@ -44,7 +44,7 @@ void VLCD::setPixel(int16_t x, int16_t y, uint16_t c) {
     }
 }
 
-void VLCD::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t col) {
+void VLCD::drawLine(int x0, int y0, int x1, int y1, color_t col) {
     push(x0);
     push(y0);
     push(x1);
@@ -56,7 +56,7 @@ void VLCD::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t col
     }
 }
 
-void VLCD::setSize(uint16_t x, uint16_t y) {
+void VLCD::setSize(int x, int y) {
     push(x);
     push(y);
     _ser->write(CMD_SET_DIM);
@@ -64,7 +64,7 @@ void VLCD::setSize(uint16_t x, uint16_t y) {
     _height = y;
 }
 
-void VLCD::setBackground(uint16_t c) {
+void VLCD::setBackground(color_t c) {
     uint32_t rgb = color2rgb(c);
     uint8_t r = (rgb >> 16) & 0xFF;
     uint8_t g = (rgb >> 8) & 0xFF;
@@ -75,7 +75,7 @@ void VLCD::setBackground(uint16_t c) {
     _ser->write(CMD_SET_BG);
 }
 
-void VLCD::setForeground(uint16_t c) {
+void VLCD::setForeground(color_t c) {
     uint32_t rgb = color2rgb(c);
     uint8_t r = (rgb >> 16) & 0xFF;
     uint8_t g = (rgb >> 8) & 0xFF;

@@ -14,7 +14,7 @@ void XPT2046::initializeDevice() {
     _offset_y = 0;
 }
 
-uint16_t XPT2046::x() {
+int XPT2046::x() {
     int x = _offset_x + ((float)(pos.x * _width / 4096) * _scale_x);
     int y = _offset_y + ((float)(pos.y * _height / 4096) * _scale_y);
 
@@ -31,7 +31,7 @@ uint16_t XPT2046::x() {
     return 0;
 }
 
-uint16_t XPT2046::y() {
+int XPT2046::y() {
     int x = _offset_x + ((float)(pos.x * _width / 4096) * _scale_x);
     int y = _offset_y + ((float)(pos.y * _height / 4096) * _scale_y);
 
@@ -113,7 +113,7 @@ void XPT2046::sample() {
     pressed = 1;
 }
 
-void XPT2046::setRotation(uint8_t r) {
+void XPT2046::setRotation(int r) {
     _rotation = r % 4;
 }
 

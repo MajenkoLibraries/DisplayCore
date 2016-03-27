@@ -8,23 +8,23 @@ class Framebuffer332 : public Image {
         uint8_t *_buf;
 
     public:
-        Framebuffer332(int16_t w, int16_t h, uint8_t *b);
+        Framebuffer332(int w, int h, uint8_t *b);
 
         void initializeDevice();
 
-        void setPixel(int16_t x, int16_t y, uint16_t c);
-        uint16_t colorAt(int16_t x, int16_t y);
-        void fillScreen(uint16_t c);
+        void setPixel(int x, int y, color_t c);
+        color_t colorAt(int x, int y);
+        void fillScreen(color_t c);
 
-        void draw(DisplayCore *dev, int16_t x, int16_t y);
-        void draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t t);
-        void drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform);
-        void drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform, uint16_t t);
+        void draw(DisplayCore *dev, int x, int y);
+        void draw(DisplayCore *dev, int x, int y, color_t t);
+        void drawTransformed(DisplayCore *dev, int x, int y, int transform);
+        void drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t);
 
-        void draw(DisplayCore &dev, int16_t x, int16_t y) { draw(&dev, x, y); }
-        void draw(DisplayCore &dev, int16_t x, int16_t y, uint16_t t) { draw(&dev, x, y, t); }
-        void drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform) { drawTransformed(&dev, x, y, transform); }
-        void drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform, uint16_t t) { drawTransformed(&dev, x, y, t); }
+        void draw(DisplayCore &dev, int x, int y) { draw(&dev, x, y); }
+        void draw(DisplayCore &dev, int x, int y, color_t t) { draw(&dev, x, y, t); }
+        void drawTransformed(DisplayCore &dev, int x, int y, int transform) { drawTransformed(&dev, x, y, transform); }
+        void drawTransformed(DisplayCore &dev, int x, int y, int transform, color_t t) { drawTransformed(&dev, x, y, t); }
 
 
 };

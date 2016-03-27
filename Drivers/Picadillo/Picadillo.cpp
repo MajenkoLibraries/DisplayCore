@@ -147,7 +147,7 @@ void Picadillo::initializeDevice()
     clearClipping();
 }
 
-void Picadillo::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) 
+void Picadillo::setAddrWindow(int x0, int y0, int x1, int y1) 
 {
     writeCommand(HX8357_SET_COLUMN_ADDRESS); // Column addr set
     writeData((x0+colstart) >> 8);
@@ -163,7 +163,7 @@ void Picadillo::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1
 	writeCommand(HX8357_WRITE_MEMORY_START); //Write SRAM Data
 }
 
-void Picadillo::setPixel(int16_t x, int16_t y, uint16_t color) 
+void Picadillo::setPixel(int x, int y, color_t color) 
 {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return;
@@ -174,12 +174,12 @@ void Picadillo::setPixel(int16_t x, int16_t y, uint16_t color)
     PMDIN = color;
 }
 
-void Picadillo::fillScreen(uint16_t color) 
+void Picadillo::fillScreen(color_t color) 
 {
 	fillRectangle(0, 0,  _width, _height, color);
 }
 
-void Picadillo::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) 
+void Picadillo::fillRectangle(int x, int y, int w, int h, color_t color) 
 {
     if (!clipToScreen(x, y, w, h)) {
         return;
@@ -194,9 +194,9 @@ void Picadillo::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16
 	}
 }
 
-void Picadillo::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) 
+void Picadillo::drawHorizontalLine(int x, int y, int w, color_t color) 
 {
-    int16_t h = 1;
+    int h = 1;
     if (!clipToScreen(x, y, w, h)) {
         return;
     }
@@ -208,9 +208,9 @@ void Picadillo::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t col
 	}
 }
 
-void Picadillo::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) 
+void Picadillo::drawVerticalLine(int x, int y, int h, color_t color) 
 {
-    int16_t w = 1;
+    int w = 1;
     if (!clipToScreen(x, y, w, h)) {
         return;
     }
@@ -222,7 +222,7 @@ void Picadillo::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color
 	}
 }
 
-void Picadillo::setRotation(uint8_t m) 
+void Picadillo::setRotation(int m) 
 {
 	writeCommand(HX8357_SET_ADDRESS_MODE);
 	rotation = m % 4; // can't be higher than 3
@@ -271,16 +271,16 @@ void Picadillo::displayOff()
 	writeCommand(HX8357_DISPLAYOFF);
 }
 
-void Picadillo::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void Picadillo::openWindow(int x0, int y0, int x1, int y1) {
     setAddrWindow(x0, y0, x0 + x1 - 1, y0 + y1 - 1);
     PMADDR = 0x0001;
 }
 
-void Picadillo::windowData(uint16_t d) {
+void Picadillo::windowData(color_t d) {
     PMDIN = d;
 }
 
-void Picadillo::windowData(uint16_t *d, uint32_t l) {
+void Picadillo::windowData(color_t *d, int l) {
 //    for (uint32_t i = 0; i < l; i++) {
 //        while (PMMODEbits.BUSY == 1);
 //        PMDIN = d[i];
@@ -343,7 +343,7 @@ uint8_t Picadillo::readByte(boolean fresh) {
     return storedByte;
 }
 
-uint16_t Picadillo::colorAt(int16_t x, int16_t y) {
+color_t Picadillo::colorAt(int x, int y) {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return 0;
     setAddrWindow(x, y, x, y);
@@ -361,10 +361,10 @@ uint16_t Picadillo::colorAt(int16_t x, int16_t y) {
 
     return rgb(r, g, b);
 }
-void Picadillo::getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf) {
+void Picadillo::getRectangle(int x, int y, int w, int h, color_t *buf) {
     uint32_t i = 0;
-    for (int16_t py = 0; py < h; py++) {
-        for (int16_t px = 0; px < w; px++) {
+    for (int py = 0; py < h; py++) {
+        for (int px = 0; px < w; px++) {
             buf[i++] = colorAt(x + px, y + py);
         }
     }
@@ -390,7 +390,7 @@ void Picadillo::disableBacklight() {
     analogWrite(PIN_BACKLIGHT, 0);
 }
 
-void Picadillo::setBacklight(uint8_t b) {
+void Picadillo::setBacklight(int b) {
     _brightness = b;
     analogWrite(PIN_BACKLIGHT, _brightness);
 }

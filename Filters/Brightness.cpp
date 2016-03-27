@@ -1,6 +1,6 @@
 #include <Brightness.h>
 
-uint16_t Brightness::function(uint16_t col) {
+color_t Brightness::function(color_t col) {
 
     int r = col >> 11;
     int g = col >> 5 & 0b111111;

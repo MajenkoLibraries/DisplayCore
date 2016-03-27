@@ -1,4 +1,4 @@
-#include <Display7Seg.h>
+#include <Display.h>
 
 namespace Fonts {
 

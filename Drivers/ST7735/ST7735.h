@@ -87,12 +87,12 @@ class ST7735 : public DisplayCore {
 		ST7735(DSPI *spi, uint8_t cs, uint8_t dc, uint8_t variant) : _spi(spi), _cs(cs), _dc(dc), _variant(variant) {}
 		ST7735(DSPI &spi, uint8_t cs, uint8_t dc, uint8_t variant) : _spi(&spi), _cs(cs), _dc(dc), _variant(variant) {}
 
-        void fillScreen(uint16_t color);
-        void setPixel(int16_t x, int16_t y, uint16_t color);
-        void drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-        void drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-        void fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-        void setRotation(uint8_t r);
+        void fillScreen(color_t color);
+        void setPixel(int x, int y, color_t color);
+        void drawVerticalLine(int x, int y, int h, color_t color);
+        void drawHorizontalLine(int x, int y, int w, color_t color);
+        void fillRectangle(int x, int y, int w, int h, color_t color);
+        void setRotation(int r);
         void invertDisplay(boolean i);
         void displayOn() {} // Not implemented
         void displayOff() {} // Not implemented
@@ -100,7 +100,7 @@ class ST7735 : public DisplayCore {
         void initializeDevice();
 
 	private:
-		void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
+		void setAddrWindow(int x0, int y0, int x1, int y1);
 		void streamCommands(const uint8_t *cmdlist);
 		uint8_t colstart, rowstart;
         void command(uint8_t);

@@ -44,7 +44,7 @@ void KS0108::initializeDevice() {
     PMAEN |= (_reg | _data);
 
 #ifdef _PMMODE_MODE16_MASK
-    PMMODEbitsN.MODE16 = 0;  // 8-bit mode
+    PMMODEbits.MODE16 = 0;  // 8-bit mode
 #endif
     PMMODEbits.MODE = 0b11; // RW + E
     PMCONbits.WRSP = 1; // E is active HIGH
@@ -79,7 +79,7 @@ void KS0108::data(uint8_t d) {
     delayMicroseconds(5);
 }
 
-void KS0108::setPixel(int16_t x, int16_t y, uint16_t color) {
+void KS0108::setPixel(int x, int y, color_t color) {
     uint8_t row;
     uint8_t pixel;
     uint8_t mask;
@@ -103,8 +103,8 @@ void KS0108::setPixel(int16_t x, int16_t y, uint16_t color) {
     }
 }
 
-uint16_t KS0108::getWidth() { return 64; }
-uint16_t KS0108::getHeight() { return 64; }
+int KS0108::getWidth() { return 64; }
+int KS0108::getHeight() { return 64; }
 
 void KS0108_BB2::initializeDevice() {
     _lcd1.initializeDevice();
@@ -116,7 +116,7 @@ void KS0108_2::initializeDevice() {
     _lcd2.initializeDevice();
 }
 
-void KS0108_BB2::setPixel(int16_t x, int16_t y, uint16_t color) {
+void KS0108_BB2::setPixel(int x, int y, color_t color) {
     if (x >= 64) {
         _lcd2.setPixel(x-64, y, color);
     } else {
@@ -124,7 +124,7 @@ void KS0108_BB2::setPixel(int16_t x, int16_t y, uint16_t color) {
     }
 }
 
-void KS0108_2::setPixel(int16_t x, int16_t y, uint16_t color) {
+void KS0108_2::setPixel(int x, int y, color_t color) {
     if (x >= 64) {
         _lcd2.setPixel(x-64, y, color);
     } else {
@@ -152,11 +152,11 @@ void KS0108_2::endBuffer() {
     _lcd2.endBuffer();
 }
 
-uint16_t KS0108_2::getWidth() { return 128; }
-uint16_t KS0108_2::getHeight() { return 64; }
+int KS0108_2::getWidth() { return 128; }
+int KS0108_2::getHeight() { return 64; }
 
-uint16_t KS0108_BB2::getWidth() { return 128; }
-uint16_t KS0108_BB2::getHeight() { return 64; }
+int KS0108_BB2::getWidth() { return 128; }
+int KS0108_BB2::getHeight() { return 64; }
 
 void KS0108_BB::initializeDevice() {
     _port_rs = getPortInformation(_rs, &_mask_rs);

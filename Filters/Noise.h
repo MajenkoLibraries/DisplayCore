@@ -5,12 +5,12 @@
 
 class Noise : public Filter {
     private:
-        uint16_t _n;
+        int _n;
     public:
         Noise() : Filter(), _n(0) {};
-        Noise(uint16_t n) : Filter(), _n(n) {};
-        uint16_t function(uint16_t);
-        void setLevel(uint16_t n) { _n = n; };
+        Noise(int n) : Filter(), _n(n) {};
+        color_t function(color_t);
+        void setLevel(int n) { _n = n; };
 };
 
 #endif

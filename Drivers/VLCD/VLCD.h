@@ -42,27 +42,27 @@ class VLCD : public DisplayCore {
     public:
         void initializeDevice();
         void initializeDevice(Stream &s);
-        void setSize(uint16_t x, uint16_t y);
+        void setSize(int x, int y);
         void sendData(uint8_t *data);
-        void setPixel(int16_t x, int16_t y, uint16_t c);
-        void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t c);
+        void setPixel(int x, int y, color_t c);
+        void drawLine(int x0, int y0, int x1, int y1, color_t c);
 
-        void setRotation(uint8_t r) { }
+        void setRotation(int r) { }
         void displayOn() { setSize(_width, _height); }
         void displayOff() { }
         void invertDisplay(boolean b) { }
 
-        void setForeground(uint16_t c);
-        void setBackground(uint16_t c);
+        void setForeground(color_t c);
+        void setBackground(color_t c);
 
         void setBaud(uint32_t b);
 
-        uint16_t getWidth() { return _width; }
-        uint16_t getHeight() { return _height; }
+        int getWidth() { return _width; }
+        int getHeight() { return _height; }
 
     private:
-        uint16_t _width;
-        uint16_t _height;
+        int _width;
+        int _height;
 };
 
 #endif

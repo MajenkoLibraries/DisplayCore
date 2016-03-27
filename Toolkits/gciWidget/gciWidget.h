@@ -32,12 +32,12 @@ class gciWidget : public Widget {
             _touch = true;
         }
 
-        void draw(DisplayCore *dev, int16_t x, int16_t y);
-		uint32_t getFrames();
+        void draw(DisplayCore *dev, int x, int y);
+		int getFrames();
 
-        uint16_t getWidth() { return _sense_w; }
-        uint16_t getHeight() { return _sense_h; }
-        void setValue(uint16_t x);
+        int getWidth() { return _sense_w; }
+        int getHeight() { return _sense_h; }
+        void setValue(int x);
 };
 
 #endif

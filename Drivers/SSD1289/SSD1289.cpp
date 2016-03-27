@@ -181,15 +181,15 @@ void SSD1289::startDisplay() {
     command(0x0022);
 }
 
-static void inline swap(uint16_t &a, uint16_t &b) {
-    uint16_t t = a;
+static void inline swap(int &a, int &b) {
+    int t = a;
     a = b;
     b = t;
 }
 
-void SSD1289::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void SSD1289::setAddrWindow(int x0, int y0, int x1, int y1) {
 
-    uint16_t x0a, x1a, y0a, y1a;
+    int x0a, x1a, y0a, y1a;
 
     switch(rotation) {
         case 0:
@@ -209,7 +209,7 @@ void SSD1289::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) 
     command(34);
 }
 
-void SSD1289::setPixel(int16_t x, int16_t y, uint16_t color) {
+void SSD1289::setPixel(int x, int y, color_t color) {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return;
 
@@ -217,11 +217,11 @@ void SSD1289::setPixel(int16_t x, int16_t y, uint16_t color) {
 	data(color);
 }
 
-void SSD1289::fillScreen(uint16_t color) {
+void SSD1289::fillScreen(color_t color) {
 	fillRectangle(0, 0,  _width, _height, color);
 }
 
-void SSD1289::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+void SSD1289::fillRectangle(int x, int y, int w, int h, color_t color) {
     if (!clipToScreen(x, y, w, h)) {
         return;
     }
@@ -233,8 +233,8 @@ void SSD1289::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t
 	}
 }
 
-void SSD1289::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
-    int16_t h = 1;
+void SSD1289::drawHorizontalLine(int x, int y, int w, color_t color) {
+    int h = 1;
     if (!clipToScreen(x, y, w, h)) {
         return;
     }
@@ -245,8 +245,8 @@ void SSD1289::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color
     }
 }
 
-void SSD1289::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
-    int16_t w = 1;
+void SSD1289::drawVerticalLine(int x, int y, int h, color_t color) {
+    int w = 1;
     if (!clipToScreen(x, y, w, h)) {
         return;
     }
@@ -271,7 +271,7 @@ void SSD1289::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) 
 #define SSD1289_ID3 0x0030
 #define SSD1289_AM  0x0008
 
-void SSD1289::setRotation(uint8_t m) {
+void SSD1289::setRotation(int m) {
 	rotation = m % 4; // can't be higher than 3
     switch(rotation) {
         case 0:
@@ -301,15 +301,15 @@ void SSD1289::invertDisplay(boolean i) {
 //	command(i ? SSD1289_INVON : SSD1289_INVOFF);
 }
 
-void SSD1289::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void SSD1289::openWindow(int x0, int y0, int x1, int y1) {
     setAddrWindow(x0, y0, x1, y1);
 }
 
-void SSD1289::windowData(uint16_t d) {
+void SSD1289::windowData(color_t d) {
     data(d);
 }
 
-void SSD1289::windowData(uint16_t *d, uint32_t l) {
+void SSD1289::windowData(color_t *d, int l) {
     for (uint32_t i = 0; i < l; i++) {
         data(d[i]);
     }

@@ -118,7 +118,7 @@ void HX8347D::initializeDevice()
     clearClipping();
 }
 
-void HX8347D::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) 
+void HX8347D::setAddrWindow(int x0, int y0, int x1, int y1) 
 {
     // Column start
     setRegister(0x02, x0 >> 8);
@@ -139,7 +139,7 @@ void HX8347D::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
     writeCommand(0x22);
 }
 
-void HX8347D::setPixel(int16_t x, int16_t y, uint16_t color) 
+void HX8347D::setPixel(int x, int y, color_t color) 
 {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return;
@@ -150,12 +150,12 @@ void HX8347D::setPixel(int16_t x, int16_t y, uint16_t color)
     closeWindow();
 }
 
-void HX8347D::fillScreen(uint16_t color) 
+void HX8347D::fillScreen(color_t color) 
 {
 	fillRectangle(0, 0,  _width, _height, color);
 }
 
-void HX8347D::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) 
+void HX8347D::fillRectangle(int x, int y, int w, int h, color_t color) 
 {
     if (!clipToScreen(x, y, w, h)) {
         return;
@@ -169,9 +169,9 @@ void HX8347D::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t
     closeWindow();
 }
 
-void HX8347D::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) 
+void HX8347D::drawHorizontalLine(int x, int y, int w, color_t color) 
 {
-    int16_t h = 1;
+    int h = 1;
     if (!clipToScreen(x, y, w, h)) {
         return;
     }
@@ -182,9 +182,9 @@ void HX8347D::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color
     closeWindow();
 }
 
-void HX8347D::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) 
+void HX8347D::drawVerticalLine(int x, int y, int h, color_t color) 
 {
-    int16_t w = 1;
+    int w = 1;
     if (!clipToScreen(x, y, w, h)) {
         return;
     }
@@ -195,7 +195,7 @@ void HX8347D::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color)
     closeWindow();
 }
 
-void HX8347D::setRotation(uint8_t m) 
+void HX8347D::setRotation(int m) 
 {
 // 0x80 = up/down flip
 // 0x40 = left/right flip
@@ -246,19 +246,19 @@ void HX8347D::displayOff()
     setRegister(0x01,0xC0);
 }
 
-void HX8347D::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void HX8347D::openWindow(int x0, int y0, int x1, int y1) {
     setAddrWindow(x0, y0, x0 + x1 - 1, y0 + y1 - 1);
     _cs_port->lat.clr = _cs_mask;
     _dc_port->lat.set = _dc_mask;
 }
 
-void HX8347D::windowData(uint16_t d) {
+void HX8347D::windowData(color_t d) {
     _spi->setSpeed(100000000UL);
     _spi->transfer((uint8_t)(d >> 8));
     _spi->transfer((uint8_t)(d & 0xFF));
 }
 
-void HX8347D::windowData(uint16_t *d, uint32_t l) {
+void HX8347D::windowData(color_t *d, uint32_t l) {
     _spi->setSpeed(100000000UL);
     for (uint32_t i = 0; i < l; i++) {
         _spi->transfer((uint8_t)(d[i] >> 8));

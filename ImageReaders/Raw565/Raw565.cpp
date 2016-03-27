@@ -1,15 +1,15 @@
 #include <Raw565.h>
 
-Raw565::Raw565(const uint16_t *data, uint16_t w, uint16_t h) : Image() {
+Raw565::Raw565(const color_t *data, int w, int h) : Image() {
     _data = data;
     _width = w;
     _height = h;
 }
 
-void Raw565::draw(DisplayCore *dev, int16_t x, int16_t y) {
+void Raw565::draw(DisplayCore *dev, int x, int y) {
     if (_filter != NULL) {
         uint32_t p = 0;
-        uint16_t line[getWidth()];
+        color_t line[getWidth()];
         for (int py = 0; py < getHeight(); py++) {
             for (int px = 0; px < getWidth(); px++) {
                 line[px] = _filter->process(_data[p]);
@@ -21,19 +21,19 @@ void Raw565::draw(DisplayCore *dev, int16_t x, int16_t y) {
         }
     } else {
         dev->openWindow(x, y, getWidth(), getHeight());
-        dev->windowData((uint16_t *)_data, (uint32_t)getWidth() * (uint32_t)getHeight());
+        dev->windowData((color_t *)_data, getWidth() * getHeight());
         dev->closeWindow();
     }
 }
 
-void Raw565::draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t t) {
+void Raw565::draw(DisplayCore *dev, int x, int y, color_t t) {
     uint32_t p = 0;
-    uint16_t line[getWidth()];
+    color_t line[getWidth()];
 
     for (int py = 0; py < getHeight(); py++) {
         boolean haveTrans = false;
         for (int px = 0; px < getWidth(); px++) {
-            uint16_t col = _data[p];
+            color_t col = _data[p];
             if (col == t) {
                 haveTrans = true;
                 line[px] = col;
@@ -59,7 +59,7 @@ void Raw565::draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t t) {
     }
 }
 
-void Raw565::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform) {
+void Raw565::drawTransformed(DisplayCore *dev, int x, int y, int transform) {
     uint32_t p = 0;
     for (int py = 0; py < getHeight(); py++) {
         for (int px = 0; px < getWidth(); px++) {
@@ -82,7 +82,7 @@ void Raw565::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t tra
     }
 }
 
-void Raw565::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform, uint16_t t) {
+void Raw565::drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t) {
     uint32_t p = 0;
     for (int py = 0; py < getHeight(); py++) {
         for (int px = 0; px < getWidth(); px++) {

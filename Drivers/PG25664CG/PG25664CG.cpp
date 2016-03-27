@@ -113,7 +113,7 @@ void PG25664CG::displayOn() {
     command(0xAF);
 }
 
-void PG25664CG::setAddressWindow(uint16_t xs, uint16_t ys, uint16_t xe, uint16_t ye) {
+void PG25664CG::setAddressWindow(int xs, int ys, int xe, int ye) {
     command(0x15);
     data(xs & 0xFF);
     data(xe & 0xFF);
@@ -122,7 +122,7 @@ void PG25664CG::setAddressWindow(uint16_t xs, uint16_t ys, uint16_t xe, uint16_t
     data(ye & 0xFF);
 }
 
-void PG25664CG::fillScreen(uint16_t c) {
+void PG25664CG::fillScreen(color_t c) {
     uint8_t pd = (c & 0x0F) | ((c & 0x0F) << 4);
     for (int x = 0; x < 8192; x++) {
         _buffer[x] = pd;
@@ -140,11 +140,11 @@ void PG25664CG::update() {
     }
 }
 
-void PG25664CG::setPixel(int16_t x, int16_t y, uint16_t c) {
+void PG25664CG::setPixel(int x, int y, color_t c) {
     if (x < 0 || y < 0 || x > 255 || y > 63) {
         return;
     }
-    int16_t dx = x / 2;
+    int dx = x / 2;
     uint8_t b = _buffer[dx + (y * 128)];
     if (x & 1) {
         b &= 0xF0;

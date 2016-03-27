@@ -21,23 +21,23 @@ class XPT2046 : public Touch {
          *
          *      XPT2046 ts(spiDev, 240, 320);
          */
-        XPT2046(DSPI *spi, uint8_t cs, uint16_t w, uint16_t h) : Touch(w, h), _spi(spi), _cs(cs)  {}
-        XPT2046(DSPI &spi, uint8_t cs, uint16_t w, uint16_t h) : Touch(w, h), _spi(&spi), _cs(cs)  {}
+        XPT2046(DSPI *spi, uint8_t cs, int w, int h) : Touch(w, h), _spi(spi), _cs(cs)  {}
+        XPT2046(DSPI &spi, uint8_t cs, int w, int h) : Touch(w, h), _spi(&spi), _cs(cs)  {}
         /**@}*/
 
         void sample();
-        uint16_t x();
-        uint16_t y();
+        int x();
+        int y();
         boolean isPressed();
 
         void initializeDevice();
 
-        void setRotation(uint8_t r);
+        void setRotation(int r);
 
     private:
         struct coord pos;
         boolean pressed;
-        uint8_t _rotation;
+        int _rotation;
         DSPI *_spi;
         uint8_t _cs;
 

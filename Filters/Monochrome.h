@@ -8,7 +8,7 @@ class Monochrome : public Filter {
         int16_t _c;
     public:
         Monochrome() : Filter() {};
-        uint16_t function(uint16_t);
+        color_t function(color_t);
 };
 
 #endif

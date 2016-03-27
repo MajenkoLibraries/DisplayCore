@@ -5,12 +5,12 @@
 
 class Tint : public Filter {
     private:
-        uint16_t _c;
+        color_t _c;
     public:
         Tint() : Filter(), _c(Color::Sepia) {};
-        Tint(uint16_t c) : Filter(), _c(c) {};
-        uint16_t function(uint16_t);
-        void setTint(uint16_t c) { _c = c; };
+        Tint(color_t c) : Filter(), _c(c) {};
+        color_t function(color_t);
+        void setTint(color_t c) { _c = c; };
 };
 
 #endif

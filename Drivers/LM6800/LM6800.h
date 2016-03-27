@@ -121,8 +121,8 @@ class LM6800 : public DisplayCore {
         boolean _buffered;
 
 	public:
-        static const uint16_t Width = 256;
-        static const uint16_t Height = 64;
+        static const int Width = 256;
+        static const int Height = 64;
 
         LM6800(
             uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
@@ -130,14 +130,14 @@ class LM6800 : public DisplayCore {
             uint8_t csa, uint8_t csb, uint8_t csc, uint8_t e,
             uint8_t rs, uint8_t rw, uint8_t reset = NULL); 
 
-		void setAddrWindow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
-        void fillScreen(uint16_t color);
-        void doSetPixel(int16_t x, int16_t y, uint16_t color);
-        void setPixel(int16_t x, int16_t y, uint16_t color);
-        void drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-        void drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-        void fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-        void setRotation(uint8_t r) {}; // Not implemented
+		void setAddrWindow(int x0, int y0, int x1, int y1);
+        void fillScreen(color_t color);
+        void doSetPixel(int x, int y, color_t color);
+        void setPixel(int x, int y, color_t color);
+        void drawVerticalLine(int x, int y, int h, color_t color);
+        void drawHorizontalLine(int x, int y, int w, color_t color);
+        void fillRectangle(int x, int y, int w, int h, color_t color);
+        void setRotation(int r) {}; // Not implemented
         void invertDisplay(boolean i);
         void displayOn() {} // Not implemented
         void displayOff() {} // Not implemented

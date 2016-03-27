@@ -9,13 +9,13 @@ namespace Gentleface48 {
     extern const uint8_t AlignLeft[];
     extern const uint8_t AlignRight[];
     extern const uint8_t AppWindow[];
-    extern const uint8_t AppWindow&48.png[];
+    extern const uint8_t AppWindow2[];
     extern const uint8_t AppWindowBlack[];
-    extern const uint8_t AppWindowBlack&48.png[];
+    extern const uint8_t AppWindowBlack2[];
     extern const uint8_t AppWindowCross[];
-    extern const uint8_t AppWindowCross&48.png[];
+    extern const uint8_t AppWindowCross2[];
     extern const uint8_t AppWindowShell[];
-    extern const uint8_t AppWindowShell&48.png[];
+    extern const uint8_t AppWindowShell2[];
     extern const uint8_t ArrowBottom[];
     extern const uint8_t ArrowBottomLeft[];
     extern const uint8_t ArrowBottomRigth[];

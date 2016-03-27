@@ -22,8 +22,8 @@
 
 class VGA : public DisplayCore {
     public:
-        static const uint16_t Width = 768 / (VGA_USE_H_RES + 1);
-        static const uint16_t Height = 480 / (VGA_USE_V_RES + 1);
+        static const int Width = 768 / (VGA_USE_H_RES + 1);
+        static const int Height = 480 / (VGA_USE_V_RES + 1);
     private:
         static const uint32_t clockOffset = 10;
 
@@ -71,19 +71,19 @@ class VGA : public DisplayCore {
     public:
         VGA(uint8_t hsync, uint8_t vsync);
         void initializeDevice();
-        void setPixel(int16_t x, int16_t y, uint16_t c);
-        void setRotation(uint8_t r) {}
+        void setPixel(int x, int y, color_t c);
+        void setRotation(int r) {}
         void displayOn() {}
         void displayOff() {}
         void invertDisplay(boolean i) {}
 
-        uint16_t getWidth() { return Width; }
-        uint16_t getHeight() { return Height; }
+        int getWidth() { return Width; }
+        int getHeight() { return Height; }
 
         void vblank();
         void flip();
 
-        void fillScreen(uint16_t c);
+        void fillScreen(color_t c);
 
         uint32_t millis();
 

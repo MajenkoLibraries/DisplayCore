@@ -39,9 +39,9 @@ class BinaryVector : public Image {
 
         BinaryVector(const uint16_t *program) : _program(program) {}
 
-        void draw(DisplayCore *dc, int16_t x, int16_t y);
-        void draw(DisplayCore *dc, int16_t x, int16_t y, uint16_t) {}
-        void drawTransformed(DisplayCore *dc, int16_t x, int16_t y, uint8_t) {}
-        void drawTransformed(DisplayCore *dc, int16_t x, int16_t y, uint8_t, uint16_t) {}
+        void draw(DisplayCore *dc, int x, int y);
+        void draw(DisplayCore *dc, int x, int y, color_t) {}
+        void drawTransformed(DisplayCore *dc, int x, int y, int) {}
+        void drawTransformed(DisplayCore *dc, int x, int y, int, color_t) {}
 };
 

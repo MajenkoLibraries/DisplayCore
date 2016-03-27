@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+typedef uint16_t color_t;
+
 #include <Color.h>
 #include <DefaultFont.h>
 
@@ -19,8 +21,8 @@ typedef struct {
 } FontHeader;
 
 struct coord {
-    uint16_t x;
-    uint16_t y;
+    int x;
+    int y;
 };
 
 typedef struct {
@@ -31,7 +33,7 @@ typedef struct {
 
 typedef struct {
     union {
-        uint16_t value;
+        color_t value;
         struct {
             unsigned r:5;
             unsigned g:6;
@@ -40,62 +42,61 @@ typedef struct {
     } __attribute__((packed));
 } __attribute__((packed)) Color565;
 
-extern uint16_t rgb(uint32_t c);
-extern uint16_t rgb(uint8_t r, uint8_t g, uint8_t b);
+extern color_t rgb(uint32_t c);
+extern color_t rgb(uint8_t r, uint8_t g, uint8_t b);
 
 class DisplayCore : public Print
 {
     public:
         DisplayCore();
-        virtual void drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
-        virtual void fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
-        virtual void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
-        virtual void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int width, uint16_t color);
-        virtual void drawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-        virtual void drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t color);
-        virtual void fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t color);
-        virtual void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
-        virtual void fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
-        virtual void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
-        virtual void drawRGB(int16_t x, int16_t y, const uint16_t *bitmap, int16_t w, int16_t h);
-        virtual void drawRGBA(int16_t x, int16_t y, const uint16_t *bitmap, int16_t w, int16_t h, uint16_t trans);
-        virtual void setCursor(int16_t x, int16_t y);
-        virtual void setCursorX(int16_t x);
-        virtual void setCursorY(int16_t y);
-        virtual int16_t getCursorX();
-        virtual int16_t getCursorY();
-        virtual int16_t getCursor(boolean x);
-        virtual void setTextColor(uint16_t c);
-        virtual void setTextColor(uint16_t fg, uint16_t bg);
-        virtual uint16_t getTextColor();
+        virtual void drawCircle(int x0, int y0, int r, color_t color);
+        virtual void fillCircle(int x0, int y0, int r, color_t color);
+        virtual void drawLine(int x0, int y0, int x1, int y1, color_t color);
+        virtual void drawLine(int x0, int y0, int x1, int y1, int width, color_t color);
+        virtual void drawRectangle(int x, int y, int w, int h, color_t color);
+        virtual void drawRoundRect(int x, int y, int w, int h, int r, color_t color);
+        virtual void fillRoundRect(int x, int y, int w, int h, int r, color_t color);
+        virtual void drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color);
+        virtual void fillTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color);
+        virtual void drawBitmap(int x, int y, const uint8_t *bitmap, int w, int h, color_t color);
+        virtual void drawRGB(int x, int y, const color_t *bitmap, int w, int h);
+        virtual void drawRGBA(int x, int y, const color_t *bitmap, int w, int h, color_t trans);
+        virtual void setCursor(int x, int y);
+        virtual void setCursorX(int x);
+        virtual void setCursorY(int y);
+        virtual int getCursorX();
+        virtual int getCursorY();
+        virtual int getCursor(boolean x);
+        virtual void setTextColor(color_t c);
+        virtual void setTextColor(color_t fg, color_t bg);
+        virtual color_t getTextColor();
         virtual void invertTextColor();
         virtual void setTextWrap(boolean w);
-        virtual uint16_t color565(uint8_t r, uint8_t g, uint8_t b);
+        virtual color_t color565(uint8_t r, uint8_t g, uint8_t b);
         virtual void setFont(const uint8_t *f);
-        virtual void translateCoordinates(int16_t *x, int16_t *y);
+        virtual void translateCoordinates(int *x, int *y);
         virtual void drawBezier(
-            int16_t x0, int16_t y0,
-            int16_t x1, int16_t y1,
-            int16_t x2, int16_t y2,
-            int16_t x3, int16_t y3,
+            int x0, int y0,
+            int x1, int y1,
+            int x2, int y2,
+            int x3, int y3,
             int resolution,
-            uint16_t color
+            color_t color
         );
 
         virtual void fillBezier(
-            int16_t x0, int16_t y0,
-            int16_t x1, int16_t y1,
-            int16_t x2, int16_t y2,
-            int16_t x3, int16_t y3,
+            int x0, int y0,
+            int x1, int y1,
+            int x2, int y2,
+            int x3, int y3,
             int resolution,
-            uint16_t color
+            color_t color
         );
 
-        virtual void fillScreen(uint16_t color);
-        virtual void fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+        virtual void fillScreen(color_t color);
+        virtual void fillRectangle(int x, int y, int w, int h, color_t color);
 
-
-        void setClipping(int16_t x0, int16_t y0, int16_t x1, int16_t y1);
+        void setClipping(int x0, int y0, int x1, int y1);
         void clearClipping();
 
         /*! \name Pure virtual functions
@@ -111,7 +112,7 @@ class DisplayCore : public Print
          *
          *      tft.setRotation(1);
          */
-        virtual void setRotation(uint8_t rotation) = 0;
+        virtual void setRotation(int rotation) = 0;
         /*! Draw a pixel
          *  ============
          *  A pixel, coloured (color) is drawn at (x,y).
@@ -120,7 +121,7 @@ class DisplayCore : public Print
          *  
          *      tft.drawPixel(100, 100, Color::Green);
          */
-        virtual void setPixel(int16_t x, int16_t y, uint16_t color) = 0;
+        virtual void setPixel(int x, int y, color_t color) = 0;
         /*! Draw a horizontal line
          *  ======================
          *  A horizontal line of width (w) is drawn from point (x,y) in colour (color);
@@ -129,7 +130,7 @@ class DisplayCore : public Print
          *
          *      tft.drawHorizontalLine(10, 10, 50, Color::Blue);
          */
-        virtual void drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+        virtual void drawHorizontalLine(int x, int y, int w, color_t color);
         /*! Draw a vertical line
          *  ====================
          *  A vertical line of height (h) is drawn from point (x,y) in colour (color);
@@ -138,7 +139,7 @@ class DisplayCore : public Print
          *
          *      tft.drawVerticalLine(10, 10, 50, Color::Blue);
          */
-        virtual void drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color);
+        virtual void drawVerticalLine(int x, int y, int h, color_t color);
         /*! Initialize the display
          *  ======================
          *  The display is configured and made ready to work.  This function *must* be called
@@ -177,16 +178,16 @@ class DisplayCore : public Print
          */
         virtual void invertDisplay(boolean i) = 0;
          /**@}*/
-        virtual uint16_t stringWidth(const char *text);
-        virtual uint16_t stringHeight(const char *text);
+        virtual int stringWidth(const char *text);
+        virtual int stringHeight(const char *text);
 
-        virtual void openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-        virtual void windowData(uint16_t d);
-        virtual void windowData(uint16_t *d, uint32_t l);
+        virtual void openWindow(int x0, int y0, int x1, int y1);
+        virtual void windowData(color_t d);
+        virtual void windowData(color_t *d, int l);
         virtual void closeWindow();
 
-        virtual uint16_t colorAt(int16_t x, int16_t y);
-        virtual void getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf);
+        virtual color_t colorAt(int x, int y);
+        virtual void getRectangle(int x, int y, int w, int h, color_t *buf);
 
         /*! Start buffered mode
          *  ===================
@@ -222,7 +223,7 @@ class DisplayCore : public Print
          *  For devices with their own backlight control this function will set the
          *  brightness of the backlight.
          */
-        virtual void setBacklight(uint8_t b) {}
+        virtual void setBacklight(int b) {}
 
         /*! Get Port Data
          *  =============
@@ -244,22 +245,22 @@ class DisplayCore : public Print
 #endif
 
         /*! The text cursor X position */
-        int16_t cursor_x;
+        int cursor_x;
         /*! The text cursor Y position */
-        int16_t cursor_y;
+        int cursor_y;
         /*! Whether or not text wrapping is enabled */
         boolean wrap;
         /*! Text foreground colour */
-        uint16_t textcolor;
+        color_t textcolor;
         /*! Text background colour */
-        uint16_t textbgcolor;
+        color_t textbgcolor;
         /*! Width of the TFT screen */
-        uint16_t _width;
+        int _width;
         /*! Height of the TFT screen */
-        uint16_t _height;
+        int _height;
         /*! Current rotation */
-        uint8_t rotation;
-        uint8_t drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg);
+        int rotation;
+        int drawChar(int x, int y, unsigned char c, color_t color, color_t bg);
 
         /*! Get screen width
          *  ================
@@ -269,7 +270,7 @@ class DisplayCore : public Print
          *
          *    int width = tft.getWidth();
          */
-        virtual uint16_t getWidth();
+        virtual int getWidth();
         /*! Get screen height
          *  =================
          *  Returns the height (in pixels) of the screen.
@@ -278,43 +279,43 @@ class DisplayCore : public Print
          *
          *    int height = tft.getHeight();
          */
-        virtual uint16_t getHeight();
+        virtual int getHeight();
 
-        point3d rgb2xyz(uint16_t c);
+        point3d rgb2xyz(color_t c);
         point3d xyz2lab(point3d c);
         float deltaE(point3d labA, point3d labB);
-        uint32_t deltaOrth(uint16_t c1, uint16_t c2);
-        static uint32_t rgb2hsv(uint16_t rgb);
-        static uint16_t hsv2rgb(uint32_t hsv);
+        uint32_t deltaOrth(color_t c1, color_t c2);
+        static uint32_t rgb2hsv(color_t rgb);
+        static color_t hsv2rgb(uint32_t hsv);
 
-        void drawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t color);
-        void fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, int16_t delta, uint16_t color);
+        void drawCircleHelper( int x0, int y0, int r, int cornername, color_t color);
+        void fillCircleHelper(int x0, int y0, int r, int cornername, int delta, color_t color);
 
-        uint16_t mix(uint16_t a, uint16_t b, uint8_t pct);
+        color_t mix(color_t a, color_t b, int pct);
 
-        boolean clipToScreen(int16_t &x, int16_t &y, int16_t &w, int16_t &h);
+        boolean clipToScreen(int &x, int &y, int &w, int &h);
 
         void fatalError(const char *title, const char *message);
 
-        uint32_t color2rgb(uint16_t c);
+        uint32_t color2rgb(color_t c);
 
-        int16_t _clip_x0;
-        int16_t _clip_x1;
-        int16_t _clip_y0;
-        int16_t _clip_y1;
+        int _clip_x0;
+        int _clip_x1;
+        int _clip_y0;
+        int _clip_y1;
 
     protected:
         /*! A pointer to the currently selected font table */
         const uint8_t *font;
 
-        uint16_t winx0;
-        uint16_t winy0;
-        uint16_t winx1;
-        uint16_t winy1;
-        uint16_t winpx;
-        uint16_t winpy;
+        int winx0;
+        int winy0;
+        int winx1;
+        int winy1;
+        int winpx;
+        int winpy;
 
-        uint16_t bgColor;
+        color_t bgColor;
 
 };
 
@@ -324,7 +325,7 @@ class Touch {
          *  ================================
          *  This takes a pointer to a communication device, and the width and height of the touch screen.
          */
-        Touch(uint16_t w, uint16_t h) : _width(w), _height(h) {}
+        Touch(int w, int h) : _width(w), _height(h) {}
         /*! Initialize the device
          *  =====================
          *  This configures and enables the touch screen device. It should be called before any other touch screen
@@ -335,18 +336,18 @@ class Touch {
          *  ================
          *  This returns the X coordinate of the current touch position.
          */
-        virtual uint16_t x() = 0;
+        virtual int x() = 0;
         /*! Get Y coordinate
          *  ================
          *  This returns the Y coordinate of the current touch position.
          */
-        virtual uint16_t y() = 0;
+        virtual int y() = 0;
         /*! Get pressed status
          *  ==================
          *  Returns true if the touch screen is pressed, false otherwise.
          */
-        virtual uint16_t rawX() { return x(); }
-        virtual uint16_t rawY() { return y(); }
+        virtual int rawX() { return x(); }
+        virtual int rawY() { return y(); }
         virtual boolean isPressed() = 0;
         /*! Calculate the touch pressure
          *  ============================
@@ -356,13 +357,13 @@ class Touch {
          *
          *      int pressure = ts.pressure();
          */
-        virtual uint16_t pressure() { return 0; }
+        virtual int pressure() { return 0; }
         /*! Set rotation
          *  ============
          *  This sets the screen orientation of the touch screen.  It should be set to the same as the
          *  rotation used for the screen.
          */
-        virtual void setRotation(uint8_t r) = 0;
+        virtual void setRotation(int r) = 0;
 
         /*! Sample the touch screen
          *  =======================
@@ -378,14 +379,14 @@ class Touch {
 
         float _scale_x;
         float _scale_y;
-        int16_t _offset_x;
-        int16_t _offset_y;
+        int _offset_x;
+        int _offset_y;
 
     protected:
         /*! The width of the toush screen in pixels */
-        uint16_t _width;  
+        int _width;  
         /*! The height of the touch screen in pixels */
-        uint16_t _height; 
+        int _height; 
 
 };
 
@@ -396,8 +397,8 @@ class Filter {
         Filter *_next;
     public:
         Filter() : _next(NULL) {};
-        uint16_t process(uint16_t);
-        virtual uint16_t function(uint16_t) = 0;
+        color_t process(color_t);
+        virtual color_t function(color_t) = 0;
         void chain(Filter &f) { _next = &f; }
         void chain(Filter *f) { _next = f; }
         void endChain() { _next = NULL; }
@@ -413,31 +414,31 @@ class Image : public DisplayCore {
 
         Image() : _filter(NULL) {};
 
-        virtual uint16_t getWidth() { return _width; }
-        virtual uint16_t getHeight() { return _height; }
+        virtual int getWidth() { return _width; }
+        virtual int getHeight() { return _height; }
 
-        virtual void draw(DisplayCore *dev, int16_t x, int16_t y) = 0;
-        virtual void draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t t) = 0;
-        virtual void drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform) = 0;
-        virtual void drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform, uint16_t t) = 0;
+        virtual void draw(DisplayCore *dev, int x, int y) = 0;
+        virtual void draw(DisplayCore *dev, int x, int y, color_t t) = 0;
+        virtual void drawTransformed(DisplayCore *dev, int x, int y, int transform) = 0;
+        virtual void drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t) = 0;
 
-        void draw(DisplayCore &dev, int16_t x, int16_t y) { draw(&dev, x, y); }
-        void draw(DisplayCore &dev, int16_t x, int16_t y, uint16_t t) { draw(&dev, x, y, t); }
-        void drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform) { drawTransformed(&dev, x, y, transform); }
-        void drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform, uint16_t t) { drawTransformed(&dev, x, y, t); }
+        void draw(DisplayCore &dev, int x, int y) { draw(&dev, x, y); }
+        void draw(DisplayCore &dev, int x, int y, color_t t) { draw(&dev, x, y, t); }
+        void drawTransformed(DisplayCore &dev, int x, int y, int transform) { drawTransformed(&dev, x, y, transform); }
+        void drawTransformed(DisplayCore &dev, int x, int y, int transform, color_t t) { drawTransformed(&dev, x, y, t); }
 
         void setFilter(Filter &f) { _filter = &f; };
         void removeFilter() { _filter = NULL; };
 
-        void setRotation(uint8_t r) {}
-        void setPixel(int16_t x, int16_t y, uint16_t c) {}
+        void setRotation(int r) {}
+        void setPixel(int x, int y, color_t c) {}
         void initializeDevice() {}
         void displayOn() {}
         void displayOff() {}
         void invertDisplay(boolean i) {}
 
-        uint16_t _width;
-        uint16_t _height;
+        int _width;
+        int _height;
 };
 
 // An abstraction of an event including the type, location, widget, etc;
@@ -523,16 +524,16 @@ class Widget : public Image {
 
         void handleTouch();
 
-        virtual void draw(DisplayCore *dev, int16_t x, int16_t y) = 0;
+        virtual void draw(DisplayCore *dev, int x, int y) = 0;
 
-        void draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t t);
-        void drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform);
-        void drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform, uint16_t t);
+        void draw(DisplayCore *dev, int x, int y, color_t t);
+        void drawTransformed(DisplayCore *dev, int x, int y, int transform);
+        void drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t);
 
-        void draw(DisplayCore &dev, int16_t x, int16_t y);
-        void draw(DisplayCore &dev, int16_t x, int16_t y, uint16_t t);
-        void drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform);
-        void drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform, uint16_t t);
+        void draw(DisplayCore &dev, int x, int y);
+        void draw(DisplayCore &dev, int x, int y, color_t t);
+        void drawTransformed(DisplayCore &dev, int x, int y, int transform);
+        void drawTransformed(DisplayCore &dev, int x, int y, int transform, color_t t);
 
         virtual void redraw();
 

@@ -179,9 +179,9 @@ class SSD1963 : public DisplayCore {
         uint8_t pin_d15;
 
 
-      void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
+      void setAddrWindow(int x0, int y0, int x1, int y1);
 
-        uint8_t _brightness;
+        int _brightness;
 
         int8_t pins[20];
         inline void command(uint16_t cmd) {
@@ -304,9 +304,9 @@ class SSD1963 : public DisplayCore {
 
    public:
         /*! The width of the screen is 800 pixels */
-        static const uint16_t Width      = 800;
+        static const int Width      = 800;
         /*! The height of the screen is 480 pixels */
-        static const uint16_t Height     = 480;
+        static const int Height     = 480;
 
       SSD1963(
          uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
@@ -324,26 +324,26 @@ class SSD1963 : public DisplayCore {
          uint8_t tft_bus_width = TFTBUS18
          );
 
-        void fillScreen(uint16_t color);
-        void setPixel(int16_t x, int16_t y, uint16_t color);
-        void drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-        void drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-        void fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-        void setRotation(uint8_t r);
+        void fillScreen(color_t color);
+        void setPixel(int x, int y, color_t color);
+        void drawVerticalLine(int x, int y, int h, color_t color);
+        void drawHorizontalLine(int x, int y, int w, color_t color);
+        void fillRectangle(int x, int y, int w, int h, color_t color);
+        void setRotation(int r);
         void invertDisplay(boolean i);
         void displayOn();
         void displayOff();
 
-        uint16_t colorAt(int16_t x, int16_t y);
+        color_t colorAt(int x, int y);
 
         void initializeDevice();
 
-        void windowData(uint16_t d);
-        void openWindow(uint16_t, uint16_t, uint16_t, uint16_t);
+        void windowData(color_t d);
+        void openWindow(int, int, int, int);
 
         void enableBacklight();
         void disableBacklight();
-        void setBacklight(uint8_t b);
+        void setBacklight(int b);
 
 };
 

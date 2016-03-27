@@ -10,7 +10,7 @@ class AdjustHSV : public Filter {
         int16_t _v;
     public:
         AdjustHSV() : Filter() {};
-        uint16_t function(uint16_t);
+        color_t function(color_t);
         void adjustHue(int16_t h) { _h = h; };
         void adjustSaturation(int16_t s) { _s = s; };
         void adjustValue(int16_t v) { _v = v; };

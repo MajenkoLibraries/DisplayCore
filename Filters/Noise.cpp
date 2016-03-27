@@ -1,6 +1,6 @@
 #include <Noise.h>
 
-uint16_t Noise::function(uint16_t col) {
+color_t Noise::function(color_t col) {
 
     int r = col >> 11;
     int g = col >> 5 & 0b111111;

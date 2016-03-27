@@ -85,20 +85,20 @@ class SSD1306 : public DisplayCore {
 
         virtual void initializeDevice();
 
-        void setPixel(int16_t x, int16_t y, uint16_t color);
+        void setPixel(int x, int y, color_t color);
         void displayOn();
         void displayOff();
 
-        void setRotation(uint8_t r);
+        void setRotation(int r);
         void invertDisplay(boolean i) {}
 
         void startBuffer() { _buffered++; }
         void endBuffer() { _buffered--; if (_buffered == 0) {updateDisplay();} }
 
-        uint16_t getWidth() { return _width; }
-        uint16_t getHeight() { return _height; }
+        int getWidth() { return _width; }
+        int getHeight() { return _height; }
 
-        void fillScreen(uint16_t color);
+        void fillScreen(color_t color);
 };
 
 class SSD1306_BB : public SSD1306 {

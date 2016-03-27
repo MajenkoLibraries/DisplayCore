@@ -2,7 +2,7 @@
 #include <stdarg.h>
 
 /*! Utility function to convert a 24-bit RGB value into a 16-bit RGB value. */
-uint16_t rgb(uint32_t c) {
+color_t rgb(uint32_t c) {
     uint8_t r = c >> 16;
     uint8_t g = c >> 8;
     uint8_t b = c;
@@ -14,7 +14,7 @@ uint16_t rgb(uint32_t c) {
 }
 
 /*! Utility function to convert three component colour values (R, G, B) into a 16-bit RGB value.*/
-uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) {
+color_t rgb(uint8_t r, uint8_t g, uint8_t b) {
     r = r >> 3;
     g = g >> 2;
     b = b >> 3;
@@ -45,13 +45,13 @@ DisplayCore::DisplayCore() {
  *
  *      tft.drawCircle(50, 50, 20, Color::Red);
  */
-void DisplayCore::drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color) {
+void DisplayCore::drawCircle(int x0, int y0, int r, color_t color) {
     startBuffer();
-    int16_t f = 1 - r;
-    int16_t ddF_x = 1;
-    int16_t ddF_y = -2 * r;
-    int16_t x = 0;
-    int16_t y = r;
+    int f = 1 - r;
+    int ddF_x = 1;
+    int ddF_y = -2 * r;
+    int x = 0;
+    int y = r;
 
     setPixel(x0, y0+r, color);
     setPixel(x0, y0-r, color);
@@ -90,7 +90,7 @@ void DisplayCore::drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color) 
  *
  *      tft.fillCircle(50, 50, 20, Color::Red);
  */
-void DisplayCore::fillCircle(int16_t x0, int16_t y0, int16_t radius, uint16_t color) {
+void DisplayCore::fillCircle(int x0, int y0, int radius, color_t color) {
     startBuffer();
     int32_t r2 = radius * radius;
     for (int y1 = 0-radius; y1 <= 0; y1++) {
@@ -106,7 +106,7 @@ void DisplayCore::fillCircle(int16_t x0, int16_t y0, int16_t radius, uint16_t co
     endBuffer();
 }
 
-static void inline swap(int16_t &i0, int16_t &i1) {
+static void inline swap(int &i0, int &i1) {
     int i2 = i0;
     i0 = i1;
     i1 = i2;
@@ -123,9 +123,9 @@ static void inline swap(int16_t &i0, int16_t &i1) {
  *      tft.drawLine(10, 10, 40, 60, Color::Green);
  */
 // bresenham's algorithm - thx wikpedia
-void DisplayCore::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color) {
+void DisplayCore::drawLine(int x0, int y0, int x1, int y1, color_t color) {
     startBuffer();
-    int16_t steep = abs(y1 - y0) > abs(x1 - x0);
+    int steep = abs(y1 - y0) > abs(x1 - x0);
     if (steep) {
         swap(x0, y0);
         swap(x1, y1);
@@ -136,12 +136,12 @@ void DisplayCore::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint1
         swap(y0, y1);
     }
 
-    int16_t dx, dy;
+    int dx, dy;
     dx = x1 - x0;
     dy = abs(y1 - y0);
 
-    int16_t err = dx / 2;
-    int16_t ystep;
+    int err = dx / 2;
+    int ystep;
 
     if (y0 < y1) {
         ystep = 1;
@@ -178,9 +178,9 @@ void DisplayCore::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint1
  *      tft.drawLine(10, 10, 40, 60, 4, Color::Green);
  */
 // bresenham's algorithm - thx wikpedia
-void DisplayCore::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int width, uint16_t color) {
+void DisplayCore::drawLine(int x0, int y0, int x1, int y1, int width, color_t color) {
     startBuffer();
-    int16_t steep = abs(y1 - y0) > abs(x1 - x0);
+    int steep = abs(y1 - y0) > abs(x1 - x0);
     if (steep) {
         swap(x0, y0);
         swap(x1, y1);
@@ -191,12 +191,12 @@ void DisplayCore::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int w
         swap(y0, y1);
     }
 
-    int16_t dx, dy;
+    int dx, dy;
     dx = x1 - x0;
     dy = abs(y1 - y0);
 
-    int16_t err = dx / 2;
-    int16_t ystep;
+    int err = dx / 2;
+    int ystep;
 
     if (y0 < y1) {
         ystep = 1;
@@ -229,7 +229,7 @@ void DisplayCore::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int w
  *
  *      setClipping(100, 100, 200, 200);
  */
-void DisplayCore::setClipping(int16_t x0, int16_t y0, int16_t x1, int16_t y1) {
+void DisplayCore::setClipping(int x0, int y0, int x1, int y1) {
     _clip_x0 = x0;
     _clip_x1 = x1;
     _clip_y0 = y0;
@@ -252,7 +252,7 @@ void DisplayCore::clearClipping() {
     _clip_y1 = getHeight() - 1;
 }
 
-void DisplayCore::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t c) {
+void DisplayCore::drawHorizontalLine(int x, int y, int w, color_t c) {
     startBuffer();
     for(int z = 0; z < w; z++) {
         setPixel(x + z, y, c);
@@ -260,7 +260,7 @@ void DisplayCore::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t c
     endBuffer();
 }
 
-void DisplayCore::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t c) {
+void DisplayCore::drawVerticalLine(int x, int y, int h, color_t c) {
     startBuffer();
     for(int z = 0; z < h; z++) {
         setPixel(x, y + z, c);
@@ -278,7 +278,7 @@ void DisplayCore::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t c) 
  * 
  *      tft.drawRectangle(10, 10, 200, 300, Color::Blue);
  */
-void DisplayCore::drawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+void DisplayCore::drawRectangle(int x, int y, int w, int h, color_t color) {
     startBuffer();
     drawHorizontalLine(x, y, w, color);
     drawHorizontalLine(x, y+h-1, w, color);
@@ -300,7 +300,7 @@ void DisplayCore::drawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint
  *  It is expected that actual screen drivers will override this function with a high speed
  *  optimized function.
  */
-void DisplayCore::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+void DisplayCore::fillRectangle(int x, int y, int w, int h, color_t color) {
     startBuffer();
     for (int i = 0; i < h; i++) {
         for (int j = 0; j < w; j++) {
@@ -318,7 +318,7 @@ void DisplayCore::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint
  *
  *      tft.fillScreen(Color::Black);
  */
-void DisplayCore::fillScreen(uint16_t color) {
+void DisplayCore::fillScreen(color_t color) {
     startBuffer();
     bgColor = color;
     fillRectangle(0, 0, getWidth(), getHeight(), color);
@@ -335,7 +335,7 @@ void DisplayCore::fillScreen(uint16_t color) {
  *
  *      tft.drawRoundRect(10, 10, 100, 50, 4, Color::Yellow);
  */
-void DisplayCore::drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t color) {
+void DisplayCore::drawRoundRect(int x, int y, int w, int h, int r, color_t color) {
     startBuffer();
     // smarter version
     drawHorizontalLine(x+r  , y    , w-2*r, color); // Top
@@ -360,7 +360,7 @@ void DisplayCore::drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int1
  *
  *      tft.fillRoundRect(10, 10, 100, 50, 4, Color::Yellow);
  */
-void DisplayCore::fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t color) {
+void DisplayCore::fillRoundRect(int x, int y, int w, int h, int r, color_t color) {
     startBuffer();
     // smarter version
     fillRectangle(x+r, y, w-2*r, h, color);
@@ -380,7 +380,7 @@ void DisplayCore::fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int1
  *
  *      tft.drawTriangle(40, 10, 60, 30, 20, 30, Color::Cyan);
  */
-void DisplayCore::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color) {
+void DisplayCore::drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color) {
     startBuffer();
     drawLine(x0, y0, x1, y1, color);
     drawLine(x1, y1, x2, y2, color);
@@ -397,8 +397,8 @@ void DisplayCore::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, i
  *
  *      tft.fillTriangle(40, 10, 60, 30, 20, 30, Color::Cyan);
  */
-void DisplayCore::fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color) {
-    int16_t a, b, y, last;
+void DisplayCore::fillTriangle ( int x0, int y0, int x1, int y1, int x2, int y2, color_t color) {
+    int a, b, y, last;
 
     startBuffer();
 
@@ -477,8 +477,8 @@ void DisplayCore::fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1,
  *          0b00000000};
  *      tft.drawBitmap(100, 100, letterA, 8, 8, Color::Red);
  */
-void DisplayCore::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color) {
-    int16_t i, j, byteWidth = (w + 7) / 8;
+void DisplayCore::drawBitmap(int x, int y, const uint8_t *bitmap, int w, int h, color_t color) {
+    int i, j, byteWidth = (w + 7) / 8;
 
     startBuffer();
     for(j=0; j<h; j++) {
@@ -500,9 +500,9 @@ void DisplayCore::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_
  *
  *    tft.drawRGB(10, 30, myImage, 16, 16);
  */
-void DisplayCore::drawRGB(int16_t x, int16_t y, const uint16_t *bitmap, int16_t w, int16_t h) {
+void DisplayCore::drawRGB(int x, int y, const color_t *bitmap, int w, int h) {
     startBuffer();
-    int16_t i, j;
+    int i, j;
     for (j = 0; j < h; j++) {
         for (i = 0; i < w; i++) {
             setPixel(x+i, y+j, bitmap[j * w + i]);
@@ -521,10 +521,10 @@ void DisplayCore::drawRGB(int16_t x, int16_t y, const uint16_t *bitmap, int16_t 
  *
  *    tft.drawRGBA(10, 30, myImage, 16, 16, Color::Black);
  */
-void DisplayCore::drawRGBA(int16_t x, int16_t y, const uint16_t *bitmap, int16_t w, int16_t h, uint16_t trans) {
+void DisplayCore::drawRGBA(int x, int y, const color_t *bitmap, int w, int h, color_t trans) {
     startBuffer();
-    int16_t i, j;
-    uint16_t col;
+    int i, j;
+    color_t col;
     for (j = 0; j < h; j++) {
         for (i = 0; i < w; i++) {
             col = bitmap[j * w + i];
@@ -551,8 +551,8 @@ void DisplayCore::drawRGBA(int16_t x, int16_t y, const uint16_t *bitmap, int16_t
  *
  *      int width = tft.stringWidth("The quick brown fox jumped over the lazy dog");
  */
-uint16_t DisplayCore::stringWidth(const char *text) {
-    uint16_t w = 0;
+int DisplayCore::stringWidth(const char *text) {
+    int w = 0;
     if (font == NULL) {
         return 0;
     }
@@ -589,7 +589,7 @@ uint16_t DisplayCore::stringWidth(const char *text) {
  *
  *      int height = stringHeight("The quick brown fox jumped over the lazy dog");
  */
-uint16_t DisplayCore::stringHeight(const char *text) {
+int DisplayCore::stringHeight(const char *text) {
     if (font == NULL) {
         return 0;
     }
@@ -683,7 +683,7 @@ void DisplayCore::write(uint8_t c) {
  *
  *      tft.drawChar(30, 30, 'Q', Color::Red, Color::Blue);
  */
-uint8_t DisplayCore::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg) {
+int DisplayCore::drawChar(int x, int y, unsigned char c, color_t color, color_t bg) {
 
     if (font == NULL) {
         return 0;
@@ -707,7 +707,7 @@ uint8_t DisplayCore::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t co
 
     uint8_t nCols = 1 << header->bitsPerPixel;
     uint32_t bitmask = nCols - 1;
-    uint16_t cmap[nCols];
+    color_t cmap[nCols];
 
     if (bg != color) {
         for (uint8_t i = 0; i < nCols; i++) {
@@ -762,7 +762,7 @@ uint8_t DisplayCore::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t co
                         setPixel(x + pixelNumber, y + lineNumber, color);
                     // Otherwise mix or fade the colour...
                     } else {
-                        uint16_t bgc = colorAt(x+pixelNumber, y+lineNumber);
+                        color_t bgc = colorAt(x+pixelNumber, y+lineNumber);
                         setPixel(x + pixelNumber, y + lineNumber, mix(bgc, color, 255 * pixelValue / bitmask));
                     }
                 }
@@ -783,7 +783,7 @@ uint8_t DisplayCore::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t co
  *
  *      tft.setCursor(0, 100);
  */
-void DisplayCore::setCursor(int16_t x, int16_t y) {
+void DisplayCore::setCursor(int x, int y) {
     cursor_x = x;
     cursor_y = y;
 }
@@ -796,7 +796,7 @@ void DisplayCore::setCursor(int16_t x, int16_t y) {
  *
  *      tft.setCursorX(100);
  */
-void DisplayCore::setCursorX(int16_t x) {
+void DisplayCore::setCursorX(int x) {
     cursor_x = x;
 }
 
@@ -808,7 +808,7 @@ void DisplayCore::setCursorX(int16_t x) {
  *
  *      tft.setCursorY(100);
  */
-void DisplayCore::setCursorY(int16_t y) {
+void DisplayCore::setCursorY(int y) {
     cursor_y = y;
 }
 
@@ -820,7 +820,7 @@ void DisplayCore::setCursorY(int16_t y) {
  *
  *      int x = tft.getCursorX();
  */
-int16_t DisplayCore::getCursorX() {
+int DisplayCore::getCursorX() {
     return cursor_x;
 }
 
@@ -832,7 +832,7 @@ int16_t DisplayCore::getCursorX() {
  *
  *      int y = tft.getCursorY();
  */
-int16_t DisplayCore::getCursorY() {
+int DisplayCore::getCursorY() {
     return cursor_y;
 }
 
@@ -846,7 +846,7 @@ int16_t DisplayCore::getCursorY() {
  *      int x = tft.getCursor(true);
  *      int y = tft.getCursor(false);
  */
-int16_t DisplayCore::getCursor(boolean x) {
+int DisplayCore::getCursor(boolean x) {
     if( x )
         return cursor_x;
     return cursor_y;
@@ -860,7 +860,7 @@ int16_t DisplayCore::getCursor(boolean x) {
  *
  *      tft.setTextColor(Color::Magenta);
  */
-void DisplayCore::setTextColor(uint16_t c) {
+void DisplayCore::setTextColor(color_t c) {
     textcolor = c;
 }
 
@@ -874,7 +874,7 @@ void DisplayCore::setTextColor(uint16_t c) {
  *
  *      tft.setTextColor(Color::Red, Color::Blue);
  */
-void DisplayCore::setTextColor(uint16_t fg, uint16_t bg) {
+void DisplayCore::setTextColor(color_t fg, color_t bg) {
    textcolor = fg;
    textbgcolor = bg;
     bgColor = bg;
@@ -928,7 +928,7 @@ void DisplayCore::setFont(const uint8_t *f) {
  *
  *      unsigned int color = tft.getTextColor();
  */
-uint16_t DisplayCore::getTextColor() {
+color_t DisplayCore::getTextColor() {
     return textcolor;
 }
 
@@ -948,7 +948,7 @@ uint16_t DisplayCore::getTextColor() {
  *
  *      unsigned int yellow = tft.color565(255, 255, 0);
  */
-uint16_t DisplayCore::color565(uint8_t r, uint8_t g, uint8_t b) {
+color_t DisplayCore::color565(uint8_t r, uint8_t g, uint8_t b) {
     return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
 
@@ -961,7 +961,7 @@ uint16_t DisplayCore::color565(uint8_t r, uint8_t g, uint8_t b) {
  *
  *      point3d color = tft.rgb2xyz(Color::Cyan);
  */
-point3d DisplayCore::rgb2xyz(uint16_t rgb) {
+point3d DisplayCore::rgb2xyz(color_t rgb) {
     uint8_t red = rgb >> 11;
     uint8_t green = rgb >> 5 & 0b111111;
     uint8_t blue = rgb & 0b11111;
@@ -1070,7 +1070,7 @@ float DisplayCore::deltaE(point3d labA, point3d labB) {
  *
  *      unsigned long delta = tft.deltaOrth(Color::Yellow, Color::Orange);
  */
-uint32_t DisplayCore::deltaOrth(uint16_t c1, uint16_t c2) {
+uint32_t DisplayCore::deltaOrth(color_t c1, color_t c2) {
     uint32_t hsv1 = rgb2hsv(c1);
     uint32_t hsv2 = rgb2hsv(c2);
 
@@ -1097,7 +1097,7 @@ uint32_t DisplayCore::deltaOrth(uint16_t c1, uint16_t c2) {
  *
  *      unsigned long hsv = tft.rgb2hsv(Color::Green);
  */
-uint32_t DisplayCore::rgb2hsv(uint16_t rgb)
+uint32_t DisplayCore::rgb2hsv(color_t rgb)
 {
     uint8_t r = rgb >> 11;
     uint8_t g = rgb >> 5 & 0b111111;
@@ -1139,7 +1139,7 @@ uint32_t DisplayCore::rgb2hsv(uint16_t rgb)
     return (h << 16) | (s << 8) | v;
 }
 
-uint16_t DisplayCore::hsv2rgb(uint32_t hsv) {
+color_t DisplayCore::hsv2rgb(uint32_t hsv) {
     int hue = (hsv >> 16) & 0xFF;
     int sat = (hsv >> 8) & 0xFF;
     int val = hsv & 0xFF;
@@ -1209,12 +1209,12 @@ uint16_t DisplayCore::hsv2rgb(uint32_t hsv) {
  *
  *      unsigned int color = tft.colorAt(100, 100);
  */
-uint16_t DisplayCore::colorAt(int16_t x, int16_t y) {
+color_t DisplayCore::colorAt(int x, int y) {
     return bgColor;
 }
 
-void DisplayCore::getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf) {
-    for (int16_t i = 0; i < w*h; i++) {
+void DisplayCore::getRectangle(int x, int y, int w, int h, color_t *buf) {
+    for (int i = 0; i < w*h; i++) {
         buf[i] = bgColor;
     }
 }
@@ -1227,7 +1227,7 @@ void DisplayCore::getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint1
  *
  *      unsigned int yellow = tft.mix(Color::Red, Color::Green);
  */
-uint16_t DisplayCore::mix(uint16_t a, uint16_t b, uint8_t pct) {
+color_t DisplayCore::mix(color_t a, color_t b, int pct) {
     Color565 col_a;
     Color565 col_b;
     Color565 col_out;
@@ -1257,7 +1257,7 @@ uint16_t DisplayCore::mix(uint16_t a, uint16_t b, uint8_t pct) {
  *  
  *      tft.openWindow(0, 0, 100, 100);
  */
-void DisplayCore::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void DisplayCore::openWindow(int x0, int y0, int x1, int y1) {
     winx0 = x0;
     winy0 = y0;
     winx1 = x0 + x1;
@@ -1275,7 +1275,7 @@ void DisplayCore::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
  *
  *      tft.windowData(Color::Red);
  */
-void DisplayCore::windowData(uint16_t d) {
+void DisplayCore::windowData(color_t d) {
     setPixel(winx0 + winpx, winy0 + winpy, d);
     winpx++;
     if ((winx0 + winpx) >= winx1) {
@@ -1296,8 +1296,8 @@ void DisplayCore::windowData(uint16_t d) {
  *
  *      tft.windowData(myData, 1000);
  */
-void DisplayCore::windowData(uint16_t *d, uint32_t l) {
-    for (uint32_t i = 0; i < l; i++) {
+void DisplayCore::windowData(color_t *d, int l) {
+    for (int i = 0; i < l; i++) {
         windowData(d[i]);
     }
 }
@@ -1323,7 +1323,7 @@ void DisplayCore::closeWindow() {
  *  These are functions used by other functions to do their work.  They may be useful in other situations as well, but they won't be as fully documented.
  */
 /**@{*/
-boolean DisplayCore::clipToScreen(int16_t &x, int16_t &y, int16_t &w, int16_t &h) {
+boolean DisplayCore::clipToScreen(int &x, int &y, int &w, int &h) {
     if (x < 0) {
         w += x;
         x = 0;
@@ -1367,13 +1367,13 @@ boolean DisplayCore::clipToScreen(int16_t &x, int16_t &y, int16_t &w, int16_t &h
 
 /*! This is a helper function.  It is used to draw portions of a circle. */
 
-void DisplayCore::drawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t color) {
+void DisplayCore::drawCircleHelper( int x0, int y0, int r, int cornername, color_t color) {
     startBuffer();
-    int16_t f     = 1 - r;
-    int16_t ddF_x = 1;
-    int16_t ddF_y = -2 * r;
-    int16_t x     = 0;
-    int16_t y     = r;
+    int f     = 1 - r;
+    int ddF_x = 1;
+    int ddF_y = -2 * r;
+    int x     = 0;
+    int y     = r;
 
     while (x<y) {
         if (f >= 0) {
@@ -1405,13 +1405,13 @@ void DisplayCore::drawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t c
 }
 
 /*! This is a helper function.  It is used to draw segments of a filled circle. */
-void DisplayCore::fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, int16_t delta, uint16_t color) {
+void DisplayCore::fillCircleHelper(int x0, int y0, int r, int cornername, int delta, color_t color) {
     startBuffer();
-    int16_t f     = 1 - r;
-    int16_t ddF_x = 1;
-    int16_t ddF_y = -2 * r;
-    int16_t x     = 0;
-    int16_t y     = r;
+    int f     = 1 - r;
+    int ddF_x = 1;
+    int ddF_y = -2 * r;
+    int x     = 0;
+    int y     = r;
 
     while (x<y) {
         if (f >= 0) {
@@ -1450,8 +1450,8 @@ void DisplayCore::fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t co
  *      tft.fatalError("MEMORY ERROR", "Unable to allocate space for objects");
  */
 void DisplayCore::fatalError(const char *title, const char *message) {
-    int16_t width = getWidth();
-    int16_t height = getHeight();
+    int width = getWidth();
+    int height = getHeight();
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             if ((x + (y & 1)) & 1) {
@@ -1461,9 +1461,9 @@ void DisplayCore::fatalError(const char *title, const char *message) {
     }
     setFont(Fonts::Default);
     int sx = 1;
-    int16_t swidth = stringWidth((char *)message);
-    int16_t twidth = stringWidth((char *)title);
-    uint16_t mwidth = max(swidth, twidth);
+    int swidth = stringWidth((char *)message);
+    int twidth = stringWidth((char *)title);
+    int mwidth = max(swidth, twidth);
     while (mwidth < width) {
         sx++;
         swidth = stringWidth((char *)message);
@@ -1472,15 +1472,15 @@ void DisplayCore::fatalError(const char *title, const char *message) {
     }
     sx--;
     swidth = stringWidth((char *)message);
-    int16_t sheight = stringHeight((char *)message);
+    int sheight = stringHeight((char *)message);
     twidth = stringWidth((char *)title);
     mwidth = max(swidth, twidth);
 
-    int16_t strw2 = swidth / 2;
-    int16_t ttlw2 = twidth / 2;
-    int16_t maxw2 = mwidth / 2;
-    int16_t scrw2 = width / 2;
-    int16_t scrh2 = height / 2;
+    int strw2 = swidth / 2;
+    int ttlw2 = twidth / 2;
+    int maxw2 = mwidth / 2;
+    int scrw2 = width / 2;
+    int scrh2 = height / 2;
     fillRoundRect(scrw2 - maxw2 - 14, scrh2 - sheight - 14, mwidth + 28, sheight * 2 + 28, 12, Color::Black);
     fillRoundRect(scrw2 - maxw2 - 10, scrh2 - sheight - 10, mwidth + 20, sheight * 2 + 20, 10, Color::Red);
     drawRoundRect(scrw2 - maxw2 - 12, scrh2 - sheight - 12, mwidth + 24, sheight * 2 + 24, 12, Color::Red);
@@ -1502,8 +1502,8 @@ void DisplayCore::fatalError(const char *title, const char *message) {
     }
 }
 
-uint16_t Filter::process(uint16_t incol) {
-    uint16_t outcol = function(incol);
+color_t Filter::process(color_t incol) {
+    color_t outcol = function(incol);
     if (_next != NULL) {
         return _next->process(outcol);
     }
@@ -1515,8 +1515,8 @@ uint16_t Filter::process(uint16_t incol) {
 
 /**@}*/
 
-void DisplayCore::translateCoordinates(int16_t *x, int16_t *y) {
-    int16_t t;
+void DisplayCore::translateCoordinates(int *x, int *y) {
+    int t;
     switch (rotation) {
         case 1:
             t = *x;
@@ -1535,7 +1535,7 @@ void DisplayCore::translateCoordinates(int16_t *x, int16_t *y) {
     }
 }
 
-uint32_t DisplayCore::color2rgb(uint16_t rgb) {
+uint32_t DisplayCore::color2rgb(color_t rgb) {
     uint8_t red = rgb >> 11;
     uint8_t green = rgb >> 5 & 0b111111;
     uint8_t blue = rgb & 0b11111;
@@ -1548,12 +1548,12 @@ uint32_t DisplayCore::color2rgb(uint16_t rgb) {
 }
 
 void DisplayCore::drawBezier(
-    int16_t x0, int16_t y0,
-    int16_t x1, int16_t y1,
-    int16_t x2, int16_t y2,
-    int16_t x3, int16_t y3,
+    int x0, int y0,
+    int x1, int y1,
+    int x2, int y2,
+    int x3, int y3,
     int resolution,
-    uint16_t color
+    color_t color
 ) {
     startBuffer();
 
@@ -1583,12 +1583,12 @@ void DisplayCore::drawBezier(
 }
 
 void DisplayCore::fillBezier(
-    int16_t x0, int16_t y0,
-    int16_t x1, int16_t y1,
-    int16_t x2, int16_t y2,
-    int16_t x3, int16_t y3,
+    int x0, int y0,
+    int x1, int y1,
+    int x2, int y2,
+    int x3, int y3,
     int resolution,
-    uint16_t color
+    color_t color
 ) {
 
     startBuffer();
@@ -1799,13 +1799,13 @@ void Widget::handleTouch() {
     }
 }
 
-void Widget::draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t t) { draw(dev, x, y); }
-void Widget::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform) { draw(dev, x, y); }
-void Widget::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform, uint16_t t) { draw(dev, x, y); }
-void Widget::draw(DisplayCore &dev, int16_t x, int16_t y) { draw(&dev, x, y); }
-void Widget::draw(DisplayCore &dev, int16_t x, int16_t y, uint16_t t) { draw(&dev, x, y, t); }
-void Widget::drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform) { drawTransformed(&dev, x, y, transform); }
-void Widget::drawTransformed(DisplayCore &dev, int16_t x, int16_t y, uint8_t transform, uint16_t t) { drawTransformed(&dev, x, y, t); }
+void Widget::draw(DisplayCore *dev, int x, int y, color_t t) { draw(dev, x, y); }
+void Widget::drawTransformed(DisplayCore *dev, int x, int y, int transform) { draw(dev, x, y); }
+void Widget::drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t) { draw(dev, x, y); }
+void Widget::draw(DisplayCore &dev, int x, int y) { draw(&dev, x, y); }
+void Widget::draw(DisplayCore &dev, int x, int y, color_t t) { draw(&dev, x, y, t); }
+void Widget::drawTransformed(DisplayCore &dev, int x, int y, int transform) { drawTransformed(&dev, x, y, transform); }
+void Widget::drawTransformed(DisplayCore &dev, int x, int y, int transform, color_t t) { drawTransformed(&dev, x, y, t); }
 
 void Widget::render() {
     handleTouch();
@@ -1819,11 +1819,11 @@ void Widget::redraw() {
     _redraw = true;
 }
 
-uint16_t DisplayCore::getWidth() {
+int DisplayCore::getWidth() {
     return _width;
 }
 
-uint16_t DisplayCore::getHeight() {
+int DisplayCore::getHeight() {
     return _height;
 }
 

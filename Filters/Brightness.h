@@ -8,7 +8,7 @@ class Brightness : public Filter {
         int16_t _b;
     public:
         Brightness() : Filter() {};
-        uint16_t function(uint16_t);
+        color_t function(color_t);
         void adjustBrightness(int16_t b) { _b = b; };
 };
 

@@ -160,7 +160,7 @@ void LM6800::initializeDevice() {
     command(3, GLCD_CMD_SET_PAGE);
 }
 
-void LM6800::setPixel(int16_t x, int16_t y, uint16_t color) {
+void LM6800::setPixel(int x, int y, color_t color) {
     doSetPixel(x, y, color);
     if (!_buffered) {
         y = y >> 3;
@@ -172,7 +172,7 @@ void LM6800::setPixel(int16_t x, int16_t y, uint16_t color) {
     }
 }
 
-void LM6800::doSetPixel(int16_t x, int16_t y, uint16_t color) {
+void LM6800::doSetPixel(int x, int y, color_t color) {
     uint8_t row;
     uint8_t pixel;
     uint8_t mask;
@@ -190,14 +190,14 @@ void LM6800::doSetPixel(int16_t x, int16_t y, uint16_t color) {
     }
 }
 
-void LM6800::fillScreen(uint16_t color) {
+void LM6800::fillScreen(color_t color) {
     for (int16_t x = 0; x < 2048; x++) {
         this->buffer[x] = color ? 0xFF : 0x00;
     }
     updateScreen();
 }
 
-void LM6800::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+void LM6800::fillRectangle(int x, int y, int w, int h, color_t color) {
 	if((x >= _width) || (y >= _height)) 
 		return;
 	if((x + w - 1) >= _width)  
@@ -205,20 +205,20 @@ void LM6800::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t 
 	if((y + h - 1) >= _height) 
 		h = _height - y;
 
-    for (int16_t dy = y; dy < y + h; dy++) {
-        for (int16_t dx = x; dx < x + w; dx++) {
+    for (int dy = y; dy < y + h; dy++) {
+        for (int dx = x; dx < x + w; dx++) {
             setPixel(dx, dy, color);
         }
     }
     updateScreen();
 }
 
-void LM6800::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
+void LM6800::drawHorizontalLine(int x, int y, int w, color_t color) {
     drawLine(x, y, x + w, y, color);
     updateScreen();
 }
 
-void LM6800::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
+void LM6800::drawVerticalLine(int x, int y, int h, color_t color) {
     drawLine(x, y, x, y + h, color);
     updateScreen();
 }

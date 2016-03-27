@@ -1,17 +1,17 @@
 #include <Widgets.h>
 
-void twIcon::draw(DisplayCore *dev, int16_t x, int16_t y) {
+void twIcon::draw(DisplayCore *dev, int x, int y) {
 
     if (isEnabled()) {
         dev->openWindow(x, y, _width, _height);
-        dev->windowData((uint16_t*)_icon, _width * _height);
+        dev->windowData((color_t*)_icon, _width * _height);
         dev->closeWindow();
     } else {
         dev->openWindow(x, y, _width, _height);
         int p = 0;
         for (int iy = 0; iy < _height; iy++) {
             for (int ix = 0; ix < _width; ix++) {
-                uint16_t c = _icon[p];
+                color_t c = _icon[p];
                 uint8_t r = c >> 11;
                 uint8_t g = c >> 5 & 0b111111;
                 uint8_t b = c & 0b11111;

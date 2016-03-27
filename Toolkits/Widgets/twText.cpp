@@ -1,6 +1,6 @@
 #include <twText.h>
 
-void twText::draw(DisplayCore *dev, int16_t x, int16_t y) {
+void twText::draw(DisplayCore *dev, int x, int y) {
     dev->startBuffer();
     dev->setTextColor(_color, Color::Black);
     dev->setFont(_font);

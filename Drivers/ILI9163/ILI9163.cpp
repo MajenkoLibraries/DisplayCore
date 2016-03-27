@@ -3,14 +3,14 @@
 void ILI9163::command(uint16_t com) {
     port_rs->lat.clr = mask_rs;
     port_cs->lat.clr = mask_cs;
-    _dspi->transfer(com);
+    _dspi->transfer((uint32_t)com);
     port_cs->lat.set = mask_cs;
 }
 
 void ILI9163::data(uint16_t com) {
     port_rs->lat.set = mask_rs;
     port_cs->lat.clr = mask_cs;
-    _dspi->transfer(com);
+    _dspi->transfer((uint32_t)com);
     port_cs->lat.set = mask_cs;
 }
 
@@ -75,7 +75,7 @@ void ILI9163::startDisplay() {
 	command(0x29); // Turn the display on.
 }
 
-void ILI9163::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void ILI9163::setAddrWindow(int x0, int y0, int x1, int y1) {
     // My display has a Y offset of 32 pixels.  The chip is a 128x160 pixel device
     // but connected to a 128x128 screen, so 32 pixels are not driven.
     y0 += 32;
@@ -93,7 +93,7 @@ void ILI9163::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) 
     command(0x002c);
 }
 
-void ILI9163::setPixel(int16_t x, int16_t y, uint16_t color) {
+void ILI9163::setPixel(int x, int y, color_t color) {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return;
 	setAddrWindow(x,y,x,y);
@@ -101,7 +101,7 @@ void ILI9163::setPixel(int16_t x, int16_t y, uint16_t color) {
     data(color & 0xFF);
 }
 
-void ILI9163::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+void ILI9163::fillRectangle(int x, int y, int w, int h, color_t color) {
 	if((x >= _width) || (y >= _height)) 
 		return;
 	if((x + w - 1) >= _width)  
@@ -118,7 +118,7 @@ void ILI9163::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t
 	}
 }
 
-void ILI9163::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
+void ILI9163::drawHorizontalLine(int x, int y, int w, color_t color) {
 	// Rudimentary clipping
 	if((x >= _width) || (y >= _height)) 
 		return;
@@ -132,7 +132,7 @@ void ILI9163::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color
 	}
 }
 
-void ILI9163::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
+void ILI9163::drawVerticalLine(int x, int y, int h, color_t color) {
 	if((x >= _width) || (y >= _height)) 
 		return;
 	if((y+h-1) >= _height) 
@@ -145,7 +145,7 @@ void ILI9163::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) 
 	}
 }
 
-void ILI9163::setRotation(uint8_t m) {
+void ILI9163::setRotation(int m) {
 	command(0x36);
 	rotation = m % 4; // can't be higher than 3
 	switch (rotation) {
@@ -184,16 +184,16 @@ void ILI9163::displayOff() {
     command(0x28);
 }
 
-void ILI9163::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void ILI9163::openWindow(int x0, int y0, int x1, int y1) {
 	setAddrWindow(x0, y0, x0 + x1 - 1, y0 + y1 - 1);
 }
 
-void ILI9163::windowData(uint16_t c) {
+void ILI9163::windowData(color_t c) {
     data(c >> 8);
     data(c & 0xFF);
 }
 
-void ILI9163::windowData(uint16_t *c, uint32_t len) {
+void ILI9163::windowData(color_t *c, int len) {
     for (uint32_t i = 0; i < len; i++) {
         data(c[i] >> 8);
         data(c[i] & 0xFF);

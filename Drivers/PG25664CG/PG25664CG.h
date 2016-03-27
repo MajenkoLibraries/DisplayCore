@@ -39,7 +39,7 @@ class PG25664CG : public DisplayCore {
         uint8_t pin_d6;
         uint8_t pin_d7;
 
-        void setAddressWindow(uint16_t xs, uint16_t ys, uint16_t xe, uint16_t ye);
+        void setAddressWindow(int xs, int ys, int xe, int ye);
 
         void update();
         virtual void command(uint8_t);
@@ -88,17 +88,17 @@ class PG25664CG : public DisplayCore {
         }
         void displayOn();
         void displayOff();
-        void setPixel(int16_t x, int16_t y, uint16_t c);
-        void fillScreen(uint16_t c);
+        void setPixel(int x, int y, color_t c);
+        void fillScreen(color_t c);
 
-        void setRotation(uint8_t r) {}
+        void setRotation(int r) {}
         void invertDisplay(boolean i) {}
 
         void startBuffer();
         void endBuffer();
 
-        uint16_t getWidth() { return 256; }
-        uint16_t getHeight() { return 64; }
+        int getWidth() { return 256; }
+        int getHeight() { return 64; }
 
 };
 

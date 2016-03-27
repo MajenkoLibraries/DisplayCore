@@ -1,20 +1,20 @@
 #include <BD663474.h>
 
-inline uint16_t swapcolor(uint16_t x) { 
+inline color_t swapcolor(color_t x) { 
 	return (x << 11) | (x & 0x07E0) | (x >> 11);
 }
 
 void BD663474::command(uint16_t com) {
     _port_rs->lat.clr = _mask_rs;
     _port_cs->lat.clr = _mask_cs;
-    _dspi->transfer(com);
+    _dspi->transfer((uint32_t)com);
     _port_cs->lat.set = _mask_cs;
 }
 
 void BD663474::data(uint16_t com) {
     _port_rs->lat.set = _mask_rs;
     _port_cs->lat.clr = _mask_cs;
-    _dspi->transfer(com);
+    _dspi->transfer((uint32_t)com);
     _port_cs->lat.set = _mask_cs;
 }
 
@@ -113,9 +113,9 @@ void BD663474::startDisplay() {
     command(0x0007); data(0x0113);
 }
 
-void BD663474::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void BD663474::setAddrWindow(int x0, int y0, int x1, int y1) {
 
-    uint16_t x0a, x1a, y0a, y1a;
+    int x0a, x1a, y0a, y1a;
 
     switch(rotation) {
         case 1:
@@ -166,7 +166,7 @@ void BD663474::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
     command(0x0202);
 }
 
-void BD663474::setPixel(int16_t x, int16_t y, uint16_t color) {
+void BD663474::setPixel(int x, int y, color_t color) {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return;
 
@@ -179,11 +179,11 @@ void BD663474::setPixel(int16_t x, int16_t y, uint16_t color) {
 //    _comm->streamEnd();
 }
 
-void BD663474::fillScreen(uint16_t color) {
+void BD663474::fillScreen(color_t color) {
 	fillRectangle(0, 0,  _width, _height, color);
 }
 
-void BD663474::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+void BD663474::fillRectangle(int x, int y, int w, int h, color_t color) {
 	if((x >= _width) || (y >= _height)) 
 		return;
 	if((x + w - 1) >= _width)  
@@ -199,7 +199,7 @@ void BD663474::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_
 	}
 }
 
-void BD663474::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
+void BD663474::drawHorizontalLine(int x, int y, int w, color_t color) {
 	// Rudimentary clipping
 	if((x >= _width) || (y >= _height)) 
 		return;
@@ -212,7 +212,7 @@ void BD663474::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t colo
 	}
 }
 
-void BD663474::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
+void BD663474::drawVerticalLine(int x, int y, int h, color_t color) {
 	if((x >= _width) || (y >= _height)) 
 		return;
 	if((y+h-1) >= _height) 
@@ -237,7 +237,7 @@ void BD663474::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color)
 #define BD663474_ID3 0x0030
 #define BD663474_AM  0x0008
 
-void BD663474::setRotation(uint8_t m) {
+void BD663474::setRotation(int m) {
 	rotation = m % 4; // can't be higher than 3
     command(BD663474_EMODE);
 	switch (rotation) {

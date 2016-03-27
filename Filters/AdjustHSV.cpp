@@ -1,6 +1,6 @@
 #include <AdjustHSV.h>
 
-uint16_t AdjustHSV::function(uint16_t col) {
+color_t AdjustHSV::function(color_t col) {
     uint32_t hsv = DisplayCore::rgb2hsv(col);
     int h = ((hsv >> 16) & 0xFF);
     int s = ((hsv >> 8) & 0xFF);

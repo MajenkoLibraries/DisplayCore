@@ -34,7 +34,9 @@
 #include <DSPI.h>
 #include <DisplayCore.h>
 #include <SD.h>
+#include <BMP.h>
 
+/*
 struct BitmapFileHeader {
     uint16_t bfType;
     uint32_t bfSize;
@@ -78,6 +80,7 @@ struct BitmapPixel32 {
         } __attribute__((packed));
     } __attribute__((packed));
 } __attribute__((packed));
+*/
 
 class BMPFile : public Image {
     public: // should be private
@@ -90,21 +93,21 @@ class BMPFile : public Image {
         uint32_t _spos;
 
     private:
-        void getScanLine(int16_t, uint8_t*);
-        void drawIdx(DisplayCore *dev, int16_t x, int16_t y, int32_t trans);
-        void draw565(DisplayCore *dev, int16_t x, int16_t y, int32_t trans);
-        void drawRGB(DisplayCore *dev, int16_t x, int16_t y, int32_t trans);
-        void drawRGBA(DisplayCore *dev, int16_t x, int16_t y, int32_t trans);
+        void getScanLine(int, uint8_t*);
+        void drawIdx(DisplayCore *dev, int x, int y, int32_t trans);
+        void draw565(DisplayCore *dev, int x, int y, int32_t trans);
+        void drawRGB(DisplayCore *dev, int x, int y, int32_t trans);
+        void drawRGBA(DisplayCore *dev, int x, int y, int32_t trans);
 
     public:
         BMPFile(File &file) : _file(&file) { _width = 0; _height = 0; };
-        void draw(DisplayCore *dev, int16_t x, int16_t y);
-        void draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t t);
-        void drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform);
-        void drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform, uint16_t t);
+        void draw(DisplayCore *dev, int x, int y);
+        void draw(DisplayCore *dev, int x, int y, color_t t);
+        void drawTransformed(DisplayCore *dev, int x, int y, int transform);
+        void drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t);
 
-        virtual uint16_t getWidth();
-        virtual uint16_t getHeight();
+        virtual int getWidth();
+        virtual int getHeight();
 
     private:
         void loadImageHeader();

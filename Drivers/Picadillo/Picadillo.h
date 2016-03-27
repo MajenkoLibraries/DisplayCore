@@ -39,31 +39,31 @@ class Picadillo : public DisplayCore
         static const uint8_t opWrite = 0;
         static const uint8_t opRead = 1;
 
-        static const uint16_t Width      = 320;
-        static const uint16_t Height     = 480;
+        static const int Width      = 320;
+        static const int Height     = 480;
 
 
 		Picadillo() : DisplayCore(), _brightness(255) {}
 
-		void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-		void setAddrWindowRead(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-        void fillScreen(uint16_t color);
-        void setPixel(int16_t x, int16_t y, uint16_t color);
-        void drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-        void drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-        void fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-        void setRotation(uint8_t r);
+		void setAddrWindow(int x0, int y0, int x1, int y1);
+		void setAddrWindowRead(int x0, int y0, int x1, int y1);
+        void fillScreen(color_t color);
+        void setPixel(int x, int y, color_t color);
+        void drawVerticalLine(int x, int y, int h, color_t color);
+        void drawHorizontalLine(int x, int y, int w, color_t color);
+        void fillRectangle(int x, int y, int w, int h, color_t color);
+        void setRotation(int r);
         void invertDisplay(boolean i);
         void displayOn();  
         void displayOff();  
-        uint16_t colorAt(int16_t x, int16_t y);
-        void getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf);
+        color_t colorAt(int x, int y);
+        void getRectangle(int x, int y, int w, int h, color_t *buf);
 
         void initializeDevice();
 
-        void openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-        void windowData(uint16_t d);
-        void windowData(uint16_t *d, uint32_t l);
+        void openWindow(int x0, int y0, int x1, int y1);
+        void windowData(color_t d);
+        void windowData(color_t *d, int l);
         void closeWindow();
 
         void writeCommand(uint16_t);
@@ -73,11 +73,11 @@ class Picadillo : public DisplayCore
 		
         void enableBacklight();
         void disableBacklight();
-        void setBacklight(uint8_t b);
+        void setBacklight(int b);
 
 	protected:
 		uint8_t colstart, rowstart;
-        uint8_t _brightness;
+        int _brightness;
 };
 
 #endif

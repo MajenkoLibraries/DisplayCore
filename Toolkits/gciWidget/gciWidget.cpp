@@ -72,7 +72,7 @@ void gciWidget::load() {
     _loaded = true;
 }
 
-void gciWidget::draw(DisplayCore *dev, int16_t x, int16_t y) {
+void gciWidget::draw(DisplayCore *dev, int x, int y) {
     File f;
     load();
     char temp[strlen(_filename) + 5];
@@ -84,7 +84,7 @@ void gciWidget::draw(DisplayCore *dev, int16_t x, int16_t y) {
         f.seek(_offset + sizeof(struct gcihdr) + (framesize * getValue() * 2));
         dev->openWindow(_x, _y, _sense_w, _sense_h);
         uint32_t done = 0;
-        uint16_t buf[IMG_BUFSZ];
+        color_t buf[IMG_BUFSZ];
         while (done < framesize) {
             int chunk = framesize - done;
             if (chunk > IMG_BUFSZ) chunk = IMG_BUFSZ;				
@@ -99,12 +99,12 @@ void gciWidget::draw(DisplayCore *dev, int16_t x, int16_t y) {
     f.close();
 }
 
-uint32_t gciWidget::getFrames() {
+int gciWidget::getFrames() {
     load();
     return swaple(_header.frames);
 }
 
-void gciWidget::setValue(uint16_t x) {
+void gciWidget::setValue(int x) {
     if (x >= getFrames()) {
         x = getFrames() - 1;
     }

@@ -141,7 +141,7 @@ void SSD1306_BB::initializeDevice() {
 
 #define C2B(X, Y) (((Y) << 7) + (X))
 
-void SSD1306::setPixel(int16_t x, int16_t y, uint16_t color) {
+void SSD1306::setPixel(int x, int y, color_t color) {
     uint8_t row;
     uint8_t pixel;
     uint8_t mask;
@@ -258,7 +258,7 @@ void SSD1306::updateDisplay() {
     }
 }
 
-void SSD1306::fillScreen(uint16_t color) {
+void SSD1306::fillScreen(color_t color) {
     if (color) { 
         memset(_buffer, 0xFF, 128*8);
     } else {
@@ -282,7 +282,7 @@ void SSD1306_BB::sendByte(uint8_t b) {
     }
 }
 
-void SSD1306::setRotation(uint8_t r) {
+void SSD1306::setRotation(int r) {
 
     rotation = r & 0x03;
 

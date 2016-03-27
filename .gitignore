@@ -1,0 +1,14 @@
+Documentation/latex/*.md5
+Documentation/latex/*.dot
+Documentation/latex/*.sty
+Documentation/latex/*.tex
+Documentation/latex/Makefile
+Documentation/*.db
+Documentation/latex/refman.aux
+Documentation/latex/refman.idx
+Documentation/latex/refman.ilg
+Documentation/latex/refman.ind
+Documentation/latex/refman.log
+Documentation/latex/refman.out
+Documentation/latex/refman.toc
+

@@ -50,7 +50,7 @@ BMP::BMP(const char *data) {
     }
 }
 
-void BMP::drawIdx(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
+void BMP::drawIdx(DisplayCore *dev, int x, int y, int32_t trans) {
     if (trans < 0) {
         dev->openWindow(x, y, getWidth(), getHeight());
     }
@@ -59,7 +59,7 @@ void BMP::drawIdx(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
         for (uint32_t ix = 0; ix < getWidth(); ix++) {
             uint32_t pix = line * getWidth() + ix;
             struct BitmapPixel32 *p = &_palette[_image[pix]];
-            uint16_t col = rgb(p->g, p->b, p->a);
+            color_t col = rgb(p->g, p->b, p->a);
             if (_filter != NULL) {
                 col = _filter->process(col);
             }
@@ -77,7 +77,7 @@ void BMP::drawIdx(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
     }
 }
 
-void BMP::draw565(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
+void BMP::draw565(DisplayCore *dev, int x, int y, int32_t trans) {
     if (trans < 0) {
         dev->openWindow(x, y, getWidth(), getHeight());
     }
@@ -86,8 +86,8 @@ void BMP::draw565(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
         for (uint32_t ix = 0; ix < getWidth(); ix++) {
             uint32_t pix = line * getWidth() + ix;
             uint32_t offset = pix * 2;
-            uint16_t *p = (uint16_t *)(_image + offset);
-            uint16_t col = *p;
+            color_t *p = (color_t *)(_image + offset);
+            color_t col = *p;
             if (_filter != NULL) {
                 col = _filter->process(col);
             }
@@ -105,7 +105,7 @@ void BMP::draw565(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
     }
 }
 
-void BMP::drawRGB(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
+void BMP::drawRGB(DisplayCore *dev, int x, int y, int32_t trans) {
     if (trans < 0) {
         dev->openWindow(x, y, getWidth(), getHeight());
     }
@@ -115,7 +115,7 @@ void BMP::drawRGB(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
             uint32_t pix = line * getWidth() + ix;
             uint32_t offset = pix * 3;
             struct BitmapPixel24 *p = (struct BitmapPixel24 *)(_image + offset);
-            uint16_t col = rgb(p->r, p->g, p->b);
+            color_t col = rgb(p->r, p->g, p->b);
             if (_filter != NULL) {
                 col = _filter->process(col);
             }
@@ -133,7 +133,7 @@ void BMP::drawRGB(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
     }
 }
 
-void BMP::drawRGBA(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
+void BMP::drawRGBA(DisplayCore *dev, int x, int y, int32_t trans) {
     int rShift = 0;
     int gShift = 8;
     int bShift = 16;
@@ -183,7 +183,7 @@ void BMP::drawRGBA(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
             green = ((p->value & gMask) >> gShift);
             blue = ((p->value & bMask) >> bShift);
             alpha = ((p->value & aMask) >> aShift);
-            int16_t fg = rgb(red, green, blue);
+            color_t fg = rgb(red, green, blue);
             if (_filter != NULL) {
                 fg = _filter->process(fg);
             }
@@ -191,7 +191,7 @@ void BMP::drawRGBA(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
             if (alpha == 255) {
                 dev->setPixel(x + ix, y + iy, fg);
             } else if(alpha > 0) {
-                int16_t bg;
+                color_t bg;
                 if (trans < 0) {
                     bg = dev->colorAt(x + ix, y + iy);
                 } else {
@@ -203,7 +203,7 @@ void BMP::drawRGBA(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
     }
 }
 
-void BMP::draw(DisplayCore *dev, int16_t x, int16_t y) {
+void BMP::draw(DisplayCore *dev, int x, int y) {
     switch (_info->biBitCount) {
         case 8:
             drawIdx(dev, x, y, -1);
@@ -227,7 +227,7 @@ void BMP::draw(DisplayCore *dev, int16_t x, int16_t y) {
     }
 }
 
-void BMP::draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t trans) {
+void BMP::draw(DisplayCore *dev, int x, int y, color_t trans) {
     switch (_info->biBitCount) {
         case 8:
             drawIdx(dev, x, y, trans);
@@ -251,6 +251,6 @@ void BMP::draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t trans) {
     }
 }
 
-void BMP::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform) {}
-void BMP::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform, uint16_t t) {}
+void BMP::drawTransformed(DisplayCore *dev, int x, int y, int transform) {}
+void BMP::drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t) {}
 

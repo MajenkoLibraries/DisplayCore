@@ -69,33 +69,33 @@ class Goldelox : public DisplayCore {
         
 
 	public:
-		Goldelox(Stream *dev, uint16_t w, uint16_t h) : _dev(dev), _width(w), _height(h), _reset(255) {}
-		Goldelox(Stream &dev, uint16_t w, uint16_t h) : _dev(&dev), _width(w), _height(h), _reset(255) {}
-		Goldelox(Stream *dev, uint16_t w, uint16_t h, uint8_t reset) : _dev(dev), _width(w), _height(h), _reset(reset) {}
-		Goldelox(Stream &dev, uint16_t w, uint16_t h, uint8_t reset) : _dev(&dev), _width(w), _height(h), _reset(reset) {}
+		Goldelox(Stream *dev, int w, int h) : _dev(dev), _width(w), _height(h), _reset(255) {}
+		Goldelox(Stream &dev, int w, int h) : _dev(&dev), _width(w), _height(h), _reset(255) {}
+		Goldelox(Stream *dev, int w, int h, uint8_t reset) : _dev(dev), _width(w), _height(h), _reset(reset) {}
+		Goldelox(Stream &dev, int w, int h, uint8_t reset) : _dev(&dev), _width(w), _height(h), _reset(reset) {}
 
         void initializeDevice();
         void displayOn();
         void displayOff();
-        void fillScreen(uint16_t color);
-        void setPixel(int16_t x, int16_t y, uint16_t color);
-        void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
-        uint16_t getWidth() { return _width; }
-        uint16_t getHeight() { return _height; }
-        void drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-        void drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-        void drawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-        void fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+        void fillScreen(color_t color);
+        void setPixel(int x, int y, color_t color);
+        void drawLine(int x0, int y0, int x1, int y1, color_t color);
+        int getWidth() { return _width; }
+        int getHeight() { return _height; }
+        void drawVerticalLine(int x, int y, int h, color_t color);
+        void drawHorizontalLine(int x, int y, int w, color_t color);
+        void drawRectangle(int x, int y, int w, int h, color_t color);
+        void fillRectangle(int x, int y, int w, int h, color_t color);
         void setRotation(uint8_t r) {};
 
         void invertDisplay(boolean i) {};
 
         void changeBaudRate(uint32_t baud);
 
-        void openWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+        void openWindow(int x, int y, int w, int h);
         void closeWindow();
-        void windowData(uint16_t d);
-        void windowData(uint16_t *d, uint32_t l);
+        void windowData(color_t d);
+        void windowData(color_t *d, int l);
 };
 
 #endif

@@ -13,7 +13,7 @@ void AnalogTouch::initializeDevice() {
     _rotation = 0;
 }
 
-uint16_t AnalogTouch::x() {
+int AnalogTouch::x() {
     int x = _pos.x + _offset_x;
     int y = _pos.y + _offset_y;
 
@@ -30,7 +30,7 @@ uint16_t AnalogTouch::x() {
     return 0;
 }
 
-uint16_t AnalogTouch::y() {
+int AnalogTouch::y() {
     int x = _pos.x + _offset_x;
     int y = _pos.y + _offset_y;
 
@@ -138,10 +138,10 @@ void AnalogTouch::sample() {
     _pressure = max(abs(x1 - x2), abs(y1 - y2));
 }
 
-uint16_t AnalogTouch::pressure() {
+int AnalogTouch::pressure() {
     return _pressure;
 }
 
-void AnalogTouch::setRotation(uint8_t r) {
+void AnalogTouch::setRotation(int r) {
     _rotation = r % 4;
 }

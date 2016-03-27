@@ -199,7 +199,7 @@ void ILI9481::startDisplay() {
 	command(0x29);
 }
 
-void ILI9481::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void ILI9481::setAddrWindow(int x0, int y0, int x1, int y1) {
     command(0x002A);
     data(x0 >> 8);
     data(x0 & 0xFF);
@@ -213,18 +213,18 @@ void ILI9481::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) 
     command(0x002c);
 }
 
-void ILI9481::setPixel(int16_t x, int16_t y, uint16_t color) {
+void ILI9481::setPixel(int x, int y, color_t color) {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return;
 	setAddrWindow(x,y,x,y);
     data(color);
 }
 
-void ILI9481::fillScreen(uint16_t color) {
+void ILI9481::fillScreen(color_t color) {
 	fillRectangle(0, 0,  _width, _height, color);
 }
 
-void ILI9481::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+void ILI9481::fillRectangle(int x, int y, int w, int h, color_t color) {
 	if((x >= _width) || (y >= _height)) 
 		return;
 	if((x + w - 1) >= _width)  
@@ -240,7 +240,7 @@ void ILI9481::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t
 	}
 }
 
-void ILI9481::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
+void ILI9481::drawHorizontalLine(int x, int y, int w, color_t color) {
 	// Rudimentary clipping
 	if((x >= _width) || (y >= _height)) 
 		return;
@@ -253,7 +253,7 @@ void ILI9481::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color
 	}
 }
 
-void ILI9481::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
+void ILI9481::drawVerticalLine(int x, int y, int h, color_t color) {
 	if((x >= _width) || (y >= _height)) 
 		return;
 	if((y+h-1) >= _height) 
@@ -265,7 +265,7 @@ void ILI9481::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) 
 	}
 }
 
-void ILI9481::setRotation(uint8_t m) {
+void ILI9481::setRotation(int m) {
 	command(0x36);
 	rotation = m % 4; // can't be higher than 3
 	switch (rotation) {
@@ -304,15 +304,15 @@ void ILI9481::displayOff() {
     command(0x28);
 }
 
-void ILI9481::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void ILI9481::openWindow(int x0, int y0, int x1, int y1) {
 	setAddrWindow(x0, y0, x0 + x1 - 1, y0 + y1 - 1);
 }
 
-void ILI9481::windowData(uint16_t c) {
+void ILI9481::windowData(color_t c) {
     data(c);
 }
 
-void ILI9481::windowData(uint16_t *c, uint32_t len) {
+void ILI9481::windowData(color_t *c, int len) {
     for (uint32_t i = 0; i < len; i++) {
         data(c[i]);
     }
@@ -382,25 +382,25 @@ uint16_t ILI9481_PMP::read(boolean cont) {
     return din;
 }
 
-uint16_t ILI9481::colorAt(int16_t x, int16_t y) {
+color_t ILI9481::colorAt(int x, int y) {
 	setAddrWindow(x,y,x,y);
     command(0x002E);
     (void)read();
-    uint16_t color = read();
-    uint16_t color1 = 0;
+    color_t color = read();
+    color_t color1 = 0;
     color1 |= ((color & 0xF800) >> 11);
     color1 |= (color & 0x07E0);
     color1 |= ((color & 0x001F) << 11);
     return color1;
 }
-void ILI9481::getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf) {
+void ILI9481::getRectangle(int x, int y, int w, int h, color_t *buf) {
     setAddrWindow(x, y, x+w-1, y+h-1);
     command(0x002E);
     (void)read();
     (void)read(true);
     for (uint32_t i = 0; i < w * h; i++) {
-        uint16_t color1 = 0;
-        uint16_t color = read(true);
+        color_t color1 = 0;
+        color_t color = read(true);
         buf[i] = 0;
         buf[i] |= ((color & 0xF800) >> 11);
         buf[i] |= (color & 0x07E0);

@@ -68,8 +68,8 @@ class ILI9481 : public DisplayCore {
         uint32_t mask_d15;
 
     public:
-        static const uint16_t Width      = 320;
-        static const uint16_t Height     = 480;
+        static const int Width      = 320;
+        static const int Height     = 480;
 
         ILI9481(
             uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
@@ -81,22 +81,22 @@ class ILI9481 : public DisplayCore {
 
         ILI9481() {}
 
-		void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-        void fillScreen(uint16_t color);
-        void setPixel(int16_t x, int16_t y, uint16_t color);
-        void drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-        void drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-        void fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-        void setRotation(uint8_t r);
+		void setAddrWindow(int x0, int y0, int x1, int y1);
+        void fillScreen(color_t color);
+        void setPixel(int x, int y, color_t color);
+        void drawVerticalLine(int x, int y, int h, color_t color);
+        void drawHorizontalLine(int x, int y, int w, color_t color);
+        void fillRectangle(int x, int y, int w, int h, color_t color);
+        void setRotation(int r);
         void invertDisplay(boolean i);
         void displayOn();
         void displayOff();
-        void openWindow(uint16_t, uint16_t, uint16_t, uint16_t);
-        void windowData(uint16_t);
-        void windowData(uint16_t *, uint32_t);
+        void openWindow(int, int, int, int);
+        void windowData(color_t);
+        void windowData(color_t *, int);
         void closeWindow();
 
-        virtual uint16_t colorAt(int16_t x, int16_t y);
+        virtual color_t colorAt(int x, int y);
 
         void startDisplay();
 
@@ -104,7 +104,7 @@ class ILI9481 : public DisplayCore {
         virtual void data(uint16_t);
         virtual void command(uint16_t);
         virtual uint16_t read(boolean cont = false);
-        virtual void getRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *buf);
+        virtual void getRectangle(int x, int y, int w, int h, color_t *buf);
 };
 
 class ILI9481_PMP : public ILI9481 {

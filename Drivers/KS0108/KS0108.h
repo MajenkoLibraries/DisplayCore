@@ -3,15 +3,6 @@
 
 #include <DisplayCore.h>
 
-#define GLCD_CMD_OFF         0b00111110
-#define GLCD_CMD_ON          0b00111111
-#define GLCD_CMD_SET_Y       0b01000000
-#define GLCD_CMD_SET_PAGE    0b10111000
-#define GLCD_CMD_START       0b11000000
-
-#define GLCD_STAT_BUSY   0b10000000
-#define GLCD_STAT_ONOFF  0b00100000
-#define GLCD_STAT_RESET  0b00010000
 
 #define C2B(X, Y) (((Y) << 6) + (X))
 
@@ -20,6 +11,16 @@
 class KS0108 : public DisplayCore {
 
     private:
+        const uint8_t GLCD_CMD_OFF       = 0b00111110;
+        const uint8_t GLCD_CMD_ON        = 0b00111111;
+        const uint8_t GLCD_CMD_SET_Y     = 0b01000000;
+        const uint8_t GLCD_CMD_SET_PAGE  = 0b10111000;
+        const uint8_t GLCD_CMD_START     = 0b11000000;
+
+        const uint8_t GLCD_STAT_BUSY     = 0b10000000;
+        const uint8_t GLCD_STAT_ONOFF    = 0b00100000;
+        const uint8_t GLCD_STAT_RESET    = 0b00010000;
+
         uint8_t _buffer[8 * 64];
         uint32_t _reg;
         uint32_t _data;
@@ -39,18 +40,18 @@ class KS0108 : public DisplayCore {
         virtual void initializeDevice();
         virtual void displayInit();
 
-        void setPixel(int16_t x, int16_t y, uint16_t color);
+        void setPixel(int x, int y, color_t color);
 
         void startBuffer();
         void endBuffer();
 
-        void setRotation(uint8_t r) {}
+        void setRotation(int r) {}
         void displayOn() {}
         void displayOff() {}
         void invertDisplay(boolean b) {}
 
-        uint16_t getWidth();
-        uint16_t getHeight();
+        int getWidth();
+        int getHeight();
 };
 
 class KS0108_2 : public DisplayCore {
@@ -65,18 +66,18 @@ class KS0108_2 : public DisplayCore {
 
         void initializeDevice();
 
-        void setPixel(int16_t x, int16_t y, uint16_t color);
+        void setPixel(int x, int y, color_t color);
 
         void startBuffer();
         void endBuffer();
 
-        void setRotation(uint8_t r) {}
+        void setRotation(int r) {}
         void displayOn() {}
         void displayOff() {}
         void invertDisplay(boolean b) {}
 
-        uint16_t getWidth();
-        uint16_t getHeight();
+        int getWidth();
+        int getHeight();
 };
 
 class KS0108_BB : public KS0108 {
@@ -154,7 +155,7 @@ class KS0108_BB2 : public DisplayCore {
 
         void initializeDevice();
 
-        void setPixel(int16_t x, int16_t y, uint16_t color);
+        void setPixel(int x, int y, color_t color);
 
         void startBuffer();
         void endBuffer();
@@ -164,7 +165,7 @@ class KS0108_BB2 : public DisplayCore {
         void displayOff() {}
         void invertDisplay(boolean b) {}
 
-        uint16_t getWidth();
-        uint16_t getHeight();
+        int getWidth();
+        int getHeight();
 };
 #endif

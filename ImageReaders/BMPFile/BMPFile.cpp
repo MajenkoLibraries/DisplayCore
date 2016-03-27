@@ -80,7 +80,7 @@ void BMPFile::loadImageHeader() {
     _chunkSize = (_chunkSize + 3) & (~3);
 }
 
-void BMPFile::getScanLine(int16_t line, uint8_t *data) {
+void BMPFile::getScanLine(int line, uint8_t *data) {
     uint32_t eof = _header.bfBitmapOffset + (getHeight() * _chunkSize);
     uint32_t pos = eof - ((line + 1) * _chunkSize);
     if (_spos != pos) {
@@ -90,7 +90,7 @@ void BMPFile::getScanLine(int16_t line, uint8_t *data) {
     _spos += _chunkSize;
 }
 
-void BMPFile::drawIdx(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
+void BMPFile::drawIdx(DisplayCore *dev, int x, int y, int32_t trans) {
     uint8_t data[_chunkSize];
     if (trans < 0) {
         dev->openWindow(x, y, getWidth(), getHeight());
@@ -99,7 +99,7 @@ void BMPFile::drawIdx(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
         getScanLine(iy, data);
         for (uint32_t ix = 0; ix < getWidth(); ix++) {
             struct BitmapPixel32 *p = &_palette[data[ix]];
-            uint16_t col = rgb(p->g, p->b, p->a);
+            color_t col = rgb(p->g, p->b, p->a);
             if (trans < 0) {
                 dev->windowData(col);
             } else {
@@ -114,7 +114,7 @@ void BMPFile::drawIdx(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
     }
 }
 
-void BMPFile::draw565(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
+void BMPFile::draw565(DisplayCore *dev, int x, int y, int32_t trans) {
     uint8_t data[_chunkSize];
     if (trans < 0) {
         dev->openWindow(x, y, getWidth(), getHeight());
@@ -123,7 +123,7 @@ void BMPFile::draw565(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
         getScanLine(iy, data);
         for (uint32_t ix = 0; ix < getWidth(); ix++) {
             uint32_t offset = ix * 2;
-            uint16_t *p = (uint16_t *)(data + offset);
+            color_t *p = (color_t *)(data + offset);
             if (trans < 0) {
                 dev->windowData(*p);
             } else {
@@ -138,7 +138,7 @@ void BMPFile::draw565(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
     }
 }
 
-void BMPFile::drawRGB(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
+void BMPFile::drawRGB(DisplayCore *dev, int x, int y, int32_t trans) {
     uint8_t data[_chunkSize];
     if (trans < 0) {
         dev->openWindow(x, y, getWidth(), getHeight());
@@ -148,7 +148,7 @@ void BMPFile::drawRGB(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
         for (uint32_t ix = 0; ix < getWidth(); ix++) {
             uint32_t offset = ix * 3;
             struct BitmapPixel24 *p = (struct BitmapPixel24 *)(data + offset);
-            uint16_t col = rgb(p->r, p->g, p->b);
+            color_t col = rgb(p->r, p->g, p->b);
             if (trans < 0) {
                 dev->windowData(col);
             } else {
@@ -163,7 +163,7 @@ void BMPFile::drawRGB(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
     }
 }
 
-void BMPFile::drawRGBA(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
+void BMPFile::drawRGBA(DisplayCore *dev, int x, int y, int32_t trans) {
     uint8_t data[_chunkSize];
     int rShift = 0;
     int gShift = 8;
@@ -214,8 +214,8 @@ void BMPFile::drawRGBA(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
             green = ((p->value & gMask) >> gShift);
             blue = ((p->value & bMask) >> bShift);
             alpha = ((p->value & aMask) >> aShift);
-            int16_t fg = rgb(red, green, blue);
-            int16_t bg;
+            color_t fg = rgb(red, green, blue);
+            color_t bg;
             if (trans < 0) {
                 bg = dev->colorAt(x + ix, y + iy);
             } else {
@@ -233,7 +233,7 @@ void BMPFile::drawRGBA(DisplayCore *dev, int16_t x, int16_t y, int32_t trans) {
 
 
 
-void BMPFile::draw(DisplayCore *dev, int16_t x, int16_t y) {
+void BMPFile::draw(DisplayCore *dev, int x, int y) {
     loadImageHeader();
     switch (_info.biBitCount) {
         case 8:
@@ -260,7 +260,7 @@ void BMPFile::draw(DisplayCore *dev, int16_t x, int16_t y) {
     dev->closeWindow();
 }
 
-void BMPFile::draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t trans) {
+void BMPFile::draw(DisplayCore *dev, int x, int y, color_t trans) {
     loadImageHeader();
     switch (_info.biBitCount) {
         case 8:
@@ -287,17 +287,17 @@ void BMPFile::draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t trans) {
     dev->closeWindow();
 }
 
-void BMPFile::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform) {}
-void BMPFile::drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform, uint16_t t) {}
+void BMPFile::drawTransformed(DisplayCore *dev, int x, int y, int transform) {}
+void BMPFile::drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t) {}
 
-uint16_t BMPFile::getWidth() {
+int BMPFile::getWidth() {
     if (_width == 0) {
         loadImageHeader();
     }
     return _width;
 }
 
-uint16_t BMPFile::getHeight() {
+int BMPFile::getHeight() {
     if (_height == 0) {
         loadImageHeader();
     }

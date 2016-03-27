@@ -89,17 +89,17 @@ class BMP : public Image {
         uint16_t _paletteSize;
 
     private:
-        void drawIdx(DisplayCore *dev, int16_t x, int16_t y, int32_t trans);
-        void draw565(DisplayCore *dev, int16_t x, int16_t y, int32_t trans);
-        void drawRGB(DisplayCore *dev, int16_t x, int16_t y, int32_t trans);
-        void drawRGBA(DisplayCore *dev, int16_t x, int16_t y, int32_t trans);
+        void drawIdx(DisplayCore *dev, int x, int y, int32_t trans);
+        void draw565(DisplayCore *dev, int x, int y, int32_t trans);
+        void drawRGB(DisplayCore *dev, int x, int y, int32_t trans);
+        void drawRGBA(DisplayCore *dev, int x, int y, int32_t trans);
 
     public:
         BMP(const char *data);
-        void draw(DisplayCore *dev, int16_t x, int16_t y);
-        void draw(DisplayCore *dev, int16_t x, int16_t y, uint16_t t);
-        void drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform);
-        void drawTransformed(DisplayCore *dev, int16_t x, int16_t y, uint8_t transform, uint16_t t);
+        void draw(DisplayCore *dev, int x, int y);
+        void draw(DisplayCore *dev, int x, int y, color_t t);
+        void drawTransformed(DisplayCore *dev, int x, int y, int transform);
+        void drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t);
 };
 
 #endif

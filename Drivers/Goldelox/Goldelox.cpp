@@ -31,7 +31,7 @@ void Goldelox::displayOn() {
 void Goldelox::displayOff() {
 }
 
-void Goldelox::fillScreen(uint16_t color) {
+void Goldelox::fillScreen(color_t color) {
     uint16_t bytes[2];
     bytes[0] = SET_BG;
     bytes[1] = color;
@@ -40,7 +40,7 @@ void Goldelox::fillScreen(uint16_t color) {
     command(bytes, 1);
 }
 
-void Goldelox::setPixel(int16_t x, int16_t y, uint16_t color) {
+void Goldelox::setPixel(int x, int y, color_t color) {
     if (x < 0 || y < 0) {
         return;
     }
@@ -55,7 +55,7 @@ void Goldelox::setPixel(int16_t x, int16_t y, uint16_t color) {
     command(bytes, 4);
 }
 
-void Goldelox::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color) {
+void Goldelox::drawLine(int x0, int y0, int x1, int y1, color_t color) {
     uint16_t bytes[6];
     bytes[0] = DRAW_LINE;
     bytes[1] = x0;
@@ -66,15 +66,15 @@ void Goldelox::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t
     command(bytes, 6);
 }
 
-void Goldelox::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
+void Goldelox::drawHorizontalLine(int x, int y, int w, color_t color) {
     drawLine(x, y, x+w, y, color);
 }
 
-void Goldelox::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
+void Goldelox::drawVerticalLine(int x, int y, int h, color_t color) {
     drawLine(x, y, x, y+h, color);
 }
 
-void Goldelox::drawRectangle(int16_t x0, int16_t y0, int16_t w, int16_t h, uint16_t color) {
+void Goldelox::drawRectangle(int x0, int y0, int w, int h, color_t color) {
     uint16_t bytes[6];
     bytes[0] = DRAW_RECTANGLE;
     bytes[1] = x0;
@@ -85,7 +85,7 @@ void Goldelox::drawRectangle(int16_t x0, int16_t y0, int16_t w, int16_t h, uint1
     command(bytes, 6);
 }
 
-void Goldelox::fillRectangle(int16_t x0, int16_t y0, int16_t w, int16_t h, uint16_t color) {
+void Goldelox::fillRectangle(int x0, int y0, int w, int h, color_t color) {
     uint16_t bytes[6];
     bytes[0] = FILL_RECTANGLE;
     bytes[1] = x0;
@@ -146,7 +146,7 @@ void Goldelox::changeBaudRate(uint32_t baud) {
     delay(200);
 }
 
-void Goldelox::openWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
+void Goldelox::openWindow(int x, int y, int w, int h) {
     _window_x = x;
     _window_y = y;
     _window_w = w;
@@ -156,13 +156,13 @@ void Goldelox::openWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
 void Goldelox::closeWindow() {
 }
 
-void Goldelox::windowData(uint16_t d) {
+void Goldelox::windowData(color_t d) {
     // Single word sending is not supported
 }
 
 // Caution: THIS MUST BE AN ENTIRE WINDOW'S WORTH OF DATA!!!
 
-void Goldelox::windowData(uint16_t *d, uint32_t len) {
+void Goldelox::windowData(color_t *d, int len) {
 //    if (len < _window_w * _window_h) {
 //        return;
 //    }
@@ -176,7 +176,7 @@ void Goldelox::windowData(uint16_t *d, uint32_t len) {
     _dev->write(_window_w & 0xFF);
     _dev->write(_window_h >> 8);
     _dev->write(_window_h & 0xFF);
-    for (uint32_t i = 0; i < _window_w * _window_h; i++) {
+    for (int i = 0; i < _window_w * _window_h; i++) {
         _dev->write(d[i] >> 8);
         _dev->write(d[i] & 0xFF);
     }

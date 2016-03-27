@@ -198,9 +198,9 @@ void SSD1963::initializeDevice() {
     data(0x000d);
 }
 
-void SSD1963::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void SSD1963::setAddrWindow(int x0, int y0, int x1, int y1) {
 
-    uint16_t x0a, x1a, y0a, y1a;
+    int x0a, x1a, y0a, y1a;
 
     switch(rotation) {
         case 1:
@@ -254,7 +254,7 @@ void SSD1963::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) 
 
 }
 
-void SSD1963::setPixel(int16_t x, int16_t y, uint16_t color) {
+void SSD1963::setPixel(int x, int y, color_t color) {
    if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height))
       return;
 
@@ -275,11 +275,11 @@ void SSD1963::setPixel(int16_t x, int16_t y, uint16_t color) {
       data(color);
 }
 
-void SSD1963::fillScreen(uint16_t color) {
+void SSD1963::fillScreen(color_t color) {
    fillRectangle(0, 0,  _width, _height, color);
 }
 
-void SSD1963::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+void SSD1963::fillRectangle(int x, int y, int w, int h, color_t color) {
     if (!clipToScreen(x, y, w, h)) {
         return;
     }
@@ -302,7 +302,7 @@ void SSD1963::fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t
    }
 }
 
-void SSD1963::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
+void SSD1963::drawHorizontalLine(int x, int y, int w, color_t color) {
     if ((y < 0) || (y >= _height) || (w <= 0)) {
         return;
     }
@@ -345,7 +345,7 @@ void SSD1963::drawHorizontalLine(int16_t x, int16_t y, int16_t w, uint16_t color
    }
 }
 
-void SSD1963::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
+void SSD1963::drawVerticalLine(int x, int y, int h, color_t color) {
     if ((x < 0) || (x >= _width) || (h <= 0)) {
         return;
     }
@@ -388,7 +388,7 @@ void SSD1963::drawVerticalLine(int16_t x, int16_t y, int16_t h, uint16_t color) 
    }
 }
 
-void SSD1963::setRotation(uint8_t m) {
+void SSD1963::setRotation(int m) {
    rotation = m % 4; // can't be higher than 3
 }
 
@@ -411,11 +411,11 @@ void SSD1963::displayOff() {
 }
 
 
-void SSD1963::windowData(uint16_t d) {
+void SSD1963::windowData(color_t d) {
     data(d);
 }
 
-void SSD1963::openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void SSD1963::openWindow(int x0, int y0, int x1, int y1) {
     setAddrWindow(x0, y0, x0 + x1 - 1, y0 + y1 - 1);
 }
 
@@ -440,7 +440,7 @@ void SSD1963::disableBacklight() {
     data(0x00);
 }
 
-void SSD1963::setBacklight(uint8_t b) {
+void SSD1963::setBacklight(int b) {
     _brightness = b;
     command(SSD1963_SetPWMConf);
     data(0x06);
@@ -451,7 +451,7 @@ void SSD1963::setBacklight(uint8_t b) {
     data(0x00);
 }
 
-uint16_t SSD1963::colorAt(int16_t x, int16_t y) {
+color_t SSD1963::colorAt(int x, int y) {
     setAddrWindow(x, y, x, y);
     command(0x2E);
     return read();

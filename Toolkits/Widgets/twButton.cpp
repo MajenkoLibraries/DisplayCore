@@ -1,25 +1,25 @@
 #include <Widgets.h>
 
-void twButton::draw(DisplayCore *dev, int16_t x, int16_t y) {
+void twButton::draw(DisplayCore *dev, int x, int y) {
 	dev->setFont(_font);
 
-    uint16_t bg = getValue() ? _bgHi : _bgLo;
-    uint16_t fg = getValue() ? _fgHi : _fgLo;
+    color_t bg = getValue() ? _bgHi : _bgLo;
+    color_t fg = getValue() ? _fgHi : _fgLo;
 
 	int _tw = dev->stringWidth(_txt);
 	int _th = dev->stringHeight(_txt);
 
-    int16_t _bgTop = _y + _bevel;
-    int16_t _bgBottom = _y + _height - _bevel;
-    int16_t _bgLeft = _x + _bevel;
-    int16_t _bgRight = _x + _width - _bevel;
+    int _bgTop = _y + _bevel;
+    int _bgBottom = _y + _height - _bevel;
+    int _bgLeft = _x + _bevel;
+    int _bgRight = _x + _width - _bevel;
 
-    int16_t _bgWidth = _width - (_bevel * 2);
+    int _bgWidth = _width - (_bevel * 2);
 
-    int16_t _txtTop = _y + ((_height / 2) - (_th / 2));
-    int16_t _txtLeft = _x + ((_width / 2) - (_tw / 2));
-    int16_t _txtBottom = (_txtTop + _th);
-    int16_t _txtRight = (_txtLeft + _tw);
+    int _txtTop = _y + ((_height / 2) - (_th / 2));
+    int _txtLeft = _x + ((_width / 2) - (_tw / 2));
+    int _txtBottom = (_txtTop + _th);
+    int _txtRight = (_txtLeft + _tw);
 
 	for (int i = 0; i < _bevel; i++) {
 		dev->drawLine(_x,      _y+i,    _x+_width-i-1, _y+i,    getValue() ? _blow : _bhi); 
