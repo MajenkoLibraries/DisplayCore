@@ -144,22 +144,22 @@ class LinuxEvent : public Touch, public Stream {
         CircularBuffer<char> _rxBuffer;
 
     public: 
-        LinuxEvent(uint16_t w, uint16_t h) : Touch(w, h), _rxBuffer(64) {}
+        LinuxEvent(int w, int h) : Touch(w, h), _rxBuffer(64) {}
 
 
         void sample();
         int getSample(uint8_t);
-        uint16_t x();
-        uint16_t y();
-        uint16_t rawX();
-        uint16_t rawY();
+        int x();
+        int y();
+        int rawX();
+        int rawY();
         boolean isPressed();
 
         void initializeDevice();
 
-        uint16_t pressure();
+        int pressure();
 
-        void setRotation(uint8_t r);
+        void setRotation(int r);
         size_t write(uint8_t v) { return 0; }
         int available() { return _rxBuffer.available(); }
         int read() { return _rxBuffer.read(); }
@@ -173,11 +173,11 @@ class LinuxEvent : public Touch, public Stream {
         boolean _pressed;
         float _scale_x;
         float _scale_y;
-        int16_t _offset_x;
-        int16_t _offset_y;
-        uint8_t _rotation;
-        uint16_t _x;
-        uint16_t _y;
+        int _offset_x;
+        int _offset_y;
+        int _rotation;
+        int _x;
+        int _y;
         int _maxfd;
 };
 

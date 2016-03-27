@@ -25,7 +25,7 @@ void LinuxEvent::initializeDevice() {
     _rotation = 0;
 }
 
-uint16_t LinuxEvent::x() {
+int LinuxEvent::x() {
     int x = (_pos.x * _width / 4095) + _offset_x;
     int y = (_pos.y * _height / 4095) + _offset_y;
 
@@ -42,7 +42,7 @@ uint16_t LinuxEvent::x() {
     return 0;
 }
 
-uint16_t LinuxEvent::y() {
+int LinuxEvent::y() {
     int x = (_pos.x * _width / 4095) + _offset_x;
     int y = (_pos.y * _height / 4095) + _offset_y;
 
@@ -113,18 +113,18 @@ void LinuxEvent::sample() {
     }
 }
 
-uint16_t LinuxEvent::rawX() {
+int LinuxEvent::rawX() {
     return _pos.x;
 }
 
-uint16_t LinuxEvent::rawY() {
+int LinuxEvent::rawY() {
     return _pos.y;
 }
 
-uint16_t LinuxEvent::pressure() {
+int LinuxEvent::pressure() {
     return 0;
 }
 
-void LinuxEvent::setRotation(uint8_t r) {
+void LinuxEvent::setRotation(int r) {
     _rotation = r % 4;
 }

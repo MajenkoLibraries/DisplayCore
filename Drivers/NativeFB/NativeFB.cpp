@@ -66,11 +66,11 @@ void NativeFB::initializeDevice() {
     _height = _vinfo.yres;
 }
 
-void NativeFB::setPixel(int16_t x, int16_t y, uint16_t c) {
+void NativeFB::setPixel(int x, int y, color_t c) {
     if (x < 0 || y < 0 || x >= _width || y >= _height) {
         return;
     }
-    uint16_t *b16 = (uint16_t *)_buffer;
+    color_t *b16 = (color_t *)_buffer;
     Color565 *cl = (Color565 *)&c;
     uint8_t r = cl->r << 3;
     uint8_t g = cl->g << 2;
@@ -110,11 +110,11 @@ void NativeFB::setPixel(int16_t x, int16_t y, uint16_t c) {
     }
 }
 
-uint16_t NativeFB::colorAt(int16_t x, int16_t y) {
+color_t NativeFB::colorAt(int x, int y) {
     if (x < 0 || y < 0 || x >= _width || y >= _height) {
         return 0;
     }
-    uint16_t *b16 = (uint16_t *)_buffer;
+    color_t *b16 = (color_t *)_buffer;
     uint8_t r;
     uint8_t g;
     uint8_t b;
@@ -186,10 +186,10 @@ void NativeFB::enableCursor() {
     close(f);
 }
 
-uint16_t NativeFB::getWidth() {
+int NativeFB::getWidth() {
     return _width;
 }
 
-uint16_t NativeFB::getHeight() {
+int NativeFB::getHeight() {
     return _height;
 }

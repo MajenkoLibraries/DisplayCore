@@ -39,25 +39,25 @@ class SDL;
 
 class SDLTouch : public Touch {
     public:
-        SDLTouch(uint16_t w, uint16_t h) : Touch(w, h) {}
+        SDLTouch(int w, int h) : Touch(w, h) {}
         boolean isPressed();
 
-        uint16_t x();
-        uint16_t y();
-        uint16_t rawX() { return x(); }
-        uint16_t rawY() { return y(); }
+        int x();
+        int y();
+        int rawX() { return x(); }
+        int rawY() { return y(); }
 
-        void setRotation(uint8_t r) {}
+        void setRotation(int r) {}
         void sample();
 
         void initializeDevice() {}
         
     private:
-        uint16_t _x;
-        uint16_t _y;
+        int _x;
+        int _y;
         boolean _pressed;
 
-        void press(uint16_t x, uint16_t y) { _pressed = true; _x = x; _y = y; }
+        void press(int x, int y) { _pressed = true; _x = x; _y = y; }
         void release() { _pressed = false; }
         
         
@@ -74,24 +74,24 @@ class SDL : public DisplayCore {
         static const uint8_t DoubleBuffered = 0x02;
         static const uint8_t Doublebuffered = 0x02;
 
-        SDL(uint16_t w, uint16_t h, uint8_t t) : DisplayCore(), _width(w), _height(h), _type(t) {}
+        SDL(int w, int h, uint8_t t) : DisplayCore(), _width(w), _height(h), _type(t) {}
         SDL(uint8_t t) : DisplayCore(), _width(0), _height(0), _type(t) {}
 
         void initializeDevice();
-        void setPixel(int16_t x, int16_t y, uint16_t c);
-        uint16_t colorAt(int16_t x, int16_t y);
+        void setPixel(int x, int y, color_t c);
+        color_t colorAt(int x, int y);
 
-        void setRotation(uint8_t r) { }
+        void setRotation(int r) { }
         void displayOn() { }
         void displayOff() { }
         void invertDisplay(boolean b) { }
 
-        void fillScreen(uint16_t c);
-        void fillRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+        void fillScreen(color_t c);
+        void fillRectangle(int x, int y, int w, int h, color_t color);
 
 
-        uint16_t getWidth();
-        uint16_t getHeight();
+        int getWidth();
+        int getHeight();
 
         void startBuffer();
         void endBuffer();
@@ -101,32 +101,32 @@ class SDL : public DisplayCore {
         void hideCursor();
         void showCursor();
 
-        void openWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-        void windowData(uint16_t d);
-        void windowData(uint16_t *d, uint32_t l);
+        void openWindow(int x0, int y0, int x1, int y1);
+        void windowData(color_t d);
+        void windowData(color_t *d, int l);
         void closeWindow();
 
 
     private:
-        uint16_t _width;
-        uint16_t _height;
-        uint16_t _type;
+        int _width;
+        int _height;
+        int _type;
 
         SDL_Surface *_display;
 
-        int32_t _buffered;
+        int _buffered;
         int _min_x;
         int _min_y;
         int _max_x;
         int _max_y;
 
-        uint16_t _winx;
-        uint16_t _winy;
-        uint16_t _winw;
-        uint16_t _winh;
+        int _winx;
+        int _winy;
+        int _winw;
+        int _winh;
 
-        uint16_t _win_px;
-        uint16_t _win_py;
+        int _win_px;
+        int _win_py;
 
         SDL_Surface *_blitSfc;
         uint32_t _win_ptr;

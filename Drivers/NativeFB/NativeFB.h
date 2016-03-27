@@ -57,25 +57,25 @@ class NativeFB : public DisplayCore {
 
     public:
         void initializeDevice();
-        void setPixel(int16_t x, int16_t y, uint16_t c);
-        uint16_t colorAt(int16_t x, int16_t y);
+        void setPixel(int x, int y, color_t c);
+        color_t colorAt(int x, int y);
 
 
-        void setRotation(uint8_t r) { }
+        void setRotation(int r) { }
         void displayOn();
         void displayOff();
         void invertDisplay(boolean b) { }
 
-        uint16_t getWidth();
-        uint16_t getHeight();
+        int getWidth();
+        int getHeight();
 
         // Special functions
         void disableCursor();
         void enableCursor();
 
     private:
-        uint16_t _width;
-        uint16_t _height;
+        int _width;
+        int _height;
 };
 
 #endif
