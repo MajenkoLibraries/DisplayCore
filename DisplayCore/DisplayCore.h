@@ -56,6 +56,13 @@ class point3d {
         float dot(point3d other) {
             return x*other.x + y*other.y + z*other.z;
         }
+        float length() {
+            return sqrt(x*x+y*y+z*z);
+        }
+        point3d norm() {
+            float l = length();
+            return point3d(x * l, y * l, z * l);
+        }
 };
 
 typedef struct {
@@ -651,15 +658,19 @@ class Scene {
         int _numtriangles;
         point3d _camera;
         point3d _camang;
-
-        point3d translatePoint(point3d p);
+        point3d _light;
+        float _ambient;
 
     public:
-        Scene(triangle *t, int numt) : _triangles(t), _numtriangles(numt) {}
+        point3d translatePoint(point3d p);
+        Scene(triangle *t, int numt) : _triangles(t), _numtriangles(numt), _ambient(1.0) {}
         void setCameraPosition(point3d c) { _camera = c; }
         void setCameraAngle(point3d a) { _camang = a; }
         void setCameraPosition(int x, int y, int z) { _camera.x = x; _camera.y = y; _camera.z = z; }
         void setCameraAngle(int x, int y, int z) { _camang.x = x; _camang.y = y; _camang.z = z; }
+        void setLightPosition(point3d l) { _light = l; }
+        void setLightPosition(int x, int y, int z) { _light.x = x; _light.y = y; _light.z = z; }
+        void setAmbientLight(float l) { _ambient = l; }
 
         void render(DisplayCore *dev);
         void render(DisplayCore &dev) { render(&dev); }

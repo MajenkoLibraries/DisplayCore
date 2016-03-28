@@ -2139,16 +2139,57 @@ bool intersect3D_RayTriangle(ray R, triangle T, point3d *I) {
     return true;                       // I is in T
 }
 
+static inline point3d triangleNormal(triangle t) {
+    point3d pba = t.b - t.a;
+    point3d pca = t.c - t.a;
+    return pba * pca;
+}
+
 void Scene::render(DisplayCore *dev) {
     // Storage for the translated triangles
+    triangle conv[_numtriangles];
     triangle trans[_numtriangles];
+
+    // First tweak the colours in the static scene
+    for (int i = 0; i < _numtriangles; i++) {
+        conv[i] = _triangles[i];
+        point3d norm = triangleNormal(conv[i]).norm();
+        point3d centroid(
+            (conv[i].a.x + conv[i].b.x, conv[i].c.x)/3,
+            (conv[i].a.y + conv[i].b.y, conv[i].c.y)/3,
+            (conv[i].a.z + conv[i].b.z, conv[i].c.z)/3
+        );
+        point3d lvec = _light - centroid;
+        point3d lightnorm = lvec.norm();
+        float nl = norm.length();
+        float cosphi = 1 - (norm.dot(lightnorm) / (nl * lightnorm.length()));
+        if (isnan(cosphi)) cosphi=1;
+        if (cosphi < 0) cosphi = 0;
+        if (cosphi > 1) cosphi = 1;
+
+        cosphi = _ambient + (cosphi * (1 - _ambient));
+
+        color_t col = conv[i].color;
+        int red = col >> 11;
+        int green = col >> 5 & 0b111111;
+        int blue = col & 0b11111;
+
+        red <<= 3;
+        green <<= 2;
+        blue <<= 3;
+
+        red = (float)red * cosphi;
+        green = (float)green * cosphi;
+        blue = (float)blue * cosphi;
+        conv[i].color = rgb(red, green, blue);
+    }
 
     // Translate all the triangles
     for (int i = 0; i < _numtriangles; i++) {
-        trans[i].a = translatePoint(_triangles[i].a);
-        trans[i].b = translatePoint(_triangles[i].b);
-        trans[i].c = translatePoint(_triangles[i].c);
-        trans[i].color = _triangles[i].color;
+        trans[i].a = translatePoint(conv[i].a);
+        trans[i].b = translatePoint(conv[i].b);
+        trans[i].c = translatePoint(conv[i].c);
+        trans[i].color = conv[i].color;
     }
 
     // Now sort them from front to back.
@@ -2158,13 +2199,14 @@ void Scene::render(DisplayCore *dev) {
             int lowz = (trans[j].a.z + trans[j].b.z + trans[j].c.z) / 3;
             int hiz = (trans[j + 1].a.z + trans[j + 1].b.z + trans[j + 1].c.z) / 3;
 
-            if (lowz > hiz) {
+            if (lowz < hiz) {
                 triangle t = trans[j];
                 trans[j] = trans[j + 1];
                 trans[j + 1] = t;
             }
         }
     }
+
 
 /*
     // Now find the triangles that aren't occluded.
@@ -2205,8 +2247,9 @@ void Scene::render(DisplayCore *dev) {
             }
         }
     }
-    // Now draw them from the back to the front.
 */
+    // Now draw them from the back to the front.
+
     for (int i = _numtriangles - 1; i >= 0; i--) {
 //        if (!isOccluded[i]) {
             point2d a = dev->map3Dto2D(trans[i].a);

@@ -2,7 +2,7 @@
 #include <HX8347D.h>
 
 void HX8347D::writeCommand(uint8_t c) {
-    _spi->setSpeed(100000000UL);
+    _spi->setSpeed(20000000UL);
     _dc_port->lat.clr = _dc_mask;
     _cs_port->lat.clr = _cs_mask;
     _spi->transfer(c);
@@ -10,7 +10,7 @@ void HX8347D::writeCommand(uint8_t c) {
 }
 
 void HX8347D::writeData(uint8_t c) {
-    _spi->setSpeed(100000000UL);
+    _spi->setSpeed(20000000UL);
     _dc_port->lat.set = _dc_mask;
     _cs_port->lat.clr = _cs_mask;
     _spi->transfer(c);
@@ -28,7 +28,7 @@ void HX8347D::initializeDevice()
     _cs_port = getPortInformation(_cs, &_cs_mask);
 
     _spi->begin();
-    _spi->setSpeed(100000000UL);
+    _spi->setSpeed(20000000UL);
 
     pinMode(_dc, OUTPUT);
     pinMode(_cs, OUTPUT);
@@ -253,13 +253,13 @@ void HX8347D::openWindow(int x0, int y0, int x1, int y1) {
 }
 
 void HX8347D::windowData(color_t d) {
-    _spi->setSpeed(100000000UL);
+    _spi->setSpeed(20000000UL);
     _spi->transfer((uint8_t)(d >> 8));
     _spi->transfer((uint8_t)(d & 0xFF));
 }
 
 void HX8347D::windowData(color_t *d, uint32_t l) {
-    _spi->setSpeed(100000000UL);
+    _spi->setSpeed(20000000UL);
     for (uint32_t i = 0; i < l; i++) {
         _spi->transfer((uint8_t)(d[i] >> 8));
         _spi->transfer((uint8_t)(d[i] & 0xFF));
