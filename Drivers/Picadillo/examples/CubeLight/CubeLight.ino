@@ -1,5 +1,6 @@
 #include <Picadillo.h>
 
+
 Picadillo tft;
 
 point3d cubepoints[8] = {
@@ -13,30 +14,28 @@ point3d cubepoints[8] = {
 	{ 100, -100,  100 }
 };
 
-triangle cube[13] = {
+triangle cube[6] = {
 	{ cubepoints[0], cubepoints[1], cubepoints[3], Color::Red },
 	{ cubepoints[0], cubepoints[3], cubepoints[2], Color::Red },
 
-	{ cubepoints[0], cubepoints[4], cubepoints[6], Color::Green },
-	{ cubepoints[0], cubepoints[6], cubepoints[3], Color::Green },
+	{ cubepoints[0], cubepoints[6], cubepoints[4], Color::Green },
+	{ cubepoints[0], cubepoints[2], cubepoints[6], Color::Green },
 
-	{ cubepoints[0], cubepoints[1], cubepoints[5], Color::Blue },
-	{ cubepoints[0], cubepoints[5], cubepoints[4], Color::Blue },
+//	{ cubepoints[0], cubepoints[5], cubepoints[1], Color::Blue },
+//	{ cubepoints[0], cubepoints[4], cubepoints[5], Color::Blue },
 
-	{ cubepoints[1], cubepoints[3], cubepoints[7], Color::Yellow },
-	{ cubepoints[1], cubepoints[7], cubepoints[5], Color::Yellow },
+	{ cubepoints[1], cubepoints[7], cubepoints[3], Color::Yellow },
+	{ cubepoints[1], cubepoints[5], cubepoints[7], Color::Yellow },
 
-	{ cubepoints[2], cubepoints[6], cubepoints[7], Color::Magenta },
-	{ cubepoints[2], cubepoints[7], cubepoints[3], Color::Magenta },
+//	{ cubepoints[2], cubepoints[6], cubepoints[7], Color::Magenta },
+//	{ cubepoints[2], cubepoints[7], cubepoints[3], Color::Magenta },
 
-	{ cubepoints[4], cubepoints[5], cubepoints[7], Color::Cyan },
-	{ cubepoints[4], cubepoints[7], cubepoints[6], Color::Cyan },
+//	{ cubepoints[4], cubepoints[7], cubepoints[5], Color::Cyan },
+//	{ cubepoints[4], cubepoints[6], cubepoints[7], Color::Cyan },
 
-    // This is a little white triangle off to one side by itself.
-    { {150, 150, 150}, {200, 200, 200}, {170, 190, 220}, Color::White },
 };
 
-Scene s(cube, sizeof(cube) / sizeof(cube[0]));
+Scene s(cube, 6); // sizeof(cube) / sizeof(cube[0]));
 
 point3d cpos;
 point3d cang;

@@ -11,4 +11,5 @@ Documentation/latex/refman.ind
 Documentation/latex/refman.log
 Documentation/latex/refman.out
 Documentation/latex/refman.toc
-
+*.lss
+*.hex

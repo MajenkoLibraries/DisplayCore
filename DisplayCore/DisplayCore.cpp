@@ -2160,9 +2160,21 @@ void Scene::render(DisplayCore *dev) {
             (conv[i].a.z + conv[i].b.z, conv[i].c.z)/3
         );
         point3d lvec = _light - centroid;
+        point3d cvec = _camera - centroid;
         point3d lightnorm = lvec.norm();
+        point3d camnorm = cvec.norm();
+
         float nl = norm.length();
-        float cosphi = 1 - (norm.dot(lightnorm) / (nl * lightnorm.length()));
+
+        float cosphi = (norm.dot(lightnorm) / (nl * lightnorm.length())) * 2.0;
+        float cam_cosphi = (norm.dot(camnorm) / (nl * camnorm.length()));
+
+        // 0.13 seems to be the magic number here. Not sure why - I would have expected 0.
+        if (cam_cosphi < 0.13) { // Can't see it, it's backwards!
+            conv[i].flags |= TRIANGLE_HIDDEN;
+            continue;
+        }
+
         if (isnan(cosphi)) cosphi=1;
         if (cosphi < 0) cosphi = 0;
         if (cosphi > 1) cosphi = 1;
@@ -2189,6 +2201,7 @@ void Scene::render(DisplayCore *dev) {
         trans[i].a = translatePoint(conv[i].a);
         trans[i].b = translatePoint(conv[i].b);
         trans[i].c = translatePoint(conv[i].c);
+        trans[i].flags = conv[i].flags;
         trans[i].color = conv[i].color;
     }
 
@@ -2251,12 +2264,12 @@ void Scene::render(DisplayCore *dev) {
     // Now draw them from the back to the front.
 
     for (int i = _numtriangles - 1; i >= 0; i--) {
-//        if (!isOccluded[i]) {
+        if ((trans[i].flags & TRIANGLE_HIDDEN) == 0) {
             point2d a = dev->map3Dto2D(trans[i].a);
             point2d b = dev->map3Dto2D(trans[i].b);
             point2d c = dev->map3Dto2D(trans[i].c);
             point2d tri[3] = {a, b, c};
             dev->fillPolygon(tri, 3, trans[i].color);
-//        }
+        }
     }
 }

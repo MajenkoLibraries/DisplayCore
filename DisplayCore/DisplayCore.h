@@ -39,13 +39,16 @@ class point3d {
         point3d operator +(point3d other) {
             return point3d(x + other.x, y + other.y, z + other.z);
         }
+        // Cross product
+
         point3d operator *(point3d other) {
             return point3d(
-                y * other.z - z * other.x,
+                y * other.z - z * other.y,
                 z * other.x - x * other.z,
                 x * other.y - y * other.x
             );
         }
+        // Scale
         point3d operator *(float other) {
             return point3d(
                 y * other,
@@ -53,6 +56,7 @@ class point3d {
                 x * other
             );
         }
+        // Dot product
         float dot(point3d other) {
             return x*other.x + y*other.y + z*other.z;
         }
@@ -645,11 +649,14 @@ class Form {
         void onRepeat(void (*func)(Event *));
 };
 
+#define TRIANGLE_HIDDEN 1
+
 struct triangle {
     point3d a;
     point3d b;
     point3d c;
     color_t color;
+    int flags;
 };
 
 class Scene {
