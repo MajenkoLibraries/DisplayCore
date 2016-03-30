@@ -1,6 +1,6 @@
-#include <ILI9325.h>
+#include <S6D0154.h>
 
-uint32_t ILI9325::readIdCode() {
+uint32_t S6D0154::readIdCode() {
     command(0, true);
     uint8_t b0 = read(true);
     uint8_t b1 = read(false);
@@ -8,7 +8,7 @@ uint32_t ILI9325::readIdCode() {
     return (b0 << 8) | b1;
 }
 
-void ILI9325::command(uint8_t cmd, bool cont) {
+void S6D0154::command(uint8_t cmd, bool cont) {
     //delayMicroseconds(1);
     _rs_port->lat.clr = _rs_mask;
     _cs_port->lat.clr = _cs_mask;
@@ -34,7 +34,7 @@ void ILI9325::command(uint8_t cmd, bool cont) {
     //delayMicroseconds(1);
 }
 
-void ILI9325::data(uint8_t dat, bool cont) {
+void S6D0154::data(uint8_t dat, bool cont) {
     //delayMicroseconds(1);
     _rs_port->lat.set = _rs_mask;
     _cs_port->lat.clr = _cs_mask;
@@ -60,7 +60,7 @@ void ILI9325::data(uint8_t dat, bool cont) {
     //delayMicroseconds(1);
 }
 
-uint8_t ILI9325::read(bool cont) {
+uint8_t S6D0154::read(bool cont) {
     uint8_t dat = 0;
     _rs_port->lat.set = _rs_mask;
     _cs_port->lat.clr = _cs_mask;
@@ -99,12 +99,12 @@ uint8_t ILI9325::read(bool cont) {
     _d4_port->tris.clr = _d4_mask;
     _d5_port->tris.clr = _d5_mask;
     _d6_port->tris.clr = _d6_mask;
-    _d7_port->tris.clR = _d7_mask;
+    _d7_port->tris.clr = _d7_mask;
 
     return dat;
 }
 
-void ILI9325::initializeDevice() {
+void S6D0154::initializeDevice() {
     if (_cs_pin >= NUM_DIGITAL_PINS_EXTENDED) return;
     if (_rs_pin >= NUM_DIGITAL_PINS_EXTENDED) return; 
     if (_wr_pin >= NUM_DIGITAL_PINS_EXTENDED) return;
@@ -146,8 +146,8 @@ void ILI9325::initializeDevice() {
     _d6_port = getPortInformation(_d6_pin, &_d6_mask);
     _d7_port = getPortInformation(_d7_pin, &_d7_mask);
 
-    _width  = ILI9325::Width;
-    _height = ILI9325::Height;
+    _width  = S6D0154::Width;
+    _height = S6D0154::Height;
 
     digitalWrite(_cs_pin, HIGH);
     digitalWrite(_rs_pin, HIGH);
@@ -161,61 +161,41 @@ void ILI9325::initializeDevice() {
     digitalWrite(_reset_pin, HIGH);
     delay(100);
 
-    regset(ILI932X_START_OSC, 0x0001);
-    delay(50);
-    regset(ILI932X_DRIV_OUT_CTRL, 0x0100);
-    regset(ILI932X_DRIV_WAV_CTRL, 0x0700);
-    regset(ILI932X_ENTRY_MOD, 0x1030);
-    regset(ILI932X_RESIZE_CTRL, 0x0000);
-    regset(ILI932X_DISP_CTRL2, 0x0202);
-    regset(ILI932X_DISP_CTRL3, 0x0000);
-    regset(ILI932X_DISP_CTRL4, 0x0000);
-    regset(ILI932X_RGB_DISP_IF_CTRL1, 0x0);
-    regset(ILI932X_FRM_MARKER_POS, 0x0);
-    regset(ILI932X_RGB_DISP_IF_CTRL2, 0x0);
-    regset(ILI932X_POW_CTRL1, 0x0000);
-    regset(ILI932X_POW_CTRL2, 0x0007);
-    regset(ILI932X_POW_CTRL3, 0x0000);
-    regset(ILI932X_POW_CTRL4, 0x0000);
-    delay(200);
-    regset(ILI932X_POW_CTRL1, 0x1690);
-    regset(ILI932X_POW_CTRL2, 0x0227);
-    delay(50);
-    regset(ILI932X_POW_CTRL3, 0x001A);
-    delay(50);
-    regset(ILI932X_POW_CTRL4, 0x1800);
-    regset(ILI932X_POW_CTRL7, 0x002A);
-    delay(50);
-    regset(ILI932X_GAMMA_CTRL1, 0x0000);
-    regset(ILI932X_GAMMA_CTRL2, 0x0000);
-    regset(ILI932X_GAMMA_CTRL3, 0x0000);
-    regset(ILI932X_GAMMA_CTRL4, 0x0206);
-    regset(ILI932X_GAMMA_CTRL5, 0x0808);
-    regset(ILI932X_GAMMA_CTRL6, 0x0007);
-    regset(ILI932X_GAMMA_CTRL7, 0x0201);
-    regset(ILI932X_GAMMA_CTRL8, 0x0000);
-    regset(ILI932X_GAMMA_CTRL9, 0x0000);
-    regset(ILI932X_GAMMA_CTRL10, 0x0000);
-    regset(ILI932X_GRAM_HOR_AD, 0x0000);
-    regset(ILI932X_GRAM_VER_AD, 0x0000);
-    regset(ILI932X_HOR_START_AD, 0x0000);
-    regset(ILI932X_HOR_END_AD, 0x00EF);
-    regset(ILI932X_VER_START_AD, 0X0000);
-    regset(ILI932X_VER_END_AD, 0x013F);
-    regset(ILI932X_GATE_SCAN_CTRL1, 0xA700);
-    regset(ILI932X_GATE_SCAN_CTRL2, 0x0003);
-    regset(ILI932X_GATE_SCAN_CTRL3, 0x0000);
-    regset(ILI932X_PANEL_IF_CTRL1, 0X0010);
-    regset(ILI932X_PANEL_IF_CTRL2, 0X0000);
-    regset(ILI932X_PANEL_IF_CTRL3, 0X0003);
-    regset(ILI932X_PANEL_IF_CTRL4, 0X1100);
-    regset(ILI932X_PANEL_IF_CTRL5, 0X0000);
-    regset(ILI932X_PANEL_IF_CTRL6, 0X0000);
-    regset(ILI932X_DISP_CTRL1, 0x0133);
+    regset(0x11,0x001A);
+    regset(0x12,0x3121);
+    regset(0x13,0x006C);
+    regset(0x14,0x4249);
 
+    regset(0x10,0x0800);
+    delay(10);
+    regset(0x11,0x011A);
+    delay(10);
+    regset(0x11,0x031A);
+    delay(10);
+    regset(0x11,0x071A);
+    delay(10);
+    regset(0x11,0x0F1A);
+    delay(20);
+    regset(0x11,0x0F3A);
+    delay(30);
+
+    regset(0x01,0x0128);
+    regset(0x02,0x0100);
+    regset(0x03,0x1030);
+    regset(0x07,0x1012);
+    regset(0x08,0x0303);
+    regset(0x0B,0x1100);
+    regset(0x0C,0x0000);
+    regset(0x0F,0x1801);
+    regset(0x15,0x0020);
+    regset(0x07,0x0012);
+    delay(40);
+
+    regset(0x07,0x0013);/*  GRAM Address Set */
+    regset(0x07,0x0017);/*  Display Control  DISPLAY ON */
 }
 
-void ILI9325::setAddrWindow(int x0, int y0, int x1, int y1) {
+void S6D0154::setAddrWindow(int x0, int y0, int x1, int y1) {
     // Values passed are in current (possibly rotated) coordinate
     // system.  932X requires hardware-native coords regardless of
     // MADCTL, so rotate inputs as needed.  The address counter is
@@ -232,44 +212,43 @@ void ILI9325::setAddrWindow(int x0, int y0, int x1, int y1) {
      case 1:
       t  = y0;
       y0 = x0;
-      x0 = ILI9325::Width  - 1 - y1;
+      x0 = S6D0154::Width  - 1 - y1;
       y1 = x1;
-      x1 = ILI9325::Width  - 1 - t;
+      x1 = S6D0154::Width  - 1 - t;
       x  = x1;
       y  = y0;
       break;
      case 2:
       t  = x0;
-      x0 = ILI9325::Width  - 1 - x1;
-      x1 = ILI9325::Width  - 1 - t;
+      x0 = S6D0154::Width  - 1 - x1;
+      x1 = S6D0154::Width  - 1 - t;
       t  = y0;
-      y0 = ILI9325::Height - 1 - y1;
-      y1 = ILI9325::Height - 1 - t;
+      y0 = S6D0154::Height - 1 - y1;
+      y1 = S6D0154::Height - 1 - t;
       x  = x1;
       y  = y1;
       break;
      case 3:
       t  = x0;
       x0 = y0;
-      y0 = ILI9325::Height - 1 - x1;
+      y0 = S6D0154::Height - 1 - x1;
       x1 = y1;
-      y1 = ILI9325::Height - 1 - t;
+      y1 = S6D0154::Height - 1 - t;
       x  = x0;
       y  = y1;
       break;
     }
 
-    regset(0x50, x0);
-    regset(0x51, x1);
-    regset(0x52, y0);
-    regset(0x53, y1);
+    regset(0x37, x0);
+    regset(0x36, x1);
+    regset(0x39, y0);
+    regset(0x38, y1);
     regset(0x20, x);
     regset(0x21, y);
-    command(0x22);
-
+    command(0x22, 0);
 }
 
-void ILI9325::setPixel(int x, int y, color_t color) {
+void S6D0154::setPixel(int x, int y, color_t color) {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return;
 	setAddrWindow(x,y,x+1,y+1);
@@ -277,11 +256,11 @@ void ILI9325::setPixel(int x, int y, color_t color) {
     data(color & 0xFF, false);
 }
 
-void ILI9325::fillScreen(color_t color) {
+void S6D0154::fillScreen(color_t color) {
 	fillRectangle(0, 0,  _width, _height, color);
 }
 
-void ILI9325::fillRectangle(int x, int y, int w, int h, color_t color) {
+void S6D0154::fillRectangle(int x, int y, int w, int h, color_t color) {
 	if((x >= _width) || (y >= _height)) 
 		return;
 	if((x + w - 1) >= _width)  
@@ -298,7 +277,7 @@ void ILI9325::fillRectangle(int x, int y, int w, int h, color_t color) {
 	}
 }
 
-void ILI9325::drawHorizontalLine(int x, int y, int w, color_t color) {
+void S6D0154::drawHorizontalLine(int x, int y, int w, color_t color) {
 	// Rudimentary clipping
 	if((x >= _width) || (y >= _height)) 
 		return;
@@ -312,7 +291,7 @@ void ILI9325::drawHorizontalLine(int x, int y, int w, color_t color) {
 	}
 }
 
-void ILI9325::drawVerticalLine(int x, int y, int h, color_t color) {
+void S6D0154::drawVerticalLine(int x, int y, int h, color_t color) {
 	if((x >= _width) || (y >= _height)) 
 		return;
 	if((y+h-1) >= _height) 
@@ -325,51 +304,51 @@ void ILI9325::drawVerticalLine(int x, int y, int h, color_t color) {
 	}
 }
 
-void ILI9325::setRotation(int m) {
+void S6D0154::setRotation(int m) {
 	rotation = m % 4; // can't be higher than 3
 	switch (rotation) {
 		case 0: 
             regset(0x3, 0x1030);
-			_width  = ILI9325::Width;
-			_height = ILI9325::Height;
+			_width  = S6D0154::Width;
+			_height = S6D0154::Height;
 			break;
 		case 1:
             regset(0x3, 0x1028);
-			_width  = ILI9325::Height;
-			_height = ILI9325::Width;
+			_width  = S6D0154::Height;
+			_height = S6D0154::Width;
 			break;
 		case 2:
             regset(0x3, 0x1000);
-			_width  = ILI9325::Width;
-			_height = ILI9325::Height;
+			_width  = S6D0154::Width;
+			_height = S6D0154::Height;
 			break;
 		case 3:
             regset(0x3, 0x1018);
-			_width  = ILI9325::Height;
-			_height = ILI9325::Width;
+			_width  = S6D0154::Height;
+			_height = S6D0154::Width;
 			break;
 	}
 }
 
-void ILI9325::invertDisplay(boolean i) {
-//	command(i ? ILI9325_INVERTON : ILI9325_INVERTOFF);
+void S6D0154::invertDisplay(boolean i) {
+//	command(i ? S6D0154_INVERTON : S6D0154_INVERTOFF);
 }
 
-void ILI9325::openWindow(int x0, int y0, int x1, int y1) {
+void S6D0154::openWindow(int x0, int y0, int x1, int y1) {
 	setAddrWindow(x0, y0, x0 + x1 - 1, y0 + y1 - 1);
 }
 
-void ILI9325::windowData(color_t c) {
+void S6D0154::windowData(color_t c) {
     data(c >> 8, true);
     data(c & 0xFF, false);
 }
 
-void ILI9325::windowData(color_t *c, int len) {
+void S6D0154::windowData(color_t *c, int len) {
     for (uint32_t i = 0; i < len; i++) {
         data(c[i] >> 8, true);
         data(c[i] & 0xFF, i < (len-1));
     }
 }
 
-void ILI9325::closeWindow() {
+void S6D0154::closeWindow() {
 }

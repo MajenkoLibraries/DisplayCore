@@ -99,10 +99,14 @@ class ILI9325 : public DisplayCore {
         uint8_t _d6_pin;
         uint8_t _d7_pin;
 
+        void data(uint8_t, bool cont = false);
+        void command(uint8_t, bool cont = false);
+        uint8_t read(bool cont = false);
+
         void regset(uint8_t r, uint16_t v) {
-            command(r);
-            data(v >> 8);
-            data(v);
+            command(r, true);
+            data(v >> 8, true);
+            data(v, false);
         }
 
 
@@ -134,8 +138,7 @@ class ILI9325 : public DisplayCore {
 
         void initializeDevice();
 
-        void data(uint8_t);
-        void command(uint8_t);
+        uint32_t readIdCode();
 
 };
 

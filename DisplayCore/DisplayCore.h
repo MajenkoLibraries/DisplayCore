@@ -661,7 +661,7 @@ struct triangle {
 
 class Scene {
     private:
-        triangle *_triangles;
+        const triangle *_triangles;
         int _numtriangles;
         point3d _camera;
         point3d _camang;
@@ -670,7 +670,7 @@ class Scene {
 
     public:
         point3d translatePoint(point3d p);
-        Scene(triangle *t, int numt) : _triangles(t), _numtriangles(numt), _ambient(1.0) {}
+        Scene(const triangle *t, int numt) : _triangles(t), _numtriangles(numt), _ambient(1.0) {}
         void setCameraPosition(point3d c) { _camera = c; }
         void setCameraAngle(point3d a) { _camang = a; }
         void setCameraPosition(int x, int y, int z) { _camera.x = x; _camera.y = y; _camera.z = z; }

@@ -2148,7 +2148,6 @@ static inline point3d triangleNormal(triangle t) {
 void Scene::render(DisplayCore *dev) {
     // Storage for the translated triangles
     triangle conv[_numtriangles];
-    triangle trans[_numtriangles];
 
     // First tweak the colours in the static scene
     for (int i = 0; i < _numtriangles; i++) {
@@ -2169,8 +2168,10 @@ void Scene::render(DisplayCore *dev) {
         float cosphi = (norm.dot(lightnorm) / (nl * lightnorm.length())) * 2.0;
         float cam_cosphi = (norm.dot(camnorm) / (nl * camnorm.length()));
 
+        conv[i].flags &= ~TRIANGLE_HIDDEN;
+
         // 0.13 seems to be the magic number here. Not sure why - I would have expected 0.
-        if (cam_cosphi < 0.13) { // Can't see it, it's backwards!
+        if (cam_cosphi < 0) { // Can't see it, it's backwards!
             conv[i].flags |= TRIANGLE_HIDDEN;
             continue;
         }
@@ -2198,78 +2199,35 @@ void Scene::render(DisplayCore *dev) {
 
     // Translate all the triangles
     for (int i = 0; i < _numtriangles; i++) {
-        trans[i].a = translatePoint(conv[i].a);
-        trans[i].b = translatePoint(conv[i].b);
-        trans[i].c = translatePoint(conv[i].c);
-        trans[i].flags = conv[i].flags;
-        trans[i].color = conv[i].color;
+        conv[i].a = translatePoint(conv[i].a);
+        conv[i].b = translatePoint(conv[i].b);
+        conv[i].c = translatePoint(conv[i].c);
     }
 
     // Now sort them from front to back.
 
     for (int i = 0; i < _numtriangles - 1; i++) {
         for (int j = 0; j < _numtriangles - 1; j++) {
-            int lowz = (trans[j].a.z + trans[j].b.z + trans[j].c.z) / 3;
-            int hiz = (trans[j + 1].a.z + trans[j + 1].b.z + trans[j + 1].c.z) / 3;
+            int lowz = (conv[j].a.z + conv[j].b.z + conv[j].c.z) / 3;
+            int hiz = (conv[j + 1].a.z + conv[j + 1].b.z + conv[j + 1].c.z) / 3;
 
             if (lowz < hiz) {
-                triangle t = trans[j];
-                trans[j] = trans[j + 1];
-                trans[j + 1] = t;
+                triangle t = conv[j];
+                conv[j] = conv[j + 1];
+                conv[j + 1] = t;
             }
         }
     }
 
-
-/*
-    // Now find the triangles that aren't occluded.
-    bool isOccluded[_numtriangles];
-
-    for (int i = 0; i < _numtriangles; i++) {
-        isOccluded[i] = false;
-
-        // The 2D coordinates for this triangle:
-        point2d a = dev->map3Dto2D(trans[i].a);
-        point2d b = dev->map3Dto2D(trans[i].b);
-        point2d c = dev->map3Dto2D(trans[i].c);
-
-        // Scan through the triangles we have already checked
-        bool oca = false;
-        bool ocb = false;
-        bool occ = false;
-        for (int j = 0; j < i; j++) {
-            // The 2D coordinates of the test triangle
-            point2d ta = dev->map3Dto2D(trans[j].a);
-            point2d tb = dev->map3Dto2D(trans[j].b);
-            point2d tc = dev->map3Dto2D(trans[j].c);
-
-            // Test the three points to see if they are inside the triangle
-            if (isInsideTriangle(a, ta, tb, tc)) {
-                oca = true;
-            }
-            if (isInsideTriangle(b, ta, tb, tc)) {
-                ocb = true;
-            }
-            if (isInsideTriangle(c, ta, tb, tc)) {
-                occ = true;
-            }
-
-            if (oca && ocb && occ) {
-                isOccluded[i] = true;
-                break;
-            }
-        }
-    }
-*/
     // Now draw them from the back to the front.
 
     for (int i = _numtriangles - 1; i >= 0; i--) {
-        if ((trans[i].flags & TRIANGLE_HIDDEN) == 0) {
-            point2d a = dev->map3Dto2D(trans[i].a);
-            point2d b = dev->map3Dto2D(trans[i].b);
-            point2d c = dev->map3Dto2D(trans[i].c);
+        if ((conv[i].flags & TRIANGLE_HIDDEN) == 0) {
+            point2d a = dev->map3Dto2D(conv[i].a);
+            point2d b = dev->map3Dto2D(conv[i].b);
+            point2d c = dev->map3Dto2D(conv[i].c);
             point2d tri[3] = {a, b, c};
-            dev->fillPolygon(tri, 3, trans[i].color);
+            dev->fillPolygon(tri, 3, conv[i].color);
         }
     }
 }
