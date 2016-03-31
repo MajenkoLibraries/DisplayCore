@@ -246,6 +246,53 @@ Description: Analog Resistive Touchscreen driver for DisplayCore
  Utilizes the internal ADC of the PIC32 to interface with a standard
  4-wire resistive touch panel.
 
+Package: libdisplaycore-driver-ssd1306
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Drivers
+Depends: libdisplaycore-core, libdspi-chipkit
+Recommends: libdisplaycore-font-squircle
+Provides: SSD1306.h
+Description: SSD1306 library (Basic IO Shield)
+ The SSD1306 is the OLED display used by the Digilent Basic IO Shield.
+
+Package: libdisplaycore-driver-hx8347d
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Drivers
+Depends: libdisplaycore-core, libdspi-chipkit
+Provides: HX8347D.h
+Description: HX8347D library
+
+Package: libdisplaycore-driver-ili9325
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Drivers
+Depends: libdisplaycore-core
+Provides: ILI9325.h
+Description: ILI9325 library for DisplayCore
+
+Package: libdisplaycore-driver-ili9341
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Drivers
+Depends: libdisplaycore-core
+Provides: ILI9341.h
+Description: ILI9341 library for DisplayCore
+
+Package: libdisplaycore-driver-s6d0154
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Drivers
+Depends: libdisplaycore-core
+Provides: S6D0154.h
+Description: S6D0154 library for DisplayCore
+
 Package: libdisplaycore-image-bmp
 Section: libraries
 Architecture: all
@@ -705,26 +752,6 @@ Depends: libdisplaycore-core
 Recommends: libdisplaycore-toolkit-monoicon
 Provides: Tutorial9Mono.h
 Description: Tutorial9Mono library
-
-Package: libdisplaycore-driver-ssd1306
-Section: libraries
-Architecture: all
-XBSC-Group: DisplayCore
-XBSC-Subgroup: Drivers
-Depends: libdisplaycore-core, libdspi-chipkit
-Recommends: libdisplaycore-font-squircle
-Provides: SSD1306.h
-Description: SSD1306 library (Basic IO Shield)
- The SSD1306 is the OLED display used by the Digilent Basic IO Shield.
-
-Package: libdisplaycore-driver-hx8347d
-Section: libraries
-Architecture: all
-XBSC-Group: DisplayCore
-XBSC-Subgroup: Drivers
-Depends: libdisplaycore-core, libdspi-chipkit
-Provides: HX8347D.h
-Description: HX8347D library
 
 Package: libdisplaycore-font-display7seg
 Section: libraries
