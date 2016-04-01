@@ -1,7 +1,6 @@
 #include <ILI9341.h>
 
 void ILI9341::command(uint8_t cmd) {
-    delayMicroseconds(100);
     _rs_port->lat.clr = _rs_mask;
     _cs_port->lat.clr = _cs_mask;
 
@@ -14,18 +13,13 @@ void ILI9341::command(uint8_t cmd) {
     if (cmd & 0x40) _d6_port->lat.set = _d6_mask; else _d6_port->lat.clr = _d6_mask;
     if (cmd & 0x80) _d7_port->lat.set = _d7_mask; else _d7_port->lat.clr = _d7_mask;
 
-    delayMicroseconds(100);
     _wr_port->lat.clr = _wr_mask;
-    delayMicroseconds(100);
     _wr_port->lat.set = _wr_mask;
-    delayMicroseconds(100);
 
     _cs_port->lat.set = _cs_mask;
-    delayMicroseconds(100);
 }
 
 void ILI9341::data(uint8_t dat) {
-    delayMicroseconds(100);
     _rs_port->lat.set = _rs_mask;
     _cs_port->lat.clr = _cs_mask;
 
@@ -38,14 +32,10 @@ void ILI9341::data(uint8_t dat) {
     if (dat & 0x40) _d6_port->lat.set = _d6_mask; else _d6_port->lat.clr = _d6_mask;
     if (dat & 0x80) _d7_port->lat.set = _d7_mask; else _d7_port->lat.clr = _d7_mask;
 
-    delayMicroseconds(100);
     _wr_port->lat.clr = _wr_mask;
-    delayMicroseconds(100);
     _wr_port->lat.set = _wr_mask;
-    delayMicroseconds(100);
 
     _cs_port->lat.set = _cs_mask;
-    delayMicroseconds(100);
 }
 
 void ILI9341::initializeDevice() {
@@ -243,4 +233,11 @@ void ILI9341::windowData(color_t *c, int len) {
 }
 
 void ILI9341::closeWindow() {
+}
+
+void ILI9341::setBacklight(int b) {
+    command(0x53);
+    data(0b00101100);
+    command(0x51);
+    data(b);
 }

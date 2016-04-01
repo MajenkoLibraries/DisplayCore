@@ -55,10 +55,10 @@
 // Then set the pins in the right section below.
 
 // SPI interface with RS(DC), CS and RESET
-#define USES_SPI
+//#define USES_SPI
 
 // 8-bit parallel interface: D0-7, RS, CS, RD, WR and RESET
-//#define USES_8BIT
+#define USES_8BIT
 
 // 16-bit parallel interface: D0-15, RS, CS, RD, WR and RESET
 //#define USES_16BIT
@@ -68,29 +68,29 @@
 
 #if defined(USES_SPI)
 // RS is sometimes known as DC
-#define RS 39
-#define CS 41
-#define RESET 10
+#define RS 7
+#define CS 10
+#define RESET 9
 #define DSPIPORT DSPI0
 #endif
 
 // Configure these pins if you selected 8 bit above.
 
 #if defined(USES_8BIT)
-#define RS A0
+#define RS A2
 #define WR A1
-#define RD A2
+#define RD A0
 #define CS A3
 #define RESET A4
 
-#define D0 26
-#define D1 27
-#define D2 28
-#define D3 29
-#define D4 30
-#define D5 31
-#define D6 32
-#define D7 33
+#define D0 8
+#define D1 9
+#define D2 2
+#define D3 3
+#define D4 4
+#define D5 5
+#define D6 6
+#define D7 7
 #endif
 
 // Configure these pins if you selected 16 bit above.
@@ -165,12 +165,14 @@ const struct displaycode ids[] = {
             0x00000000, 0x00000000, 
             "P6D0164"},
     
+    // TODO: Get the code for this screen (mine is write-only)
     {0x00,  0x89898989, 0xFFFFFFFF, 
             0x00000000, 0x00000000, 
             0x00000000, 0x00000000, 
             0x00000000, 0x00000000, 
            "SSD1289"},
 
+    // TODO: Get the code for this screen (mine is broken)
     {0xA1,  0x12345678, 0xFFFFFFFF, 
             0x00000000, 0x00000000, 
             0x00000000, 0x00000000, 
@@ -182,6 +184,17 @@ const struct displaycode ids[] = {
             0x00810000, 0xFFFF0000, 
             0x00000000, 0x00000000, 
             "ILI9481"},
+
+    {0x00,  0x47000000, 0xFF000000,
+            0x00000000, 0x00000000,
+            0x00000000, 0x00000000,
+            0x00000000, 0x00000000,
+            "HX8347D"},
+    {0x04,  0x00009302, 0x0000FFFF,
+            0x00000000, 0x00000000,
+            0x00000000, 0x00000000,
+            0x00000000, 0x00000000,
+            "ILI9341"},
 
     {0, 0, 0, 0, 0, 0}
 };

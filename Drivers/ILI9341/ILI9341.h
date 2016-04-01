@@ -107,6 +107,8 @@ class ILI9341 : public DisplayCore {
         void windowData(color_t *, int);
         void closeWindow();
 
+        void setBacklight(int b);
+
         void initializeDevice();
 
         void data(uint8_t);
