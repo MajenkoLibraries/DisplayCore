@@ -27,21 +27,21 @@ struct coord {
 
 class point3d {
     public:
-        float x;
-        float y;
-        float z;
+        double x;
+        double y;
+        double z;
         point3d() : x(0), y(0), z(0) {}
-        point3d(float _x,float _y, float _z) : x(_x), y(_y), z(_z) {}
+        point3d(double _x,double _y, double _z) : x(_x), y(_y), z(_z) {}
 
-        point3d operator -(point3d other) {
+        point3d operator -(point3d &other) {
             return point3d(x - other.x, y - other.y, z - other.z);
         }
-        point3d operator +(point3d other) {
+        point3d operator +(point3d &other) {
             return point3d(x + other.x, y + other.y, z + other.z);
         }
         // Cross product
 
-        point3d operator *(point3d other) {
+        point3d operator *(point3d &other) {
             return point3d(
                 y * other.z - z * other.y,
                 z * other.x - x * other.z,
@@ -49,7 +49,7 @@ class point3d {
             );
         }
         // Scale
-        point3d operator *(float other) {
+        point3d operator *(double other) {
             return point3d(
                 y * other,
                 z * other,
@@ -57,15 +57,15 @@ class point3d {
             );
         }
         // Dot product
-        float dot(point3d other) {
+        double dot(point3d &other) {
             return x*other.x + y*other.y + z*other.z;
         }
-        float length() {
+        double length() {
             return sqrt(x*x+y*y+z*z);
         }
         point3d norm() {
-            float l = length();
-            return point3d(x * l, y * l, z * l);
+            double l = length();
+            return point3d(x / l, y / l, z / l);
         }
 };
 
@@ -75,8 +75,8 @@ typedef struct {
 } ray;
 
 typedef struct {
-    float x;
-    float y;
+    double x;
+    double y;
 } point2d;
 
 typedef struct {
@@ -361,7 +361,7 @@ class DisplayCore : public Print
 
         point3d rgb2xyz(color_t c);
         point3d xyz2lab(point3d c);
-        float deltaE(point3d labA, point3d labB);
+        double deltaE(point3d labA, point3d labB);
         uint32_t deltaOrth(color_t c1, color_t c2);
         static uint32_t rgb2hsv(color_t rgb);
         static color_t hsv2rgb(uint32_t hsv);
@@ -454,13 +454,13 @@ class Touch {
          */
         virtual void sample() = 0;
 
-        virtual void scaleX(float x) { _scale_x = x; }
-        virtual void scaleY(float y) { _scale_y = y; }
-        virtual void offsetX(float x) { _offset_x = x; }
-        virtual void offsetY(float y) { _offset_y = y; }
+        virtual void scaleX(double x) { _scale_x = x; }
+        virtual void scaleY(double y) { _scale_y = y; }
+        virtual void offsetX(double x) { _offset_x = x; }
+        virtual void offsetY(double y) { _offset_y = y; }
 
-        float _scale_x;
-        float _scale_y;
+        double _scale_x;
+        double _scale_y;
         int _offset_x;
         int _offset_y;
 
@@ -666,7 +666,7 @@ class Scene {
         point3d _camera;
         point3d _camang;
         point3d _light;
-        float _ambient;
+        double _ambient;
 
     public:
         point3d translatePoint(point3d p);
@@ -677,10 +677,10 @@ class Scene {
         void setCameraAngle(int x, int y, int z) { _camang.x = x; _camang.y = y; _camang.z = z; }
         void setLightPosition(point3d l) { _light = l; }
         void setLightPosition(int x, int y, int z) { _light.x = x; _light.y = y; _light.z = z; }
-        void setAmbientLight(float l) { _ambient = l; }
+        void setAmbientLight(double l) { _ambient = l; }
 
-        void render(DisplayCore *dev);
-        void render(DisplayCore &dev) { render(&dev); }
+        int render(DisplayCore *dev);
+        int render(DisplayCore &dev) { return render(&dev); }
 
 };
 

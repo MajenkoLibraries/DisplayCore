@@ -972,9 +972,9 @@ point3d DisplayCore::rgb2xyz(color_t rgb) {
     green = green << 2;
     blue = blue << 3;
 
-    float r = red / 255.0;
-    float g = green / 255.0;
-    float b = blue / 255.0;
+    double r = red / 255.0;
+    double g = green / 255.0;
+    double b = blue / 255.0;
 
     if (r > 0.04045) {
         r  = pow(((r + 0.055) / 1.055), 2.4);
@@ -1016,9 +1016,9 @@ point3d DisplayCore::rgb2xyz(color_t rgb) {
 point3d DisplayCore::xyz2lab(point3d xyz) {
     point3d lab;
 
-    float x = xyz.x / 100.0;
-    float y = xyz.y / 100.0;
-    float z = xyz.z / 100.0;
+    double x = xyz.x / 100.0;
+    double y = xyz.y / 100.0;
+    double z = xyz.z / 100.0;
     
     if (x > 0.008856) {
         x = pow(x, 1.0/3.0);
@@ -1051,9 +1051,9 @@ point3d DisplayCore::xyz2lab(point3d xyz) {
  *
  *  Example:
  *
- *      float delta = tft.deltaE(colorA, colorB);
+ *      double delta = tft.deltaE(colorA, colorB);
  */
-float DisplayCore::deltaE(point3d labA, point3d labB) {
+double DisplayCore::deltaE(point3d labA, point3d labB) {
     return sqrt(
         (pow(labA.x - labB.x, 2.0))
         + (pow(labA.y - labB.y, 2.0))
@@ -1558,9 +1558,9 @@ void DisplayCore::drawBezier(
     startBuffer();
 
     boolean first = true;
-    float points = 1.0/(float)resolution;
-    float t = 0.0, sx = 0, sy = 0;
-    float ex, ey;
+    double points = 1.0/(double)resolution;
+    double t = 0.0, sx = 0, sy = 0;
+    double ex, ey;
 
 
     for (t = 0.0; t < 1.0; t += points)
@@ -1594,9 +1594,9 @@ void DisplayCore::fillBezier(
     startBuffer();
 
     boolean first = true;
-    float points = 1.0/(float)resolution;
-    float t = 0.0, sx = 0, sy = 0;
-    float ex, ey;
+    double points = 1.0/(double)resolution;
+    double t = 0.0, sx = 0, sy = 0;
+    double ex, ey;
 
 
     for (t = 0.0; t < 1.0; t += points)
@@ -2055,14 +2055,14 @@ void DisplayCore::fillPolygon3D(point3d *nodes, int numpoints, color_t color) {
 
 point3d Scene::translatePoint(point3d p) {
     point3d d;
-    d.x = cosf(_camang.y*PI/180) * ( sinf(_camang.z*PI/180) * (p.y - _camera.y) + cosf(_camang.z*PI/180) *
-             (p.x - _camera.x) ) - sinf(_camang.y*PI/180) * (p.z - _camera.z);
-    d.y = sinf(_camang.x*PI/180) * ( cosf(_camang.y*PI/180) * (p.z - _camera.z) + sinf(_camang.y*PI/180) *
-             (sinf(_camang.z*PI/180) * (p.y - _camera.y) + cosf(_camang.z*PI/180) * (p.x - _camera.x)) ) +
-             cosf(_camang.x*PI/180) * ( cosf(_camang.z*PI/180) * (p.y - _camera.y) - sinf(_camang.z*PI/180) * (p.x - _camera.x) );
-    d.z = cosf(_camang.x*PI/180) * ( cosf(_camang.y*PI/180) * (p.z - _camera.z) + sinf(_camang.y*PI/180) *
-             (sinf(_camang.z*PI/180) * (p.y - _camera.y) + cosf(_camang.z*PI/180) * (p.x - _camera.x)) ) -
-             sinf(_camang.x*PI/180) * ( cosf(_camang.z*PI/180) * (p.y - _camera.y) - sinf(_camang.z*PI/180) * (p.x - _camera.x) );
+    d.x = cos(_camang.y*PI/180) * ( sin(_camang.z*PI/180) * (p.y - _camera.y) + cos(_camang.z*PI/180) *
+             (p.x - _camera.x) ) - sin(_camang.y*PI/180) * (p.z - _camera.z);
+    d.y = sin(_camang.x*PI/180) * ( cos(_camang.y*PI/180) * (p.z - _camera.z) + sin(_camang.y*PI/180) *
+             (sin(_camang.z*PI/180) * (p.y - _camera.y) + cos(_camang.z*PI/180) * (p.x - _camera.x)) ) +
+             cos(_camang.x*PI/180) * ( cos(_camang.z*PI/180) * (p.y - _camera.y) - sin(_camang.z*PI/180) * (p.x - _camera.x) );
+    d.z = cos(_camang.x*PI/180) * ( cos(_camang.y*PI/180) * (p.z - _camera.z) + sin(_camang.y*PI/180) *
+             (sin(_camang.z*PI/180) * (p.y - _camera.y) + cos(_camang.z*PI/180) * (p.x - _camera.x)) ) -
+             sin(_camang.x*PI/180) * ( cos(_camang.z*PI/180) * (p.y - _camera.y) - sin(_camang.z*PI/180) * (p.x - _camera.x) );
     
     return d;
 }
@@ -2083,7 +2083,7 @@ static inline bool isInsideTriangle(point2d s, point2d a, point2d b, point2d c) 
 bool intersect3D_RayTriangle(ray R, triangle T, point3d *I) {
     point3d    u, v, n;              // triangle vectors
     point3d    dir, w0, w;           // ray vectors
-    float     r, a, b;              // params to calc ray-plane intersect
+    double     r, a, b;              // params to calc ray-plane intersect
 
     // get triangle edge vectors and plane normal
     u = T.b - T.a;
@@ -2118,7 +2118,7 @@ bool intersect3D_RayTriangle(ray R, triangle T, point3d *I) {
     *I = dir * r + R.a;            // intersect point of ray and plane
 
     // is I inside T?
-    float    uu, uv, vv, wu, wv, D;
+    double    uu, uv, vv, wu, wv, D;
     uu = u.dot(u);
     uv = u.dot(v);
     vv = v.dot(v);
@@ -2128,7 +2128,7 @@ bool intersect3D_RayTriangle(ray R, triangle T, point3d *I) {
     D = uv * uv - uu * vv;
 
     // get and test parametric coords
-    float s, t;
+    double s, t;
     s = (uv * wv - vv * wu) / D;
     if (s < 0.0 || s > 1.0)         // I is outside T
         return false;
@@ -2145,36 +2145,119 @@ static inline point3d triangleNormal(triangle t) {
     return pba * pca;
 }
 
-void Scene::render(DisplayCore *dev) {
+static inline double zentroid(triangle *t) {
+    return (t->a.z + t->b.z + t->c.z) / 3.0;
+}
+
+#define SWP(A, B, T) T = A; A = B; B = T;
+
+static int qsval = 0;
+
+static void quicksort(triangle *tri, int first, int last) {
+    int pivot, j, i;
+    double td;
+    int ti;
+
+    // Limit the sorting so it doesn't overflow the stack
+    qsval++;
+    if (qsval > 100) {
+        qsval--;
+        return;
+    }
+
+    if (first < last) {
+        pivot = first;
+        i = first;
+        j = last;
+        double zp = zentroid(&tri[pivot]);
+
+        while (i < j) {
+            while (zentroid(&tri[i]) <= zp && i < last) {
+                i++;
+            }
+            while (zentroid(&tri[j]) > zp) {
+                j--;
+            }
+            if (i < j) {
+                SWP(tri[i].a.x, tri[j].a.x, td);
+                SWP(tri[i].a.y, tri[j].a.y, td);
+                SWP(tri[i].a.z, tri[j].a.z, td);
+                SWP(tri[i].b.x, tri[j].b.x, td);
+                SWP(tri[i].b.y, tri[j].b.y, td);
+                SWP(tri[i].b.z, tri[j].b.z, td);
+                SWP(tri[i].c.x, tri[j].c.x, td);
+                SWP(tri[i].c.y, tri[j].c.y, td);
+                SWP(tri[i].c.z, tri[j].c.z, td);
+                SWP(tri[i].color, tri[j].color, ti);
+                SWP(tri[i].flags, tri[j].flags, ti);
+            }
+        }
+        SWP(tri[pivot].a.x, tri[j].a.x, td);
+        SWP(tri[pivot].a.y, tri[j].a.y, td);
+        SWP(tri[pivot].a.z, tri[j].a.z, td);
+        SWP(tri[pivot].b.x, tri[j].b.x, td);
+        SWP(tri[pivot].b.y, tri[j].b.y, td);
+        SWP(tri[pivot].b.z, tri[j].b.z, td);
+        SWP(tri[pivot].c.x, tri[j].c.x, td);
+        SWP(tri[pivot].c.y, tri[j].c.y, td);
+        SWP(tri[pivot].c.z, tri[j].c.z, td);
+        SWP(tri[pivot].color, tri[j].color, ti);
+        SWP(tri[pivot].flags, tri[j].flags, ti);
+        quicksort(tri, first, j-1);
+        quicksort(tri, j+1, last);
+    }
+    qsval--;
+}
+
+
+
+
+int Scene::render(DisplayCore *dev) {
     // Storage for the translated triangles
     triangle conv[_numtriangles];
-
     // First tweak the colours in the static scene
     for (int i = 0; i < _numtriangles; i++) {
-        conv[i] = _triangles[i];
-        point3d norm = triangleNormal(conv[i]).norm();
-        point3d centroid(
-            (conv[i].a.x + conv[i].b.x, conv[i].c.x)/3,
-            (conv[i].a.y + conv[i].b.y, conv[i].c.y)/3,
-            (conv[i].a.z + conv[i].b.z, conv[i].c.z)/3
-        );
-        point3d lvec = _light - centroid;
-        point3d cvec = _camera - centroid;
-        point3d lightnorm = lvec.norm();
-        point3d camnorm = cvec.norm();
-
-        float nl = norm.length();
-
-        float cosphi = (norm.dot(lightnorm) / (nl * lightnorm.length())) * 2.0;
-        float cam_cosphi = (norm.dot(camnorm) / (nl * camnorm.length()));
-
-        conv[i].flags &= ~TRIANGLE_HIDDEN;
-
-        // 0.13 seems to be the magic number here. Not sure why - I would have expected 0.
-        if (cam_cosphi < 0) { // Can't see it, it's backwards!
-            conv[i].flags |= TRIANGLE_HIDDEN;
+        conv[i].a.x = _triangles[i].a.x;
+        conv[i].a.y = _triangles[i].a.y;
+        conv[i].a.z = _triangles[i].a.z;
+        conv[i].b.x = _triangles[i].b.x;
+        conv[i].b.y = _triangles[i].b.y;
+        conv[i].b.z = _triangles[i].b.z;
+        conv[i].c.x = _triangles[i].c.x;
+        conv[i].c.y = _triangles[i].c.y;
+        conv[i].c.z = _triangles[i].c.z;
+        conv[i].color = _triangles[i].color;
+        conv[i].flags = _triangles[i].flags;
+        if (conv[i].flags & TRIANGLE_HIDDEN) {
             continue;
         }
+        point3d norm = triangleNormal(conv[i]).norm();
+        point3d centroid(
+            (conv[i].a.x + conv[i].b.x, conv[i].c.x)/3.0,
+            (conv[i].a.y + conv[i].b.y, conv[i].c.y)/3.0,
+            (conv[i].a.z + conv[i].b.z, conv[i].c.z)/.03
+        );
+        point3d lvec = _light - centroid;
+//        point3d cvec = _camera - centroid;
+        point3d lightnorm = lvec.norm();
+//        point3d camnorm = cvec.norm();
+
+        double cosphi = norm.dot(lightnorm);
+//        double cam_cosphi = camnorm.dot(norm);
+
+//        conv[i].flags &= ~TRIANGLE_HIDDEN;
+//if (i == 1485) {
+//    dev->printf("%d: a=%.2f, cx=%.2f, cy=%.2f, cz=%.2f\r\n",
+//        i, cam_cosphi, camnorm.x, camnorm.y, camnorm.z);
+//    dev->printf("%d: a=%.2f, nx=%.2f, ny=%.2f, nz=%.2f\r\n",
+//        i, cam_cosphi, norm.x, norm.y, norm.z);
+//}
+
+        // 0.13 seems to be the magic number here. Not sure why - I would have expected 0.
+//        if (cam_cosphi < -0.4) { // Can't see it, it's backwards!
+//            conv[i].flags |= TRIANGLE_HIDDEN;
+//            continue;
+//        }
 
         if (isnan(cosphi)) cosphi=1;
         if (cosphi < 0) cosphi = 0;
@@ -2191,38 +2274,67 @@ void Scene::render(DisplayCore *dev) {
         green <<= 2;
         blue <<= 3;
 
-        red = (float)red * cosphi;
-        green = (float)green * cosphi;
-        blue = (float)blue * cosphi;
+        red = (double)red * cosphi;
+        green = (double)green * cosphi;
+        blue = (double)blue * cosphi;
         conv[i].color = rgb(red, green, blue);
     }
 
+
     // Translate all the triangles
     for (int i = 0; i < _numtriangles; i++) {
+        if (conv[i].flags & TRIANGLE_HIDDEN) {
+            continue;
+        }
         conv[i].a = translatePoint(conv[i].a);
         conv[i].b = translatePoint(conv[i].b);
         conv[i].c = translatePoint(conv[i].c);
-    }
-
-    // Now sort them from front to back.
-
-    for (int i = 0; i < _numtriangles - 1; i++) {
-        for (int j = 0; j < _numtriangles - 1; j++) {
-            int lowz = (conv[j].a.z + conv[j].b.z + conv[j].c.z) / 3;
-            int hiz = (conv[j + 1].a.z + conv[j + 1].b.z + conv[j + 1].c.z) / 3;
-
-            if (lowz < hiz) {
-                triangle t = conv[j];
-                conv[j] = conv[j + 1];
-                conv[j + 1] = t;
-            }
+        // If any points are behind me (or in me) then don't show it.
+        if (conv[i].a.z >= 0 || conv[i].b.z >= 0 || conv[i].c.z >= 0) {
+            conv[i].flags |= TRIANGLE_HIDDEN;
         }
     }
 
+    // Now sort them from back to front.
+
+
+    qsval = 0;
+    quicksort(conv, 0, _numtriangles-1);
+/*
+    for (int i = 0; i < _numtriangles - 1; i++) {
+        for (int j = i; j < _numtriangles - 1; j++) {
+            double lowz = (conv[j].a.z + conv[j].b.z + conv[j].c.z) / 3.0;
+            double hiz = (conv[j + 1].a.z + conv[j + 1].b.z + conv[j + 1].c.z) / 3.0;
+
+            if (lowz > hiz) {
+
+                float tf;
+                int ti;
+                
+
+                SWP(conv[j].a.x, conv[j+1].a.x, tf)
+                SWP(conv[j].a.y, conv[j+1].a.y, tf)
+                SWP(conv[j].a.z, conv[j+1].a.z, tf)
+                SWP(conv[j].b.x, conv[j+1].b.x, tf)
+                SWP(conv[j].b.y, conv[j+1].b.y, tf)
+                SWP(conv[j].b.z, conv[j+1].b.z, tf)
+                SWP(conv[j].c.x, conv[j+1].c.x, tf)
+                SWP(conv[j].c.y, conv[j+1].c.y, tf)
+                SWP(conv[j].c.z, conv[j+1].c.z, tf)
+                SWP(conv[j].color, conv[j+1].color, ti)
+                SWP(conv[j].flags, conv[j+1].flags, ti)
+
+            }
+        }
+    }
+*/
     // Now draw them from the back to the front.
 
-    for (int i = _numtriangles - 1; i >= 0; i--) {
+    int rend = 0;
+
+    for (int i = 0; i < _numtriangles; i++) {
         if ((conv[i].flags & TRIANGLE_HIDDEN) == 0) {
+            rend++;
             point2d a = dev->map3Dto2D(conv[i].a);
             point2d b = dev->map3Dto2D(conv[i].b);
             point2d c = dev->map3Dto2D(conv[i].c);
@@ -2230,4 +2342,5 @@ void Scene::render(DisplayCore *dev) {
             dev->fillPolygon(tri, 3, conv[i].color);
         }
     }
+    return rend;
 }
