@@ -2,7 +2,6 @@
 #define _MONO_ICON_H
 
 #include <DisplayCore.h>
-#include <Framebuffer565.h>
 
 class MonoIcon : public Widget {
     private:
@@ -12,6 +11,8 @@ class MonoIcon : public Widget {
         const char *_text;
         const uint8_t *_font;
         color_t _textcol;
+
+        uint16_t *_buffer;
 
     public:
         static const color_t MonoIconBG[];
@@ -29,6 +30,8 @@ class MonoIcon : public Widget {
         void draw(DisplayCore *dev, int x, int y);
         void setColor(color_t c);
         void setIcon(const uint8_t *i);
+
+        void setPixel(int x, int y, color_t c);
 };
 
 #endif

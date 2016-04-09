@@ -1,5 +1,11 @@
 #include <MonoIcon.h>
 
+void MonoIcon::setPixel(int x, int y, color_t col) {
+    if (x < 0 || y < 0 || x >= _sense_w || y >= _sense_h) return;
+    uint32_t offset = y * _sense_w + x;
+    _buffer[offset] = col;
+}
+
 void MonoIcon::draw(DisplayCore *dev, int x, int y) {
 
     int voff = 0;
@@ -10,20 +16,25 @@ void MonoIcon::draw(DisplayCore *dev, int x, int y) {
     int fg_x = _sense_w/2 - fg_w/2;
     int fg_y = (_sense_h/2 - fg_h/2) - voff;;
 
+    color_t color = _color;
+//    if (!_enabled) {
+//        color = Color::Gray60;
+//    }
 
     color_t buffer[_sense_w * _sense_h];
-    Framebuffer565 fb(_sense_w, _sense_h, buffer);
+
+    _buffer = buffer;
 
     int th = 0;
     int tw = 0;
 
     if (_text != NULL) {
-        fb.setFont(_font);
-        fb.setTextColor(_textcol, _textcol);
-        fb.setTextWrap(false);
+        setFont(_font);
+        setTextColor(_textcol, _textcol);
+        setTextWrap(false);
 
-        tw = fb.stringWidth(_text);
-        th = fb.stringHeight(_text);
+        tw = stringWidth(_text);
+        th = stringHeight(_text);
     }
 
     for (int py = 0; py < _sense_h; py++) {
@@ -35,26 +46,24 @@ void MonoIcon::draw(DisplayCore *dev, int x, int y) {
                 (py <= fg_y) ||
                 (py >= (fg_y + fg_h))
             ) {
-                fb.setPixel(px, py, _bg[py * _sense_w + px]);
+                setPixel(px, py, _bg[py * _sense_w + px]);
             } else {
                 int alpha = _icon[(py - fg_y) * fg_w + (px - fg_x)];
                 color_t bg = _bg[py * _sense_w + px];
-                color_t col = mix(bg, _color, alpha * 2);
-                fb.setPixel(px, py, col);
+                color_t col = mix(bg, color, alpha * 2);
+                setPixel(px, py, col);
             }
         }
     }
 
     if (_text != NULL) {
-        fb.setCursor(_sense_w/2 - tw/2, _sense_h - th - 3);
-        fb.print(_text);
+        setCursor(_sense_w/2 - tw/2, _sense_h - th - 3);
+        print(_text);
     }
 
-    fb.draw(dev, x, y);
-
-//    dev->openWindow(x, y, _sense_w, _sense_h);
-//    dev->windowData(buffer, _sense_w * _sense_h);
-//    dev->closeWindow();
+    dev->openWindow(x, y, _sense_w, _sense_h);
+    dev->windowData(_buffer, _sense_w * _sense_h);
+    dev->closeWindow();
 }
 
 void MonoIcon::setColor(color_t c) {
