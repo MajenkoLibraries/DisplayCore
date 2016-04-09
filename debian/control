@@ -762,5 +762,14 @@ Depends: libdisplaycore-core
 Provides: Display7Seg.h
 Description: Display7Seg font
 
+Package: libdisplaycore-font-display7segshadow
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Display7SegShadow.h
+Description: Display7SegShadow library
+
 
 
