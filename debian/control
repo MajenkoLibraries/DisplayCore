@@ -771,5 +771,140 @@ Depends: libdisplaycore-core
 Provides: Display7SegShadow.h
 Description: Display7SegShadow library
 
+Package: libdisplaycore-font-acorn8x8
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Acorn8x8.h
+Description: Acorn8x8 font for DisplayCore
+
+Package: libdisplaycore-font-cp437
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP437.h
+Description: CP437 font for DisplayCore
+
+Package: libdisplaycore-font-cp737
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP737.h
+Description: CP737 font for DisplayCore
+
+Package: libdisplaycore-font-cp850
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP850.h
+Description: CP850 font for DisplayCore
+
+Package: libdisplaycore-font-linux10x18
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Linux10x18.h
+Description: Linux10x18 font for DisplayCore
+
+Package: llibdisplaycore-font-linux6x10
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Linux6x10.h
+Description: Linux6x10 font for DisplayCore
+
+Package: libdisplaycore-font-linux7x14
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Linux7x14.h
+Description: Linux7x14 font for DisplayCore
+
+Package: libdisplaycore-font-mini4x6
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: MINI4x6.h
+Description: MINI4x6 font for DisplayCore
+
+Package: libdisplaycore-font-pearl8x8
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: PEARL8x8.h
+Description: PEARL8x8 font for DisplayCore
+
+Package: libdisplaycore-font-profont6x11
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: ProFont6x11.h
+Description: ProFont6x11 font for DisplayCore
+
+Package: libdisplaycore-font-sun12x22
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: SUN12x22.h
+Description: SUN12x22 font for DisplayCore
+
+Package: libdisplaycore-font-sun8x16
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: SUN8x16.h
+Description: SUN8x16 font for DisplayCore
+
+Package: libdisplaycore-font-terminus6x12
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Terminus6x12.h
+Description: Terminus6x12 font for DisplayCore
+
+Package: libdisplaycore-font-vga8x16
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: VGA8x16.h
+Description: VGA8x16 font for DisplayCore
+
+Package: libdisplaycore-font-vga8x8
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: VGA8x8.h
+Description: VGA8x8 font for DisplayCore
+
 
 

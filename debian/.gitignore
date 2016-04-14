@@ -73,3 +73,9 @@ libdisplaycore-icons-picol
 libdisplaycore-icons-tutorial9mono
 libdisplaycore-toolkit-monoicon
 libdisplaycore-driver-hx8347d
+libdisplaycore-driver-ili9325
+libdisplaycore-driver-ili9341
+libdisplaycore-driver-s6d0154
+libdisplaycore-font-display7seg
+libdisplaycore-font-display7segshadow
+
