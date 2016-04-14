@@ -906,5 +906,14 @@ Depends: libdisplaycore-core
 Provides: VGA8x8.h
 Description: VGA8x8 font for DisplayCore
 
+Package: libdisplaycore-font-carbine
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Carbine.h
+Description: Carbine font for DisplayCore
+
 
 
