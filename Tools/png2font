@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$options = "iw:vd:c:o:n:";
+$options = "iw:vd:c:o:n::T:B:L:R:";
 $opts = getopt($options);
 
 foreach( $opts as $o => $a ) {
@@ -15,7 +15,17 @@ foreach( $opts as $o => $a ) {
 $argv = array_merge( $argv );
 
 if (count($argv) < 2) {
-    print("Usage: png2font [-i] [-w cpl] [-c chars] [-d bpp] [-o offset] [-n name] <filename>\n");
+    print("Usage: png2font [options] filename\n");
+    print("  Options: -i             Invert image\n");
+    print("           -w cpl         Set number of characters per line\n");
+    print("           -c chars       Number of characters in the image\n");
+    print("           -d bpp         Bits per pixel of the font\n");
+    print("           -o offset      Starting character\n");
+    print("           -n name        Name of the font\n");
+    print("           -T pixels      Top margin of the image\n");
+    print("           -B pixels      Bottom margin of the image\n");
+    print("           -L pixels      Left margin of the image\n");
+    print("           -R pixels      Right margin of the image\n");
     exit(10);
 }
 $file = $argv[1];
@@ -45,6 +55,26 @@ if (isset($opts['o'])) {
     $offset = $opts['o'];
 }
 
+$borderTop = 0;
+if (isset($opts['T'])) {
+    $borderTop = $opts['T'];
+}
+
+$borderBottomp = 0;
+if (isset($opts['B'])) {
+    $borderBottom = $opts['B'];
+}
+
+$borderLeft = 0;
+if (isset($opts['L'])) {
+    $borderLeft = $opts['L'];
+}
+
+$borderRight = 0;
+if (isset($opts['R'])) {
+    $borderRight = $opts['R'];
+}
+
 $prefix = substr($file, 0, -4);
 if (isset($opts['n'])) {
     $prefix = $opts['n'];
@@ -52,8 +82,8 @@ if (isset($opts['n'])) {
 
 $img = imageCreateFromPng($file);
 
-$imageWidth = ImageSX($img);
-$imageHeight = ImageSY($img);
+$imageWidth = ImageSX($img) - ($borderLeft + $borderRight);
+$imageHeight = ImageSY($img) - ($borderTop + $borderBottom);;
 
 $cpl = 16;
 if (isset($opts['w'])) {
@@ -102,7 +132,7 @@ for ($y = 0; $y < $imageHeight; $y++) {
 
         $arraySlice = $arrayOffset + $charLine;
 
-        $pix = imageColorAt($img, $x, $y);
+        $pix = imageColorAt($img, $borderLeft + $x, $borderTop + $y);
         $rgb = imageColorsForIndex($img, $pix);
         $sdata = @$fontData[$arraySlice];
         $sdata += 0;
