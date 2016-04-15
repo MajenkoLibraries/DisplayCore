@@ -915,5 +915,14 @@ Depends: libdisplaycore-core
 Provides: Carbine.h
 Description: Carbine font for DisplayCore
 
+Package: libdisplaycore-font-bpmonoitalic
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: BPMonoItalic.h
+Description: BPMonoItalic Font for DisplayCore
+
 
 
