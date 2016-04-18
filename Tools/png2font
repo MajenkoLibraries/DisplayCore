@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$options = "iw:vd:c:o:n::T:B:L:R:";
+$options = "iw:vd:c:o:n::T:B:L:R:t:";
 $opts = getopt($options);
 
 foreach( $opts as $o => $a ) {
@@ -26,6 +26,7 @@ if (count($argv) < 2) {
     print("           -B pixels      Bottom margin of the image\n");
     print("           -L pixels      Left margin of the image\n");
     print("           -R pixels      Right margin of the image\n");
+    print("           -t x,y         Pixel location of a background colour\n");
     exit(10);
 }
 $file = $argv[1];
@@ -43,6 +44,11 @@ $bpp = 1;
 
 if (isset($opts['d'])) {
     $bpp = $opts['d'];
+}
+
+$bgloc = false;
+if (isset($opts['t'])) {
+    $bgloc = $opts['t'];
 }
 
 $chars = 256;
@@ -98,56 +104,31 @@ $bpl = ceil($charWidth / 8);
 
 print("Creating font $prefix...\n");
 
+$bpl *= $bpp;
+
 printf("Characters are %d x %d pixels\n", $charWidth, $charHeight);
 printf("Arranged as %d lines of %d characters\n", $lines, $cpl);
 printf("Characters consist of %d byte%c per line\n", $bpl, $bpl == 1 ? '' : 's');
 
+$bgr = 0;
+$bgg = 0;
+$bgb = 0;
+if ($bgloc != false) {
+    $bgl = explode(",", $bgloc);
+    $pix = imageColorAt($img, $bgl[0], $bgl[1]);
+    $rgb = imageColorsForIndex($img, $pix);
+    $bgr = $rgb['red'];
+    $bgg = $rgb['green'];
+    $bgb = $rgb['blue'];
+}
+
+
 $fontData = array();
 
-for ($y = 0; $y < $imageHeight; $y++) {
-    for ($x = 0; $x < $imageWidth; $x++) {
-        $pno = $y * $imageWidth + $x;
+$shifts = 0;
+$sdata = 0;
 
-        // Where in the font array are we supposed to be?
-        if (isset($opts['v'])) { // Vertical arrangement?
-            $charCol = floor($y / $charHeight);
-            $charRow = floor($x / $charWidth);
-            $charLine = $y % $charHeight;
-            $charPix = $x % $charWidth;
-        } else {
-            $charRow = floor($y / $charHeight);
-            $charCol = floor($x / $charWidth);
-            $charLine = $y % $charHeight;
-            $charPix = $x % $charWidth;
-        }
-
-        $charNo = $charRow * $cpl + $charCol;
-        if ($charNo < $offset) {
-            continue;
-        }
-
-        $charNo -= $offset;
-
-        $arrayOffset = $charNo * $charHeight;
-
-        $arraySlice = $arrayOffset + $charLine;
-
-        $pix = imageColorAt($img, $borderLeft + $x, $borderTop + $y);
-        $rgb = imageColorsForIndex($img, $pix);
-        $sdata = @$fontData[$arraySlice];
-        $sdata += 0;
-        $brightness = ($rgb["red"] + $rgb["green"] + $rgb["blue"]) / 3;
-
-        if (isset($opts['i'])) {
-            $brightness = 255 - $brightness;
-        }
-
-        $brightness = $brightness >> (8 - $bpp);
-
-        $sdata |= $brightness << ($charPix * $bpp);
-        $fontData[$arraySlice] = $sdata;
-    }
-}
+$lcn = -1;
 
 @mkdir($prefix);
 
@@ -158,20 +139,58 @@ fprintf($cpp, "\n");
 fprintf($cpp, "namespace Fonts {\n");
 fprintf($cpp, "\n");
 fprintf($cpp, "    const uint8_t " . $prefix . "[] = {\n");
-fprintf($cpp, "        0x%02X, 0x%02X, 0x00, 0xFF, 0x%02X,\n", $charHeight, $bpl * $bpp, $bpp);
-$slice = 0;
-for ($char = 0; $char < 256; $char++) {
-    fprintf($cpp, "        0x%02X, ", $charWidth);
-    for ($b = 0; $b < $charHeight; $b++) {
-        $val = $fontData[$slice++];
-        for ($c = 0; $c < $bpl * $bpp; $c++) {
-            fprintf($cpp, "0x%02x, ", 
-                ($val >> ((($bpl * $bpp) - $c - 1) * 8)) & 0xFF
-            );
+fprintf($cpp, "        0x%02X, 0x%02X, 0x00, 0xFF, 0x%02X,\n", $charHeight, $bpl, $bpp);
+
+for ($char = 0; $char < $chars; $char++) {
+
+    if (!isset($opts['v'])) { // Vertical arrangement?
+        $cx = (($char * $charWidth) % $imageWidth) + $borderLeft;
+        $cy = (floor(($char * $charWidth) / $imageWidth) * $charHeight) + $borderTop;
+    } else {
+        $cy = (($char * $charHeight) % $imageHeight) + $borderTop;
+        $cx = (floor(($char * $charHeight) / $imageHeight) * $charWidth) + $borderLeft;
+    }
+
+    print "Char number $char. Top left is $cx, $cy\n";
+
+    fprintf($cpp, "        %d, ", $charWidth);
+
+    for ($y = 0; $y < $charHeight; $y++) {
+        $lineData = array();
+        for ($x = 0; $x < $bpl; $x++) {
+            $lineData[$x] = 0;
+        }
+        for ($x = 0; $x < $charWidth; $x++) {
+
+            $byteno = $bpl - floor(($x * $bpp) / 8) - 1;
+            $bitno = ($x * $bpp) % 8;
+
+            $pix = imageColorAt($img, $cx + $x, $cy + $y);
+            $rgb = imageColorsForIndex($img, $pix);
+
+            $brightness = ($rgb["red"] + $rgb["green"] + $rgb["blue"]) / 3;
+            $brightness *= 1-($rgb["alpha"] / 128);
+
+            if (isset($opts['i'])) {
+                $brightness = 255 - $brightness;
+            }
+
+            if ($bgloc != false) {
+                if ($bgr == $rgb['red'] && $bgg == $rgb['green'] && $bgb == $rgb['blue']) {
+                    $brightness = 0;
+                }
+            }
+            $brightness = $brightness >> (8 - $bpp);
+            $bval = $brightness << $bitno;
+            $lineData[$byteno] |= $bval;
+        }
+        foreach ($lineData as $d) {
+            fprintf($cpp, "0x%02x, ", $d);
         }
     }
     fprintf($cpp, "\n");
 }
+
 fprintf($cpp, "    };\n");
 fprintf($cpp, "};\n");
 
