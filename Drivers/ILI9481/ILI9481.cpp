@@ -28,6 +28,28 @@ ILI9481::ILI9481(
     pin_d13 = d13;
     pin_d14 = d14;
     pin_d15 = d15;
+    bus_width = 16;
+}
+
+ILI9481::ILI9481(
+    uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
+    uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
+    uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7
+) {
+    pin_rs = rs;
+    pin_wr = wr;
+    pin_rd = rd;
+    pin_cs = cs;
+    pin_reset = reset;
+    pin_d0 = d0;
+    pin_d1 = d1;
+    pin_d2 = d2;
+    pin_d3 = d3;
+    pin_d4 = d4;
+    pin_d5 = d5;
+    pin_d6 = d6;
+    pin_d7 = d7;
+    bus_width = 8;
 }
 
 void ILI9481::command(uint16_t com) {
@@ -40,19 +62,21 @@ void ILI9481::command(uint16_t com) {
     com & 0x0020 ? port_d5->lat.set = mask_d5 : port_d5->lat.clr = mask_d5;
     com & 0x0040 ? port_d6->lat.set = mask_d6 : port_d6->lat.clr = mask_d6;
     com & 0x0080 ? port_d7->lat.set = mask_d7 : port_d7->lat.clr = mask_d7;
-    com & 0x0100 ? port_d8->lat.set = mask_d8 : port_d8->lat.clr = mask_d8;
-    com & 0x0200 ? port_d9->lat.set = mask_d9 : port_d9->lat.clr = mask_d9;
-    com & 0x0400 ? port_d10->lat.set = mask_d10 : port_d10->lat.clr = mask_d10;
-    com & 0x0800 ? port_d11->lat.set = mask_d11 : port_d11->lat.clr = mask_d11;
-    com & 0x1000 ? port_d12->lat.set = mask_d12 : port_d12->lat.clr = mask_d12;
-    com & 0x2000 ? port_d13->lat.set = mask_d13 : port_d13->lat.clr = mask_d13;
-    com & 0x4000 ? port_d14->lat.set = mask_d14 : port_d14->lat.clr = mask_d14;
-    com & 0x8000 ? port_d15->lat.set = mask_d15 : port_d15->lat.clr = mask_d15;
+    if (bus_width == 16) {
+        port_d8->lat.clr = mask_d8;
+        port_d9->lat.clr = mask_d9;
+        port_d10->lat.clr = mask_d10;
+        port_d11->lat.clr = mask_d11;
+        port_d12->lat.clr = mask_d12;
+        port_d13->lat.clr = mask_d13;
+        port_d14->lat.clr = mask_d14;
+        port_d15->lat.clr = mask_d15;
+    }
     port_wr->lat.clr = mask_wr;
     port_wr->lat.set = mask_wr;
 }
 
-void ILI9481::data(uint16_t com) {
+void ILI9481::data8(uint8_t com) {
     port_rs->lat.set = mask_rs;
     com & 0x0001 ? port_d0->lat.set = mask_d0 : port_d0->lat.clr = mask_d0;
     com & 0x0002 ? port_d1->lat.set = mask_d1 : port_d1->lat.clr = mask_d1;
@@ -62,14 +86,52 @@ void ILI9481::data(uint16_t com) {
     com & 0x0020 ? port_d5->lat.set = mask_d5 : port_d5->lat.clr = mask_d5;
     com & 0x0040 ? port_d6->lat.set = mask_d6 : port_d6->lat.clr = mask_d6;
     com & 0x0080 ? port_d7->lat.set = mask_d7 : port_d7->lat.clr = mask_d7;
-    com & 0x0100 ? port_d8->lat.set = mask_d8 : port_d8->lat.clr = mask_d8;
-    com & 0x0200 ? port_d9->lat.set = mask_d9 : port_d9->lat.clr = mask_d9;
-    com & 0x0400 ? port_d10->lat.set = mask_d10 : port_d10->lat.clr = mask_d10;
-    com & 0x0800 ? port_d11->lat.set = mask_d11 : port_d11->lat.clr = mask_d11;
-    com & 0x1000 ? port_d12->lat.set = mask_d12 : port_d12->lat.clr = mask_d12;
-    com & 0x2000 ? port_d13->lat.set = mask_d13 : port_d13->lat.clr = mask_d13;
-    com & 0x4000 ? port_d14->lat.set = mask_d14 : port_d14->lat.clr = mask_d14;
-    com & 0x8000 ? port_d15->lat.set = mask_d15 : port_d15->lat.clr = mask_d15;
+    if (bus_width == 16) {
+        port_d8->lat.clr = mask_d8;
+        port_d9->lat.clr = mask_d9;
+        port_d10->lat.clr = mask_d10;
+        port_d11->lat.clr = mask_d11;
+        port_d12->lat.clr = mask_d12;
+        port_d13->lat.clr = mask_d13;
+        port_d14->lat.clr = mask_d14;
+        port_d15->lat.clr = mask_d15;
+    } 
+    port_wr->lat.clr = mask_wr;
+    port_wr->lat.set = mask_wr;
+}
+
+void ILI9481::data16(uint16_t com) {
+    port_rs->lat.set = mask_rs;
+    if (bus_width == 8) {
+        com & 0x0100 ? port_d0->lat.set = mask_d0 : port_d0->lat.clr = mask_d0;
+        com & 0x0200 ? port_d1->lat.set = mask_d1 : port_d1->lat.clr = mask_d1;
+        com & 0x0400 ? port_d2->lat.set = mask_d2 : port_d2->lat.clr = mask_d2;
+        com & 0x0800 ? port_d3->lat.set = mask_d3 : port_d3->lat.clr = mask_d3;
+        com & 0x1000 ? port_d4->lat.set = mask_d4 : port_d4->lat.clr = mask_d4;
+        com & 0x2000 ? port_d5->lat.set = mask_d5 : port_d5->lat.clr = mask_d5;
+        com & 0x4000 ? port_d6->lat.set = mask_d6 : port_d6->lat.clr = mask_d6;
+        com & 0x8000 ? port_d7->lat.set = mask_d7 : port_d7->lat.clr = mask_d7;
+        port_wr->lat.clr = mask_wr;
+        port_wr->lat.set = mask_wr;
+    }
+    com & 0x0001 ? port_d0->lat.set = mask_d0 : port_d0->lat.clr = mask_d0;
+    com & 0x0002 ? port_d1->lat.set = mask_d1 : port_d1->lat.clr = mask_d1;
+    com & 0x0004 ? port_d2->lat.set = mask_d2 : port_d2->lat.clr = mask_d2;
+    com & 0x0008 ? port_d3->lat.set = mask_d3 : port_d3->lat.clr = mask_d3;
+    com & 0x0010 ? port_d4->lat.set = mask_d4 : port_d4->lat.clr = mask_d4;
+    com & 0x0020 ? port_d5->lat.set = mask_d5 : port_d5->lat.clr = mask_d5;
+    com & 0x0040 ? port_d6->lat.set = mask_d6 : port_d6->lat.clr = mask_d6;
+    com & 0x0080 ? port_d7->lat.set = mask_d7 : port_d7->lat.clr = mask_d7;
+    if (bus_width == 16) {
+        com & 0x0100 ? port_d8->lat.set = mask_d8 : port_d8->lat.clr = mask_d8;
+        com & 0x0200 ? port_d9->lat.set = mask_d9 : port_d9->lat.clr = mask_d9;
+        com & 0x0400 ? port_d10->lat.set = mask_d10 : port_d10->lat.clr = mask_d10;
+        com & 0x0800 ? port_d11->lat.set = mask_d11 : port_d11->lat.clr = mask_d11;
+        com & 0x1000 ? port_d12->lat.set = mask_d12 : port_d12->lat.clr = mask_d12;
+        com & 0x2000 ? port_d13->lat.set = mask_d13 : port_d13->lat.clr = mask_d13;
+        com & 0x4000 ? port_d14->lat.set = mask_d14 : port_d14->lat.clr = mask_d14;
+        com & 0x8000 ? port_d15->lat.set = mask_d15 : port_d15->lat.clr = mask_d15;
+    } 
     port_wr->lat.clr = mask_wr;
     port_wr->lat.set = mask_wr;
 }
@@ -89,15 +151,16 @@ void ILI9481::initializeDevice() {
     pinMode(pin_d5, OUTPUT);
     pinMode(pin_d6, OUTPUT);
     pinMode(pin_d7, OUTPUT);
-    pinMode(pin_d8, OUTPUT);
-    pinMode(pin_d9, OUTPUT);
-    pinMode(pin_d10, OUTPUT);
-    pinMode(pin_d11, OUTPUT);
-    pinMode(pin_d12, OUTPUT);
-    pinMode(pin_d13, OUTPUT);
-    pinMode(pin_d14, OUTPUT);
-    pinMode(pin_d15, OUTPUT);
-
+    if (bus_width == 16) {
+        pinMode(pin_d8, OUTPUT);
+        pinMode(pin_d9, OUTPUT);
+        pinMode(pin_d10, OUTPUT);
+        pinMode(pin_d11, OUTPUT);
+        pinMode(pin_d12, OUTPUT);
+        pinMode(pin_d13, OUTPUT);
+        pinMode(pin_d14, OUTPUT);
+        pinMode(pin_d15, OUTPUT);
+    }
     port_rs = getPortInformation(pin_rs, &mask_rs);
     port_rd = getPortInformation(pin_rd, &mask_rd);
     port_wr = getPortInformation(pin_wr, &mask_wr);
@@ -109,14 +172,16 @@ void ILI9481::initializeDevice() {
     port_d5 = getPortInformation(pin_d5, &mask_d5);
     port_d6 = getPortInformation(pin_d6, &mask_d6);
     port_d7 = getPortInformation(pin_d7, &mask_d7);
-    port_d8 = getPortInformation(pin_d8, &mask_d8);
-    port_d9 = getPortInformation(pin_d9, &mask_d9);
-    port_d10 = getPortInformation(pin_d10, &mask_d10);
-    port_d11 = getPortInformation(pin_d11, &mask_d11);
-    port_d12 = getPortInformation(pin_d12, &mask_d12);
-    port_d13 = getPortInformation(pin_d13, &mask_d13);
-    port_d14 = getPortInformation(pin_d14, &mask_d14);
-    port_d15 = getPortInformation(pin_d15, &mask_d15);
+    if (bus_width == 16) {
+        port_d8 = getPortInformation(pin_d8, &mask_d8);
+        port_d9 = getPortInformation(pin_d9, &mask_d9);
+        port_d10 = getPortInformation(pin_d10, &mask_d10);
+        port_d11 = getPortInformation(pin_d11, &mask_d11);
+        port_d12 = getPortInformation(pin_d12, &mask_d12);
+        port_d13 = getPortInformation(pin_d13, &mask_d13);
+        port_d14 = getPortInformation(pin_d14, &mask_d14);
+        port_d15 = getPortInformation(pin_d15, &mask_d15);
+    }
 
     digitalWrite(pin_rs, HIGH);
     digitalWrite(pin_cs, HIGH);
@@ -140,76 +205,76 @@ void ILI9481::startDisplay() {
 	command(0x11);
     delay(20);
 	command(0xD0);
-    data(0x07);
-    data(0x42);
-    data(0x18);
+    data8(0x07);
+    data8(0x42);
+    data8(0x18);
 
 	command(0xD1);
-    data(0x00);
-    data(0x07);
-    data(0x10);
+    data8(0x00);
+    data8(0x07);
+    data8(0x10);
 
 	command(0xD2);
-    data(0x01);
-    data(0x02);
+    data8(0x01);
+    data8(0x02);
 
 	command(0xC0);
-    data(0x10);
-    data(0x3B);
-    data(0x00);
-    data(0x02);
-    data(0x11);
+    data8(0x10);
+    data8(0x3B);
+    data8(0x00);
+    data8(0x02);
+    data8(0x11);
 
 	command(0xC5);
-    data(0x03);
+    data8(0x03);
 
 	command(0xC8);
-    data(0x00);
-    data(0x32);
-    data(0x36);
-    data(0x45);
-    data(0x06);
-    data(0x16);
-    data(0x37);
-    data(0x75);
-    data(0x77);
-    data(0x54);
-    data(0x0C);
-    data(0x00);
+    data8(0x00);
+    data8(0x32);
+    data8(0x36);
+    data8(0x45);
+    data8(0x06);
+    data8(0x16);
+    data8(0x37);
+    data8(0x75);
+    data8(0x77);
+    data8(0x54);
+    data8(0x0C);
+    data8(0x00);
 
 	command(0x36);
-    data(0x0A);
+    data8(0x0A);
 
 
 	command(0x3A);
-    data(0x55);
+    data8(0x55);
 
 	command(0x2A);
-    data(0x00);
-    data(0x00);
-    data(0x01);
-    data(0x3F);
+    data8(0x00);
+    data8(0x00);
+    data8(0x01);
+    data8(0x3F);
 
 	command(0x2B);
-    data(0x00);
-    data(0x00);
-    data(0x01);
-    data(0xE0);
+    data8(0x00);
+    data8(0x00);
+    data8(0x01);
+    data8(0xE0);
     delay(120);
 	command(0x29);
 }
 
 void ILI9481::setAddrWindow(int x0, int y0, int x1, int y1) {
     command(0x002A);
-    data(x0 >> 8);
-    data(x0 & 0xFF);
-    data(x1 >> 8);
-    data(x1 & 0xFF);
+    data8(x0 >> 8);
+    data8(x0 & 0xFF);
+    data8(x1 >> 8);
+    data8(x1 & 0xFF);
     command(0x002B);
-    data(y0 >> 8);
-    data(y0 & 0xFF);
-    data(y1 >> 8);
-    data(y1 & 0xFF);
+    data8(y0 >> 8);
+    data8(y0 & 0xFF);
+    data8(y1 >> 8);
+    data8(y1 & 0xFF);
     command(0x002c);
 }
 
@@ -217,7 +282,7 @@ void ILI9481::setPixel(int x, int y, color_t color) {
 	if((x < 0) ||(x >= _width) || (y < 0) || (y >= _height)) 
 		return;
 	setAddrWindow(x,y,x,y);
-    data(color);
+    data16(color);
 }
 
 void ILI9481::fillScreen(color_t color) {
@@ -235,7 +300,7 @@ void ILI9481::fillRectangle(int x, int y, int w, int h, color_t color) {
 
 	for(y=h; y>0; y--) {
 		for(x=w; x>0; x--) {
-            data(color);
+            data16(color);
 		}
 	}
 }
@@ -249,7 +314,7 @@ void ILI9481::drawHorizontalLine(int x, int y, int w, color_t color) {
 	setAddrWindow(x, y, x+w-1, y);
 
 	while (w--) {
-        data(color);
+        data16(color);
 	}
 }
 
@@ -261,7 +326,7 @@ void ILI9481::drawVerticalLine(int x, int y, int h, color_t color) {
 	setAddrWindow(x, y, x, y+h-1);
 
 	while (h--) {
-        data(color);
+        data16(color);
 	}
 }
 
@@ -270,22 +335,22 @@ void ILI9481::setRotation(int m) {
 	rotation = m % 4; // can't be higher than 3
 	switch (rotation) {
 		case 0:
-			data(0x0A);
+			data8(0x0A);
 			_width  = ILI9481::Width;
 			_height = ILI9481::Height;
 			break;
 		case 1:
-		    data(0x28);
+		    data8(0x28);
 			_width  = ILI9481::Height;
 			_height = ILI9481::Width;
 			break;
 		case 2:
-			data(0x09);
+			data8(0x09);
 			_width  = ILI9481::Width;
 			_height = ILI9481::Height;
 			break;
 		case 3:
-			data(0x2B);
+			data8(0x2B);
 			_width  = ILI9481::Height;
 			_height = ILI9481::Width;
 			break;
@@ -309,12 +374,12 @@ void ILI9481::openWindow(int x0, int y0, int x1, int y1) {
 }
 
 void ILI9481::windowData(color_t c) {
-    data(c);
+    data16(c);
 }
 
 void ILI9481::windowData(color_t *c, int len) {
     for (uint32_t i = 0; i < len; i++) {
-        data(c[i]);
+        data16(c[i]);
     }
 }
 
@@ -359,7 +424,13 @@ void ILI9481_PMP::command(uint16_t cmd) {
     PMDIN = cmd;
 }
 
-void ILI9481_PMP::data(uint16_t cmd) {
+void ILI9481_PMP::data8(uint8_t cmd) {
+    while (PMMODEbits.BUSY == 1);
+    PMADDR = 0x8001;
+    PMDIN = cmd;
+}
+
+void ILI9481_PMP::data16(uint16_t cmd) {
     while (PMMODEbits.BUSY == 1);
     PMADDR = 0x8001;
     PMDIN = cmd;

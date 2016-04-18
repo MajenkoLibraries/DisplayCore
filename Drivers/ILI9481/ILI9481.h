@@ -67,6 +67,8 @@ class ILI9481 : public DisplayCore {
         uint32_t mask_d14;
         uint32_t mask_d15;
 
+        uint8_t bus_width;
+
     public:
         static const int Width      = 320;
         static const int Height     = 480;
@@ -77,6 +79,12 @@ class ILI9481 : public DisplayCore {
             uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
             uint8_t d8, uint8_t d9, uint8_t d10, uint8_t d11,
             uint8_t d12, uint8_t d13, uint8_t d14, uint8_t d15
+        );
+
+        ILI9481(
+            uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
+            uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
+            uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7
         );
 
         ILI9481() {}
@@ -101,7 +109,8 @@ class ILI9481 : public DisplayCore {
         void startDisplay();
 
         virtual void initializeDevice();
-        virtual void data(uint16_t);
+        virtual void data8(uint8_t);
+        virtual void data16(uint16_t);
         virtual void command(uint16_t);
         virtual uint16_t read(boolean cont = false);
         virtual void getRectangle(int x, int y, int w, int h, color_t *buf);
@@ -116,7 +125,8 @@ class ILI9481_PMP : public ILI9481 {
         ILI9481_PMP(uint8_t res) : pin_reset(res) {}
 
         void initializeDevice();
-        void data(uint16_t);
+        void data8(uint8_t);
+        void data16(uint16_t);
         void command(uint16_t);
         uint16_t read(boolean cont = false);
 };

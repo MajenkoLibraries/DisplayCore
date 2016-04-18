@@ -12,6 +12,9 @@ typedef uint16_t color_t;
 #include <Color.h>
 #include <DefaultFont.h>
 
+#include "DCPinDefs.h"
+
+
 typedef struct {
     uint8_t linesPerCharacter;
     uint8_t bytesPerLine;
