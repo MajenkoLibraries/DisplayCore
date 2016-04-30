@@ -924,5 +924,77 @@ Depends: libdisplaycore-core
 Provides: BPMonoItalic.h
 Description: BPMonoItalic Font for DisplayCore
 
+Package: libdisplaycore-font-bisasam
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Bisasam.h
+Description: Bisasam library
+
+Package: libdisplaycore-font-bunnymambo
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: BunnyMambo.h
+Description: BunnyMambo library
+
+Package: libdisplaycore-font-diablo16
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Diablo16.h
+Description: Diablo16 library
+
+Package: libdisplaycore-font-font44
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Font44.h
+Description: Font44 library
+
+Package: libdisplaycore-font-gem
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Gem.h
+Description: Gem library
+
+Package: libdisplaycore-font-ledmatrixbright
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: LedMatrixBright.h
+Description: LedMatrixBright library
+
+Package: libdisplaycore-font-ledmatrixdim
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: LedMatrixDim.h
+Description: LedMatrixDim library
+
+Package: libdisplaycore-font-linux6x10
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Linux6x10.h
+Description: Linux6x10 library
+
 
 
