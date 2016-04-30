@@ -1,5 +1,12 @@
 #include <ILI9481.h>
 
+static void inline tinyDelay() {
+#if defined(__PIC32MZ__)
+    asm volatile("nop");
+    asm volatile("nop");
+#endif
+}
+
 ILI9481::ILI9481(
     uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
     uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
@@ -73,6 +80,7 @@ void ILI9481::command(uint16_t com) {
         port_d15->lat.clr = mask_d15;
     }
     port_wr->lat.clr = mask_wr;
+    tinyDelay();
     port_wr->lat.set = mask_wr;
 }
 
@@ -97,6 +105,7 @@ void ILI9481::data8(uint8_t com) {
         port_d15->lat.clr = mask_d15;
     } 
     port_wr->lat.clr = mask_wr;
+    tinyDelay();
     port_wr->lat.set = mask_wr;
 }
 
@@ -112,6 +121,7 @@ void ILI9481::data16(uint16_t com) {
         com & 0x4000 ? port_d6->lat.set = mask_d6 : port_d6->lat.clr = mask_d6;
         com & 0x8000 ? port_d7->lat.set = mask_d7 : port_d7->lat.clr = mask_d7;
         port_wr->lat.clr = mask_wr;
+        tinyDelay();
         port_wr->lat.set = mask_wr;
     }
     com & 0x0001 ? port_d0->lat.set = mask_d0 : port_d0->lat.clr = mask_d0;
@@ -133,6 +143,7 @@ void ILI9481::data16(uint16_t com) {
         com & 0x8000 ? port_d15->lat.set = mask_d15 : port_d15->lat.clr = mask_d15;
     } 
     port_wr->lat.clr = mask_wr;
+    tinyDelay();
     port_wr->lat.set = mask_wr;
 }
 
@@ -387,6 +398,8 @@ void ILI9481::closeWindow() {
 }
 
 
+#ifdef _PMMODE_MODE16_POSITION
+
 void ILI9481_PMP::initializeDevice() {
     PMCONbits.ON = 0;
     asm volatile("nop");
@@ -436,11 +449,6 @@ void ILI9481_PMP::data16(uint16_t cmd) {
     PMDIN = cmd;
 }
 
-
-uint16_t ILI9481::read(boolean cont) {
-    return 0;
-}
-
 uint16_t ILI9481_PMP::read(boolean cont) {
     uint16_t din;
     PMADDR = 0x8001;
@@ -451,6 +459,13 @@ uint16_t ILI9481_PMP::read(boolean cont) {
     while (PMMODEbits.BUSY == 1);
     din = PMDIN;
     return din;
+}
+
+#endif
+
+
+uint16_t ILI9481::read(boolean cont) {
+    return 0;
 }
 
 color_t ILI9481::colorAt(int x, int y) {

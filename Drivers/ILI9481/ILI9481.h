@@ -116,6 +116,7 @@ class ILI9481 : public DisplayCore {
         virtual void getRectangle(int x, int y, int w, int h, color_t *buf);
 };
 
+#ifdef _PMMODE_MODE16_POSITION
 class ILI9481_PMP : public ILI9481 {
     private:
 
@@ -130,6 +131,6 @@ class ILI9481_PMP : public ILI9481 {
         void command(uint16_t);
         uint16_t read(boolean cont = false);
 };
-
+#endif
 
 #endif
