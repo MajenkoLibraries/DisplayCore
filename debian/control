@@ -1025,10 +1025,27 @@ Description: Unicode Font library
  # CAUTION - THIS IS A VERY BIG LIBRARY
  .
  This library contains a 16-pixel high proportionally spaced font of the entire
- Unicode space. That's 65536 characters. It is split into 256 fonts of 256 
+ Unicode space. That's 65536 characters. It is split into 256 fonts of 256
  characters each, named Unicode00 through UnicodeFF.
  .
  It takes a long time to compile all 256 source files.
+
+Package: libdisplaycore-image-jpeg
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Image
+Depends: libdisplaycore-core
+Provides: JPEG.h
+Description: JPEG library
+ # Rudimentary JPEG Decoding.
+ .
+ This is a very basic decoder with lots of limitations.  Most notably:
+ .
+ * It doesn't do progressive scan JPEGs
+ .
+ Also it is very slow. Mind, considering how complex decoding a JPEG is it holds
+ up quite well.
 
 
 

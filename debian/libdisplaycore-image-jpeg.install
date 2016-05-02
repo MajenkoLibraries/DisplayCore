@@ -1,0 +1,3 @@
+ImageReaders/JPEG/JPEG.cpp libraries/DisplayCore/JPEG
+ImageReaders/JPEG/JPEG.h libraries/DisplayCore/JPEG
+ImageReaders/JPEG/examples/ libraries/DisplayCore/JPEG
