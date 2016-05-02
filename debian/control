@@ -996,5 +996,39 @@ Depends: libdisplaycore-core
 Provides: Linux6x10.h
 Description: Linux6x10 library
 
+Package: libdisplaycore-font-ingot
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Ingot.h
+Description: Ingot library
+
+Package: libdisplaycore-font-rawgold
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: RawGold.h
+Description: RawGold library
+
+Package: libdisplaycore-font-unicode
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Unicode.h
+Description: Unicode Font library
+ # CAUTION - THIS IS A VERY BIG LIBRARY
+ .
+ This library contains a 16-pixel high proportionally spaced font of the entire
+ Unicode space. That's 65536 characters. It is split into 256 fonts of 256 
+ characters each, named Unicode00 through UnicodeFF.
+ .
+ It takes a long time to compile all 256 source files.
+
 
 
