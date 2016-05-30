@@ -942,7 +942,7 @@ Depends: libdisplaycore-core
 Provides: BunnyMambo.h
 Description: BunnyMambo library
 
-Package: libdisplaycore-font-diablo16
+Package: libdisplaycore-driver-diablo16
 Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
