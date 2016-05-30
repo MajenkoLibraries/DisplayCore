@@ -554,12 +554,12 @@ void DisplayCore::drawRGBA(int x, int y, const color_t *bitmap, int w, int h, co
 int DisplayCore::stringWidth(const char *text) {
     int w = 0;
     if (font == NULL) {
-        return 0;
+        return 1;
     }
     FontHeader *header = (FontHeader *)font;
 
     for (const char *t = text; *t; t++) {
-        char c = *t;
+        uint8_t c = *t;
         if (c < header->startGlyph) {
             if (c >= 'A' && c <= 'Z') {
                 c += ('a' - 'A');

@@ -1047,5 +1047,221 @@ Description: JPEG library
  Also it is very slow. Mind, considering how complex decoding a JPEG is it holds
  up quite well.
 
+Package: libdisplaycore-font-cp111
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP111.h
+Description: CP111 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
 
+Package: libdisplaycore-font-cp112
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP112.h
+Description: CP112 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp113
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP113.h
+Description: CP113 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp851
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP851.h
+Description: CP851 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp852
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP852.h
+Description: CP852 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp853
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP853.h
+Description: CP853 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp860
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP860.h
+Description: CP860 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp861
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP861.h
+Description: CP861 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp862
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP862.h
+Description: CP862 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp863
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP863.h
+Description: CP863 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp864
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP864.h
+Description: CP864 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp865
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP865.h
+Description: CP865 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp866
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP866.h
+Description: CP866 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp880
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP880.h
+Description: CP880 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp881
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP881.h
+Description: CP881 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp882
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP882.h
+Description: CP882 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp883
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP883.h
+Description: CP883 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp884
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP884.h
+Description: CP884 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-cp885
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: CP885.h
+Description: CP885 font for DisplayCore
+ The CP font family are the traditional VGA Text Mode (720x400) 9x16 fonts
+ in a variety of Code Pages (that is, different extended character sets).
+
+Package: libdisplaycore-font-roboto
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Roboto.h
+Description: Roboto font for DisplayCore
 

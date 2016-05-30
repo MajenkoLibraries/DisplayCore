@@ -27,11 +27,22 @@ class MonoIcon : public Widget {
                 _sense_h = h;
             }
 
+        MonoIcon(Touch &ts, DisplayCore &dev, int x, int y, int w, int h, const color_t *bg,  
+                                const char *text, const uint8_t *font, color_t textcol) :
+            Widget(ts, dev, x, y), _bg(bg), _icon(NULL), _color(Color::Black), _text(text), _font(font), _textcol(textcol) {
+                _touch = true;
+                _sense_x = 0;
+                _sense_y = 0;
+                _sense_w = w;
+                _sense_h = h;
+            }
+
         void draw(DisplayCore *dev, int x, int y);
         void setColor(color_t c);
         void setIcon(const uint8_t *i);
 
         void setPixel(int x, int y, color_t c);
+        color_t colorAt(int x, int y);
 };
 
 #endif
