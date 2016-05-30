@@ -1265,3 +1265,12 @@ Depends: libdisplaycore-core
 Provides: Roboto.h
 Description: Roboto font for DisplayCore
 
+Package: libdisplaycore-font-georgiabolditalic
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: GeorgiaBoldItalic.h
+Description: Georgia Bold Italic font for DisplayCore
+
