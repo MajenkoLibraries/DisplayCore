@@ -1,0 +1,29 @@
+#!/usr/bin/php
+<?php
+
+$in = @$argv[1];
+$out = @$argv[2];
+
+if (!$out) {
+    print "Usage: pad9 <in.png> <out.png>\n";
+    return 10;
+}
+
+$imgin = ImageCreateFromPNG($in);
+$w = ImageSX($imgin);
+$h = ImageSY($imgin);
+$cpl = floor($w / 8);
+$wo = $cpl * 9;
+$imgout = ImageCreateTruecolor($wo, $h);
+
+$bg = ImageColorsForIndex($imgin, ImageColorAt($imgin, 0, 0));
+
+$bgcol = ImageColorAllocate($imgout, $bg['red'], $bg['green'], $bg['blue']);
+ImageFilledRectangle($imgout, 0, 0, $wo, $h, $bgcol);
+
+for ($c = 0; $c < $cpl; $c++) {
+    ImageCopy($imgout, $imgin, $c * 9 + 1, 0, $c * 8, 0, 8, $h);
+    ImageCopy($imgout, $imgin, $c * 9, 0, $c * 8, 0, 8, $h);
+}
+
+ImagePNG($imgout, $out);

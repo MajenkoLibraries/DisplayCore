@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$options = "iw:vd:c:o:n::T:B:L:R:t:";
+$options = "jiw:d:c:o:n:T:B:L:R:x:t:";
 $opts = getopt($options);
 
 foreach( $opts as $o => $a ) {
@@ -20,12 +20,14 @@ if (count($argv) < 2) {
     print("           -w cpl         Set number of characters per line\n");
     print("           -c chars       Number of characters in the image\n");
     print("           -d bpp         Bits per pixel of the font\n");
+    print("           -j             Vertical arrangement\n");
     print("           -o offset      Starting character\n");
     print("           -n name        Name of the font\n");
     print("           -T pixels      Top margin of the image\n");
     print("           -B pixels      Bottom margin of the image\n");
     print("           -L pixels      Left margin of the image\n");
     print("           -R pixels      Right margin of the image\n");
+    print("           -x x,y,w,h     Bounding box\n");
     print("           -t x,y         Pixel location of a background colour\n");
     exit(10);
 }
@@ -41,6 +43,17 @@ if (substr($file, -4, 4) != ".png") {
 }
 
 $bpp = 1;
+
+$hgutter = 0;
+$vgutter = 0;
+
+if (isset($opts['H'])) {
+    $hgutter = $opts['H'];
+}
+
+if (isset($opts['V'])) {
+    $vgutter = $opts['V'];
+}
 
 if (isset($opts['d'])) {
     $bpp = $opts['d'];
@@ -86,6 +99,8 @@ if (isset($opts['n'])) {
     $prefix = $opts['n'];
 }
 
+$prefix = sanitize($prefix);
+
 $img = imageCreateFromPng($file);
 
 $imageWidth = ImageSX($img) - ($borderLeft + $borderRight);
@@ -100,13 +115,27 @@ $lines = $chars / $cpl;
 
 $charWidth = floor($imageWidth / $cpl);
 $charHeight = floor($imageHeight / $lines);
-$bpl = ceil($charWidth / 8);
+
+$bbx = 0;
+$bby = 0;
+$bbw = $charWidth;
+$bbh = $charHeight;
+
+if (isset($opts['x'])) {
+    $bits = explode(",", $opts['x']);
+    $bbx = $bits[0];
+    $bby = $bits[1];
+    $bbw = $bits[2];
+    $bbh = $bits[3];
+}
+
+$bpl = ceil($bbw / 8);
 
 print("Creating font $prefix...\n");
 
 $bpl *= $bpp;
 
-printf("Characters are %d x %d pixels\n", $charWidth, $charHeight);
+printf("Characters are %d x %d pixels\n", $bbw, $bbh);
 printf("Arranged as %d lines of %d characters\n", $lines, $cpl);
 printf("Characters consist of %d byte%c per line\n", $bpl, $bpl == 1 ? '' : 's');
 
@@ -139,11 +168,10 @@ fprintf($cpp, "\n");
 fprintf($cpp, "namespace Fonts {\n");
 fprintf($cpp, "\n");
 fprintf($cpp, "    const uint8_t " . $prefix . "[] = {\n");
-fprintf($cpp, "        0x%02X, 0x%02X, 0x00, 0xFF, 0x%02X,\n", $charHeight, $bpl, $bpp);
+fprintf($cpp, "        0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X,\n", $bbh, $bpl, $offset, $offset+$chars-1, $bpp);
 
 for ($char = 0; $char < $chars; $char++) {
-
-    if (!isset($opts['v'])) { // Vertical arrangement?
+    if (!isset($opts['j'])) { // Vertical arrangement?
         $cx = (($char * $charWidth) % $imageWidth) + $borderLeft;
         $cy = (floor(($char * $charWidth) / $imageWidth) * $charHeight) + $borderTop;
     } else {
@@ -151,21 +179,21 @@ for ($char = 0; $char < $chars; $char++) {
         $cx = (floor(($char * $charHeight) / $imageHeight) * $charWidth) + $borderLeft;
     }
 
-    print "Char number $char. Top left is $cx, $cy\n";
+//    print "Char number $char. Top left is $cx, $cy\n";
 
-    fprintf($cpp, "        %d, ", $charWidth);
+    fprintf($cpp, "        %d, ", $bbw);
 
-    for ($y = 0; $y < $charHeight; $y++) {
+    for ($y = 0; $y < $bbh; $y++) {
         $lineData = array();
         for ($x = 0; $x < $bpl; $x++) {
             $lineData[$x] = 0;
         }
-        for ($x = 0; $x < $charWidth; $x++) {
+        for ($x = 0; $x < $bbw; $x++) {
 
             $byteno = $bpl - floor(($x * $bpp) / 8) - 1;
             $bitno = ($x * $bpp) % 8;
 
-            $pix = imageColorAt($img, $cx + $x, $cy + $y);
+            $pix = imageColorAt($img, $cx + $x + $bbx, $cy + $y + $bby);
             $rgb = imageColorsForIndex($img, $pix);
 
             $brightness = ($rgb["red"] + $rgb["green"] + $rgb["blue"]) / 3;
@@ -210,3 +238,14 @@ fprintf($h, "};\n");
 fprintf($h, "\n");
 fprintf($h, "#endif\n");
 fclose($h);
+
+function sanitize($s) {
+    $s = str_replace("_", " ", $s);
+    $s = str_replace("~", " ", $s);
+    $s = str_replace("-", " ", $s);
+    $s = str_replace(".", " ", $s);
+    $s = ucwords($s);
+    $s = str_replace(" ", "", $s);
+    return $s;
+}
+
