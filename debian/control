@@ -816,7 +816,7 @@ Depends: libdisplaycore-core
 Provides: Linux10x18.h
 Description: Linux10x18 font for DisplayCore
 
-Package: llibdisplaycore-font-linux6x10
+Package: libdisplaycore-font-linux6x10
 Section: libraries
 Architecture: all
 XBSC-Group: DisplayCore
@@ -1273,4 +1273,15 @@ XBSC-Subgroup: Fonts
 Depends: libdisplaycore-core
 Provides: GeorgiaBoldItalic.h
 Description: Georgia Bold Italic font for DisplayCore
+
+Package: libdisplaycore-font-icon8
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Depends: libdisplaycore-core
+Provides: Icon8.h
+Description: Icon8 mini icons
+ A selection of useful 8x8 icons in 1-bit depth. Ideal for small
+ OLED and LCD screens.
 
