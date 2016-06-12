@@ -2235,33 +2235,22 @@ int Scene::render(DisplayCore *dev) {
         point3d centroid(
             (conv[i].a.x + conv[i].b.x, conv[i].c.x)/3.0,
             (conv[i].a.y + conv[i].b.y, conv[i].c.y)/3.0,
-            (conv[i].a.z + conv[i].b.z, conv[i].c.z)/.03
+            (conv[i].a.z + conv[i].b.z, conv[i].c.z)/3.0
         );
-        point3d lvec = _light - centroid;
-//        point3d cvec = _camera - centroid;
+        point3d lvec = centroid - _light;
+        point3d cvec = centroid - _camera;
         point3d lightnorm = lvec.norm();
-//        point3d camnorm = cvec.norm();
+        point3d camnorm = cvec.norm();
 
         double cosphi = norm.dot(lightnorm);
-//        double cam_cosphi = camnorm.dot(norm);
+        double cam_cosphi = norm.dot(camnorm); //camnorm.dot(norm);
 
-//        conv[i].flags &= ~TRIANGLE_HIDDEN;
-//if (i == 1485) {
-//    dev->printf("%d: a=%.2f, cx=%.2f, cy=%.2f, cz=%.2f\r\n",
-//        i, cam_cosphi, camnorm.x, camnorm.y, camnorm.z);
-//    dev->printf("%d: a=%.2f, nx=%.2f, ny=%.2f, nz=%.2f\r\n",
-//        i, cam_cosphi, norm.x, norm.y, norm.z);
-//}
+        conv[i].flags &= ~TRIANGLE_HIDDEN;
 
-        // 0.13 seems to be the magic number here. Not sure why - I would have expected 0.
-//        if (cam_cosphi < -0.4) { // Can't see it, it's backwards!
-//            conv[i].flags |= TRIANGLE_HIDDEN;
-//            continue;
-//        }
-
-        if (isnan(cosphi)) cosphi=1;
-        if (cosphi < 0) cosphi = 0;
-        if (cosphi > 1) cosphi = 1;
+        if (cam_cosphi > 0.1) { // Can't see it, it's backwards!
+            conv[i].flags |= TRIANGLE_HIDDEN;
+            continue;
+        }
 
         cosphi = _ambient + (cosphi * (1 - _ambient));
 
@@ -2277,6 +2266,16 @@ int Scene::render(DisplayCore *dev) {
         red = (double)red * cosphi;
         green = (double)green * cosphi;
         blue = (double)blue * cosphi;
+
+        if (red < 0) red = 0;
+        if (red > 255) red = 255;
+
+        if (green < 0) green = 0;
+        if (green> 255) green = 255;
+
+        if (blue < 0) blue = 0;
+        if (blue > 255) blue = 255;
+
         conv[i].color = rgb(red, green, blue);
     }
 
