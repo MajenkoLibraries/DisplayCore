@@ -63,12 +63,26 @@ class point3d {
         double dot(point3d &other) {
             return x*other.x + y*other.y + z*other.z;
         }
+        float Q_rsqrt( float number ) {
+            int32_t i;
+            float x2, y2;
+            const float threehalfs = 1.5F;
+
+            x2 = number * 0.5F;
+            y2  = number;
+            i  = * ( long * ) &y2;
+            i  = 0x5f3759df - ( i >> 1 );
+            y2  = * ( float * ) &i;
+            y2  = y2 * ( threehalfs - ( x2 * y2 * y2 ) );
+
+            return y2;
+        }
         double length() {
-            return sqrt(x*x+y*y+z*z);
+            return 1.0/Q_rsqrt(x*x+y*y+z*z);
         }
         point3d norm() {
-            double l = length();
-            return point3d(x / l, y / l, z / l);
+            double l = Q_rsqrt(x*x+y*y+z*z);
+            return point3d(x*l, y*l, z*l);
         }
 };
 
