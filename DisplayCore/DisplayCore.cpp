@@ -1990,6 +1990,14 @@ void DisplayCore::drawLine3D(int x1, int y1, int z1, const int x2, const int y2,
     setPixel(point[0], point[1], point[2], color);
 }
 
+void DisplayCore::drawPolygon(point2d *nodes, int numpoints, color_t color) {
+    for (int i = 1; i < numpoints; i++) {
+        drawLine(nodes[i-1].x, nodes[i-1].y, nodes[i].x, nodes[i].y, color);
+    }
+    drawLine(nodes[0].x, nodes[0].y, nodes[numpoints-1].x, nodes[numpoints-1].y, color);
+}
+
+
 void DisplayCore::fillPolygon(point2d *nodes, int numpoints, color_t color) {
     int i;
     int nodeX[20];
@@ -2043,6 +2051,9 @@ void DisplayCore::fillPolygon(point2d *nodes, int numpoints, color_t color) {
             }
         }
     }
+}
+
+void DisplayCore::drawPolygon3D(point3d *nodes, int numpoints, color_t color) {
 }
 
 void DisplayCore::fillPolygon3D(point3d *nodes, int numpoints, color_t color) {
@@ -2242,7 +2253,7 @@ int Scene::render(DisplayCore *dev) {
         point3d lightnorm = lvec.norm();
         point3d camnorm = cvec.norm();
 
-        double cosphi = norm.dot(lightnorm);
+        double cosphi = 0 - norm.dot(lightnorm);
         double cam_cosphi = norm.dot(camnorm); //camnorm.dot(norm);
 
         conv[i].flags &= ~TRIANGLE_HIDDEN;
@@ -2253,6 +2264,9 @@ int Scene::render(DisplayCore *dev) {
         }
 
         cosphi = _ambient + (cosphi * (1 - _ambient));
+
+        if (cosphi < 0) cosphi = 0;
+        if (cosphi > 1) cosphi = 1;
 
         color_t col = conv[i].color;
         int red = col >> 11;
@@ -2338,8 +2352,16 @@ int Scene::render(DisplayCore *dev) {
             point2d b = dev->map3Dto2D(conv[i].b);
             point2d c = dev->map3Dto2D(conv[i].c);
             point2d tri[3] = {a, b, c};
-            dev->fillPolygon(tri, 3, conv[i].color);
+            if (_wireframe) {
+                dev->drawPolygon(tri, 3, conv[i].color);
+            } else {
+                dev->fillPolygon(tri, 3, conv[i].color);
+            }
         }
     }
     return rend;
+}
+
+void Scene::setWireFrame(bool b) {
+    _wireframe = b;
 }

@@ -123,6 +123,8 @@ class DisplayCore : public Print
         point2d map3Dto2D(point3d &p);
 
 
+        void drawPolygon(point2d *nodes, int numpoints, color_t color);
+        void drawPolygon3D(point3d *nodes, int numpoints, color_t color);
         void fillPolygon(point2d *nodes, int numpoints, color_t color);
         void fillPolygon3D(point3d *nodes, int numpoints, color_t color);
 
@@ -538,6 +540,7 @@ class Image : public DisplayCore {
 
         int _width;
         int _height;
+
 };
 
 // An abstraction of an event including the type, location, widget, etc;
@@ -684,6 +687,7 @@ class Scene {
         point3d _camang;
         point3d _light;
         double _ambient;
+        bool _wireframe;
 
     public:
         point3d translatePoint(point3d p);
@@ -698,6 +702,7 @@ class Scene {
 
         int render(DisplayCore *dev);
         int render(DisplayCore &dev) { return render(&dev); }
+        void setWireFrame(bool b);
 
 };
 
