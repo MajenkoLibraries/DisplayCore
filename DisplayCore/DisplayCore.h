@@ -280,7 +280,7 @@ class DisplayCore : public Print
 
         virtual void openWindow(int x0, int y0, int x1, int y1);
         virtual void windowData(color_t d);
-        virtual void windowData(color_t *d, int l);
+        virtual void windowData(const color_t *d, int l);
         virtual void closeWindow();
 
         virtual color_t colorAt(int x, int y);

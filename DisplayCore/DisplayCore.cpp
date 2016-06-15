@@ -1296,7 +1296,7 @@ void DisplayCore::windowData(color_t d) {
  *
  *      tft.windowData(myData, 1000);
  */
-void DisplayCore::windowData(color_t *d, int l) {
+void DisplayCore::windowData(const color_t *d, int l) {
     for (int i = 0; i < l; i++) {
         windowData(d[i]);
     }
@@ -1728,8 +1728,10 @@ void Widget::handleTouch() {
     }
 
     if ((pressed && !inBounds) && _active) {
-        _active = false;
-        _redraw = true;
+//        _active = false;
+//        _redraw = true;
+        Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_RELEASE};
+        _release(&e);
         //draw(_dev, _x, _y);
     }
     // Drag
