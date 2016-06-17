@@ -70,13 +70,15 @@ void SSD1306::initializeDevice() {
     digitalWrite(_vbat, HIGH);
     delay(100);
 
+        command(CMD_SEG_REMAP);
+        command(CMD_COM_DIR);
     // Invert the display
-    command(CMD_SEG_REMAP);
-    command(CMD_COM_DIR);
+    if (_width == 128 && _height == 32) {
 
-    // Sequential COM
-    command(CMD_COM_CONFIG);
-    command(0x20);
+        // Sequential COM
+        command(CMD_COM_CONFIG);
+        command(0x20);
+    }
 
     // Display on
 
@@ -88,20 +90,28 @@ void SSD1306_BB::initializeDevice() {
     digitalWrite(_cs, HIGH);
     pinMode(_dc, OUTPUT);
     digitalWrite(_dc, DC_COMMAND);
-    pinMode(_vdd, OUTPUT);
-    digitalWrite(_vdd, LOW);
-    pinMode(_vbat, OUTPUT);
-    digitalWrite(_vbat, LOW);
+    if (_vdd != NOT_A_PIN) {
+        pinMode(_vdd, OUTPUT);
+        digitalWrite(_vdd, LOW);
+    }
+
+    if (_vbat != NOT_A_PIN) {
+        pinMode(_vbat, OUTPUT);
+        digitalWrite(_vbat, LOW);
+    }
+
     pinMode(_mosi_pin, OUTPUT);
     pinMode(_sck_pin, OUTPUT);
 
     _mosi_port = getPortInformation(_mosi_pin, &_mosi_mask);
     _sck_port = getPortInformation(_sck_pin, &_sck_mask);
 
-    // Start off by powering the thing up.  Step one is
-    // turn on the VDD supply.
-    digitalWrite(_vdd, HIGH);
-    delay(1);
+    if (_vdd != NOT_A_PIN) {
+        // Start off by powering the thing up.  Step one is
+        // turn on the VDD supply.
+        digitalWrite(_vdd, HIGH);
+        delay(1);
+    }
 
     displayOff();
 
@@ -123,8 +133,10 @@ void SSD1306_BB::initializeDevice() {
 
     // Now VBAT needs to be turned on:
 
-    digitalWrite(_vbat, HIGH);
-    delay(100);
+    if (_vbat != NOT_A_PIN) {
+        digitalWrite(_vbat, HIGH);
+        delay(100);
+    }
 
     // Invert the display
     command(CMD_SEG_REMAP);
@@ -148,7 +160,10 @@ void SSD1306::setPixel(int x, int y, color_t color) {
 
     translateCoordinates(&x, &y);
 
-    if((x < 0) ||(x >= 128) || (y < 0) || (y >= 32))
+    x += _offset_x;
+    y += _offset_y;
+
+    if((x < 0) ||(x >= 128) || (y < 0) || (y >= 64))
         return;
 
     row = y>>3;
@@ -249,7 +264,7 @@ void SSD1306::setY(int y) {
 }
 
 void SSD1306::updateDisplay() {
-    for (int p = 0; p < 7; p++) {
+    for (int p = 0; p < 8; p++) {
         setPage(p);
         setY(0);
         for (int y = 0; y < 128; y++) {
@@ -289,18 +304,18 @@ void SSD1306::setRotation(int r) {
     switch (r & 0x03) {
         case 0:
             _width = 128;
-            _height = 32;
+            _height = 64;
             break;
         case 1:
-            _width = 32;
+            _width = 64;
             _height = 128;
             break;
         case 2:
             _width = 128;
-            _height = 32;
+            _height = 64;
             break;
         case 3:
-            _width = 32;
+            _width = 64;
             _height = 128;
             break;
     }

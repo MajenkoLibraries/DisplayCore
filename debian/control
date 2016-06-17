@@ -987,15 +987,6 @@ Depends: libdisplaycore-core
 Provides: LedMatrixDim.h
 Description: LedMatrixDim library
 
-Package: libdisplaycore-font-linux6x10
-Section: libraries
-Architecture: all
-XBSC-Group: DisplayCore
-XBSC-Subgroup: Fonts
-Depends: libdisplaycore-core
-Provides: Linux6x10.h
-Description: Linux6x10 library
-
 Package: libdisplaycore-font-ingot
 Section: libraries
 Architecture: all

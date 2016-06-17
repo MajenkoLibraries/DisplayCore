@@ -52,6 +52,9 @@ class SSD1306 : public DisplayCore {
         int _reset;
         int _buffered;
 
+        int _offset_x;
+        int _offset_y;
+
         uint8_t _buffer[8*128]; // 8 pages of 128 bytes.
         void updateDisplay();
 
@@ -68,19 +71,25 @@ class SSD1306 : public DisplayCore {
             _spi(&spi), _cs(cs), _dc(dc), _vdd(vdd), _vbat(vbat), _reset(reset),
             _buffered(0) {
                 _width = 128;
-                _height = 32;
+                _height = 64;
+                _offset_x = 0;
+                _offset_y = 0;
         }
         SSD1306(DSPI *spi, int cs, int dc, int vdd, int vbat, int reset = -1) : 
             _spi(spi), _cs(cs), _dc(dc), _vdd(vdd), _vbat(vbat), _reset(reset),
             _buffered(0) {
                 _width = 128;
-                _height = 32;
+                _height = 64;
+                _offset_x = 0;
+                _offset_y = 0;
         }
         SSD1306(int cs, int dc, int vdd, int vbat, int reset = -1) : 
             _spi(NULL), _cs(cs), _dc(dc), _vdd(vdd), _vbat(vbat), _reset(reset),
             _buffered(0) {
                 _width = 128;
-                _height = 32;
+                _height = 64;
+                _offset_x = 0;
+                _offset_y = 0;
         }
 
         virtual void initializeDevice();
@@ -127,39 +136,39 @@ class SSD1306_BB : public SSD1306 {
 
 class SSD1306_UMOD_JA : public SSD1306_BB {
     public:
-        SSD1306_UMOD_JA() : SSD1306_BB(27, 29, 26, 30, 33, 32, 31) {}
+        SSD1306_UMOD_JA() : SSD1306_BB(27, 29, 26, 30, 33, 32, 31) {_height = 32;}
 };
     
 class SSD1306_UMOD_JB : public SSD1306_BB {
     public:
-        SSD1306_UMOD_JB() : SSD1306_BB(1, 38, 7, 36, 37, 10, 34) {}
+        SSD1306_UMOD_JB() : SSD1306_BB(1, 38, 7, 36, 37, 10, 34) {_height = 32;}
 };
     
 //class SSD1306_UMOD_JC : public SSD1306 {
 //    public:
-//        SSD1306_UMOD_JC() : SSD1306_BB([2], [4], [1], [7], [10], [9], [8]) {}
+//        SSD1306_UMOD_JC() : SSD1306_BB([2], [4], [1], [7], [10], [9], [8]) {_height = 32;}
 //};
     
 class SSD1306_UMOD_JD : public SSD1306_BB {
     public:
-        SSD1306_UMOD_JD() : SSD1306_BB(40, 19, 16, 42, 5, 3, 41) {}
+        SSD1306_UMOD_JD() : SSD1306_BB(40, 19, 16, 42, 5, 3, 41) {_height = 32;}
 };
     
 class SSD1306_UMOD_JE : public SSD1306_BB {
     public:
-        SSD1306_UMOD_JE() : SSD1306_BB(6, 22, 14, 18, 24, 35, 9) {}
+        SSD1306_UMOD_JE() : SSD1306_BB(6, 22, 14, 18, 24, 35, 9) {_height = 32;}
 };
     
 
 #if defined(_BOARD_CMOD_)
 class SSD1306_CMOD_J1 : public SSD1306 {
     public:
-        SSD1306_CMOD_J1() : SSD1306(new DSPI0(), 24, 7, 8, 30, 6) {}
+        SSD1306_CMOD_J1() : SSD1306(new DSPI0(), 24, 7, 8, 30, 6) {_height = 32;}
 };
 
 class SSD1306_CMOD_J2 : public SSD1306_BB {
     public:
-        SSD1306_CMOD_J2() : SSD1306_BB(20, 34, 22, 33, 17, 32, 36) {}
+        SSD1306_CMOD_J2() : SSD1306_BB(20, 34, 22, 33, 17, 32, 36) {_height = 32;}
 };
 
 #endif
@@ -168,38 +177,44 @@ class SSD1306_CMOD_J2 : public SSD1306_BB {
 
 class SSD1306_PMOD_A : public SSD1306_BB {
     public:
-        SSD1306_PMOD_A() : SSD1306_BB(1, 3, 0, 4, 7, 6, 5) {}
+        SSD1306_PMOD_A() : SSD1306_BB(1, 3, 0, 4, 7, 6, 5) {_height = 32;}
 };
 
 class SSD1306_PMOD_B : public SSD1306_BB {
     public:
-        SSD1306_PMOD_B() : SSD1306_BB(9, 11, 8, 12, 15, 14, 13) {}
+        SSD1306_PMOD_B() : SSD1306_BB(9, 11, 8, 12, 15, 14, 13) {_height = 32;}
 };
 
 class SSD1306_PMOD_C : public SSD1306_BB {
     public:
-        SSD1306_PMOD_C() : SSD1306_BB(17, 19, 16, 20, 23, 22, 21) {}
+        SSD1306_PMOD_C() : SSD1306_BB(17, 19, 16, 20, 23, 22, 21) {_height = 32;}
 };
 
 class SSD1306_PMOD_D : public SSD1306 {
     public:
-        SSD1306_PMOD_D() : SSD1306(new DSPI0(), 24, 28, 31, 30, 29) {}
+        SSD1306_PMOD_D() : SSD1306(new DSPI0(), 24, 28, 31, 30, 29) {_height = 32;}
 };
 
 class SSD1306_PMOD_E : public SSD1306 {
     public:
-        SSD1306_PMOD_E() : SSD1306(new DSPI1(), 32, 36, 39, 38, 37) {}
+        SSD1306_PMOD_E() : SSD1306(new DSPI1(), 32, 36, 39, 38, 37) {_height = 32;}
 };
 
 class SSD1306_PMOD_F : public SSD1306 {
     public:
-        SSD1306_PMOD_F() : SSD1306(new DSPI2(), 40, 44, 47, 46, 45) {}
+        SSD1306_PMOD_F() : SSD1306(new DSPI2(), 40, 44, 47, 46, 45) {_height = 32;}
 };
 
 #endif
 
 class SSD1306_IOSHIELD : public SSD1306 {
     public:
-        SSD1306_IOSHIELD() : SSD1306(new DSPI0(), 41, 39, 38, 40, 10) {}
+        SSD1306_IOSHIELD() : SSD1306(new DSPI0(), 41, 39, 38, 40, 10) {_height = 32;}
 };
 
+
+class CLICK_OLED_B : public SSD1306 {
+    public:
+        CLICK_OLED_B(DSPI *spi, uint8_t cs, uint8_t dc, uint8_t reset) : SSD1306(spi, cs, dc, NOT_A_PIN, NOT_A_PIN, reset) { _width = 96; _height = 39; _offset_y = 64 - 39; _offset_x = 128 - 96; }
+        CLICK_OLED_B(DSPI &spi, uint8_t cs, uint8_t dc, uint8_t reset) : SSD1306(&spi, cs, dc, NOT_A_PIN, NOT_A_PIN, reset) { _width = 96; _height = 39; _offset_y = 64 - 39; _offset_x = 128 - 96; }
+};
