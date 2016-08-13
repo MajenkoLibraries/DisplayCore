@@ -395,4 +395,11 @@ void Picadillo::setBacklight(int b) {
     analogWrite(PIN_BACKLIGHT, _brightness);
 }
 
+int Picadillo::getScanLine() {
+    writeCommand(HX8357_GETSCAN);
+    uint8_t h = readData(false);
+    uint8_t l = readByte(true);
+    return (h << 8) | l;
+}
+
 #endif

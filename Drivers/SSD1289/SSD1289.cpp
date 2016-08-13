@@ -276,21 +276,25 @@ void SSD1289::setRotation(int m) {
     switch(rotation) {
         case 0:
             command(0x0001); data(0x2B3F);
+            command(0x0011); data(0x6070);
             _width = Width;
             _height = Height;
             break;
         case 1:
             command(0x0001); data(0x6B3F);
+            command(0x0011); data(0x6078);
             _width = Height;
             _height = Width;
             break;
         case 2:
             command(0x0001); data(0x693F);
+            command(0x0011); data(0x6070);
             _width = Width;
             _height = Height;
             break;
         case 3:
             command(0x0001); data(0x293F);
+            command(0x0011); data(0x6078);
             _width = Height;
             _height = Width;
             break;
@@ -302,7 +306,7 @@ void SSD1289::invertDisplay(boolean i) {
 }
 
 void SSD1289::openWindow(int x0, int y0, int x1, int y1) {
-    setAddrWindow(x0, y0, x1, y1);
+    setAddrWindow(x0, y0, x0 + x1 - 1, y0 + y1 - 1);
 }
 
 void SSD1289::windowData(color_t d) {

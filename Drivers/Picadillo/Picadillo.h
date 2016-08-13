@@ -29,6 +29,7 @@ class Picadillo : public DisplayCore
         static const uint8_t HX8357_SET_PANEL_DRIVING          = 0xC0;
         static const uint8_t HX8357_SET_PANEL_CHARACTERISTIC   = 0xCC;
         static const uint8_t HX8357_SET_GAMMA_CURVE            = 0xE0;
+        static const uint8_t HX8357_GETSCAN                    = 0x45;
 
         static const uint8_t HX8357_INVON                      = 0x21;
         static const uint8_t HX8357_INVOFF                     = 0x20;
@@ -74,6 +75,8 @@ class Picadillo : public DisplayCore
         void enableBacklight();
         void disableBacklight();
         void setBacklight(int b);
+
+        int getScanLine();
 
 	protected:
 		uint8_t colstart, rowstart;

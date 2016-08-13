@@ -1,7 +1,10 @@
 #include <SSD1289.h>
 #include <Sinclair.h>
 
-SSD1289_PMP tft(A4);
+SSD1289 tft(3, 4, 5, 6, 7,
+            26, 27, 28, 29, 30, 31, 32, 33,
+            34, 35, 36, 37, 38, 39, 40, 41 
+    );
 
 void setup() {
 	tft.initializeDevice();

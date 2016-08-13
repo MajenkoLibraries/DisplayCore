@@ -4,6 +4,10 @@
 #include "static3d.h"
 #include "quicksort.h"
 
+#define RED(C) (((C) >> 8) & 0b11111000)
+#define GREEN(C) (((C) >> 3) & 0b11111100)
+#define BLUE(C) (((C) << 3) & 0b11111000)
+
 point3d Scene::translatePoint(point3d p) {
     point3d d;
     d.x = cos(_camang.y*PI/180) * ( sin(_camang.z*PI/180) * (p.y - _camera.y) + cos(_camang.z*PI/180) *
@@ -63,17 +67,10 @@ int Scene::render(DisplayCore *dev) {
         if (cosphi > 1) cosphi = 1;
 
         color_t col = conv[i].color;
-        int red = col >> 11;
-        int green = col >> 5 & 0b111111;
-        int blue = col & 0b11111;
 
-        red <<= 3;
-        green <<= 2;
-        blue <<= 3;
-
-        red = (double)red * cosphi;
-        green = (double)green * cosphi;
-        blue = (double)blue * cosphi;
+        int red = RED(col) * cosphi;
+        int green = GREEN(col) * cosphi;
+        int blue = BLUE(col) * cosphi;
 
         if (red < 0) red = 0;
         if (red > 255) red = 255;
@@ -145,6 +142,9 @@ static int findTrianglesAround(point3d &p, triangle *tris, int num) {
     }
     int nf = 0;
     for (int i = 0; i < num; i++) {
+        if (tris[i].flags & TRIANGLE_HIDDEN) {
+            continue;
+        }
         float dax = fabs(p.x - tris[i].a.x);
         float day = fabs(p.y - tris[i].a.y);
         float daz = fabs(p.z - tris[i].a.z);
@@ -181,6 +181,9 @@ static int findTrianglesAround(point3d &p, triangle *tris, int num) {
 void Scene::trace(DisplayCore *dev, float depth, bool smooth) {
     // Storage for the translated triangles
     triangle conv[_numtriangles];
+    color_t acolor[_numtriangles];
+    color_t bcolor[_numtriangles];
+    color_t ccolor[_numtriangles];
     for (int i = 0; i < _numtriangles; i++) {
         conv[i].a.x = _triangles[i].a.x;
         conv[i].a.y = _triangles[i].a.y;
@@ -200,9 +203,19 @@ void Scene::trace(DisplayCore *dev, float depth, bool smooth) {
             (conv[i].a.z + conv[i].b.z, conv[i].c.z)/3.0
         );
         point3d lvec = centroid - _light;
+        point3d cvec = centroid - _camera;
         point3d lightnorm = lvec.norm();
+        point3d camnorm = cvec.norm();
 
         double cosphi = 0 - norm.dot(lightnorm);
+        double cam_cosphi = norm.dot(camnorm); //camnorm.dot(norm);
+
+        conv[i].flags &= ~TRIANGLE_HIDDEN;
+
+        if (cam_cosphi > 0.1) { // Can't see it, it's backwards!
+            conv[i].flags |= TRIANGLE_HIDDEN;
+            continue;
+        }
 
         cosphi = _ambient + (cosphi * (1 - _ambient));
 
@@ -210,17 +223,9 @@ void Scene::trace(DisplayCore *dev, float depth, bool smooth) {
         if (cosphi > 1) cosphi = 1;
 
         color_t col = conv[i].color;
-        int red = col >> 11;
-        int green = col >> 5 & 0b111111;
-        int blue = col & 0b11111;
-
-        red <<= 3;
-        green <<= 2;
-        blue <<= 3;
-
-        red = (double)red * cosphi;
-        green = (double)green * cosphi;
-        blue = (double)blue * cosphi;
+        int red = RED(col) * cosphi;
+        int green = GREEN(col) * cosphi;
+        int blue = BLUE(col) * cosphi;
 
         if (red < 0) red = 0;
         if (red > 255) red = 255;
@@ -236,15 +241,105 @@ void Scene::trace(DisplayCore *dev, float depth, bool smooth) {
 
     // Translate all the triangles
     for (int i = 0; i < _numtriangles; i++) {
+        if (conv[i].flags & TRIANGLE_HIDDEN) {
+            continue;
+        }
+        conv[i].flags &= ~TRIANGLE_HIDDEN;
         conv[i].a = translatePoint(conv[i].a);
         conv[i].b = translatePoint(conv[i].b);
         conv[i].c = translatePoint(conv[i].c);
+        // If any points are behind me (or in me) then don't show it.
+        if (conv[i].a.z >= 0 || conv[i].b.z >= 0 || conv[i].c.z >= 0) {
+            conv[i].flags |= TRIANGLE_HIDDEN;
+        }
     }
 
     // Now sort them from back to front.
 
-//    qsval = 0;
-//    quicksort(conv, 0, _numtriangles-1);
+    qsval = 0;
+    quicksort(conv, 0, _numtriangles-1);
+
+    // Now we want to colour the vertices.
+
+    if (smooth) {
+        for (int j = 0; j < _numtriangles; j++) {
+            if (conv[j].flags & TRIANGLE_HIDDEN) {
+                continue;
+            }
+            uint32_t r = 0;
+            uint32_t g = 0;
+            uint32_t b = 0;
+            int nf = findTrianglesAround(conv[j].a, conv, _numtriangles);
+            if (nf > 0) {
+                for (int i = 0; i < _numtriangles; i++) {
+                    if (conv[i].flags & TRIANGLE_FOUND) {
+                        r += RED(conv[i].color);
+                        g += GREEN(conv[i].color);
+                        b += BLUE(conv[i].color);
+                    }
+                }
+                r /= nf;
+                g /= nf;
+                b /= nf;
+                acolor[j] = rgb(r, g, b);
+            } else {
+                // Should NEVER happen.
+                acolor[j] = conv[j].color;
+            }
+
+            r = 0;
+            g = 0;
+            b = 0;
+            nf = findTrianglesAround(conv[j].b, conv, _numtriangles);
+            if (nf > 0) {
+                for (int i = 0; i < _numtriangles; i++) {
+                    if (conv[i].flags & TRIANGLE_FOUND) {
+                        r += RED(conv[i].color);
+                        g += GREEN(conv[i].color);
+                        b += BLUE(conv[i].color);
+                    }
+                }
+                r /= nf;
+                g /= nf;
+                b /= nf;
+                bcolor[j] = rgb(r, g, b);
+            } else {
+                // Should NEVER happen.
+                bcolor[j] = conv[j].color;
+            }
+
+            r = 0;
+            g = 0;
+            b = 0;
+            nf = findTrianglesAround(conv[j].c, conv, _numtriangles);
+            if (nf > 0) {
+                for (int i = 0; i < _numtriangles; i++) {
+                    if (conv[i].flags & TRIANGLE_FOUND) {
+                        r += RED(conv[i].color);
+                        g += GREEN(conv[i].color);
+                        b += BLUE(conv[i].color);
+                    }
+                }
+                r /= nf;
+                g /= nf;
+                b /= nf;
+                ccolor[j] = rgb(r, g, b);
+            } else {
+                // Should NEVER happen.
+                ccolor[j] = conv[j].color;
+            }
+        }
+    } else {
+        for (int j = 0; j < _numtriangles; j++) {
+//            if (conv[j].flags & TRIANGLE_HIDDEN) {
+//                continue;
+//            }
+            acolor[j] = conv[j].color;
+            bcolor[j] = conv[j].color;
+            ccolor[j] = conv[j].color;
+        }
+    }
+
 
     uint32_t width = dev->getWidth();
     uint32_t height = dev->getHeight();
@@ -264,102 +359,46 @@ void Scene::trace(DisplayCore *dev, float depth, bool smooth) {
 
             float tm, um, vm;
             tm = 9999999999999999999.99999999;
-            int got = -1;
             for (int n = _numtriangles-1; n >= 0; n--) {
+                if (conv[n].flags & TRIANGLE_HIDDEN) {
+                    continue;
+                }
                 if (rayTriangleIntersect(orig, dir, conv[n].a, conv[n].b, conv[n].c, t, u, v)) {
                     if (t < tm) {
                         tm = t;
                         um = u;
                         vm = v;
-                        got = n;
-                    }
-                }
-            }
-            if (got >= 0) {
+                        if (smooth) {
+                            float ra = RED(acolor[n]);
+                            float rb = RED(bcolor[n]);
+                            float rc = RED(ccolor[n]);
 
-                if (smooth) {
-                    float ra = 0;
-                    float ga = 0;
-                    float ba = 0;
-                    int nf = findTrianglesAround(conv[got].a, conv, _numtriangles);
-                    for (int i = 0; i < _numtriangles; i++) {
-                        if (conv[i].flags & TRIANGLE_FOUND) {
-                            color_t col = conv[i].color;
-                            int red = col >> 11;
-                            int green = col >> 5 & 0b111111;
-                            int blue = col & 0b11111;
+                            float ga = GREEN(acolor[n]);
+                            float gb = GREEN(bcolor[n]);
+                            float gc = GREEN(ccolor[n]);
 
-                            red <<= 3;
-                            green <<= 2;
-                            blue <<= 3;
-                            
-                            ra += red;
-                            ga += green;
-                            ba += blue;
+                            float ba = BLUE(acolor[n]);
+                            float bb = BLUE(bcolor[n]);
+                            float bc = BLUE(ccolor[n]);
+
+                            color_t clr = rgb(
+                                um * rb + vm * rc + (1 - um - vm) * ra,
+                                um * gb + vm * gc + (1 - um - vm) * ga,
+                                um * bb + vm * bc + (1 - um - vm) * ba);
+                            dev->setPixel(i, j, clr);
+                        } else {
+                            dev->setPixel(i, j, conv[n].color);
                         }
                     }
-                    ra /= nf;
-                    ga /= nf;
-                    ba /= nf;
-
-                    float rb = 0;
-                    float gb = 0;
-                    float bb = 0;
-                    nf = findTrianglesAround(conv[got].b, conv, _numtriangles);
-                    for (int i = 0; i < _numtriangles; i++) {
-                        if (conv[i].flags & TRIANGLE_FOUND) {
-                            color_t col = conv[i].color;
-                            int red = col >> 11;
-                            int green = col >> 5 & 0b111111;
-                            int blue = col & 0b11111;
-
-                            red <<= 3;
-                            green <<= 2;
-                            blue <<= 3;
-                            
-                            rb += red;
-                            gb += green;
-                            bb += blue;
-                        }
-                    }
-                    rb /= nf;
-                    gb /= nf;
-                    bb /= nf;
-
-                    float rc = 0;
-                    float gc = 0;
-                    float bc = 0;
-                    nf = findTrianglesAround(conv[got].c, conv, _numtriangles);
-                    for (int i = 0; i < _numtriangles; i++) {
-                        if (conv[i].flags & TRIANGLE_FOUND) {
-                            color_t col = conv[i].color;
-                            int red = col >> 11;
-                            int green = col >> 5 & 0b111111;
-                            int blue = col & 0b11111;
-
-                            red <<= 3;
-                            green <<= 2;
-                            blue <<= 3;
-                            
-                            rc += red;
-                            gc += green;
-                            bc += blue;
-                        }
-                    }
-                    rc /= nf;
-                    gc /= nf;
-                    bc /= nf;
-
-                    color_t clr = rgb(
-                        um * rb + vm * rc + (1 - um - vm) * ra,
-                        um * gb + vm * gc + (1 - um - vm) * ga,
-                        um * bb + vm * bc + (1 - um - vm) * ba);
-
-                    dev->setPixel(i, j, clr);
-                } else {
-                    dev->setPixel(i, j, conv[got].color);
                 }
             }
         }
+        if (_traceCallBack != NULL) {
+            _traceCallBack(j);
+        }
     }
+}
+
+void Scene::setTraceCallback(void (*tcb)(int)) {
+    _traceCallBack = tcb;
 }

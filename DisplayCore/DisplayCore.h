@@ -36,15 +36,15 @@ class point3d {
         point3d() : x(0), y(0), z(0) {}
         point3d(double _x,double _y, double _z) : x(_x), y(_y), z(_z) {}
 
-        point3d operator -(point3d &other) {
+        point3d operator -(const point3d &other) const {
             return point3d(x - other.x, y - other.y, z - other.z);
         }
-        point3d operator +(point3d &other) {
+        point3d operator +(const point3d &other) const {
             return point3d(x + other.x, y + other.y, z + other.z);
         }
         // Cross product
 
-        point3d operator *(point3d &other) {
+        point3d operator *(const point3d &other) const {
             return point3d(
                 y * other.z - z * other.y,
                 z * other.x - x * other.z,
@@ -52,7 +52,7 @@ class point3d {
             );
         }
         // Scale
-        point3d operator *(double other) {
+        point3d operator *(double other) const {
             return point3d(
                 y * other,
                 z * other,
@@ -60,7 +60,7 @@ class point3d {
             );
         }
         // Dot product
-        double dot(point3d &other) {
+        double dot(const point3d &other) const {
             return x*other.x + y*other.y + z*other.z;
         }
         float Q_rsqrt( float number ) {
@@ -670,6 +670,7 @@ class Form {
 };
 
 #define TRIANGLE_HIDDEN 1
+#define TRIANGLE_FOUND 2
 
 struct triangle {
     point3d a;
@@ -688,8 +689,10 @@ class Scene {
         point3d _light;
         double _ambient;
         bool _wireframe;
+        void (*_traceCallBack)(int);
 
     public:
+        void setTraceCallback(void (*tcb)(int));
         point3d translatePoint(point3d p);
         Scene(const triangle *t, int numt) : _triangles(t), _numtriangles(numt), _ambient(1.0) {}
         void setCameraPosition(point3d c) { _camera = c; }
@@ -703,7 +706,7 @@ class Scene {
         int render(DisplayCore *dev);
         int render(DisplayCore &dev) { return render(&dev); }
         void setWireFrame(bool b);
-
+        void trace(DisplayCore *dev, float depth, bool smooth = false);
 };
 
 
