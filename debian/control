@@ -284,6 +284,15 @@ Depends: libdisplaycore-core
 Provides: ILI9341.h
 Description: ILI9341 library for DisplayCore
 
+Package: libdisplaycore-driver-ili9342
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Drivers
+Depends: libdisplaycore-core
+Provides: ILI9342.h
+Description: ILI9342 library for DisplayCore
+
 Package: libdisplaycore-driver-s6d0154
 Section: libraries
 Architecture: all
