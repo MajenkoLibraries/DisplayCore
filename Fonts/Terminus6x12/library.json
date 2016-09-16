@@ -1,0 +1,16 @@
+{
+    "name": "Terminus6x12",
+    "keywords": "displaycore, tft",
+    "description": "Terminus6x12 font for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/Terminus6x12"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

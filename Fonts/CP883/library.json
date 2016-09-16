@@ -1,0 +1,16 @@
+{
+    "name": "CP883",
+    "keywords": "displaycore, tft",
+    "description": "CP883 font for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/CP883"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

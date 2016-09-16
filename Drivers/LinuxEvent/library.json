@@ -1,0 +1,16 @@
+{
+    "name": "LinuxEvent",
+    "keywords": "displaycore, tft",
+    "description": "Linux Event driver",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Drivers/LinuxEvent"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

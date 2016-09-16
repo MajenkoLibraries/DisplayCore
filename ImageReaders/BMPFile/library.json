@@ -1,0 +1,16 @@
+{
+    "name": "BMPFile",
+    "keywords": "displaycore, tft",
+    "description": "DisplayCore BMP File renderer",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "ImageReaders/BMPFile"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

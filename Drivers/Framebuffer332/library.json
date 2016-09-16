@@ -1,0 +1,16 @@
+{
+    "name": "Framebuffer332",
+    "keywords": "displaycore, tft",
+    "description": "DisplayCore RGB332 Framebuffer",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Drivers/Framebuffer332"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

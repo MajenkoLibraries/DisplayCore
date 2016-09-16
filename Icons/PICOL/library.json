@@ -1,0 +1,16 @@
+{
+    "name": "PICOL",
+    "keywords": "displaycore, tft",
+    "description": "PICOL library",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Icons/PICOL"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

@@ -1,0 +1,16 @@
+{
+    "name": "Display7Seg",
+    "keywords": "displaycore, tft",
+    "description": "Display7Seg font",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/Display7Seg"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

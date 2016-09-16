@@ -1,0 +1,16 @@
+{
+    "name": "LCARSInterface",
+    "keywords": "displaycore, tft",
+    "description": "LCARS-like interface widgets",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Toolkits/LCARSInterface"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

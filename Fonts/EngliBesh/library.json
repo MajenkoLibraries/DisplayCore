@@ -1,0 +1,16 @@
+{
+    "name": "EngliBesh",
+    "keywords": "displaycore, tft",
+    "description": "EngliBesh font for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/EngliBesh"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

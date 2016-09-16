@@ -1,0 +1,16 @@
+{
+    "name": "LCDish",
+    "keywords": "displaycore, tft",
+    "description": "HD44780 LCD font for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/LCDish"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

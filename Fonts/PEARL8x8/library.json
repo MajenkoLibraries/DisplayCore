@@ -1,0 +1,16 @@
+{
+    "name": "PEARL8x8",
+    "keywords": "displaycore, tft",
+    "description": "PEARL8x8 font for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/PEARL8x8"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

@@ -1,0 +1,16 @@
+{
+    "name": "Raw565",
+    "keywords": "displaycore, tft",
+    "description": "DisplayCore RGB565 Flash renderer",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "ImageReaders/Raw565"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

@@ -1,0 +1,16 @@
+{
+    "name": "Gentleface48",
+    "keywords": "displaycore, tft",
+    "description": "Gentleface48 library",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Icons/Gentleface48"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

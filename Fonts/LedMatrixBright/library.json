@@ -1,0 +1,16 @@
+{
+    "name": "LedMatrixBright",
+    "keywords": "displaycore, tft",
+    "description": "LedMatrixBright library",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/LedMatrixBright"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

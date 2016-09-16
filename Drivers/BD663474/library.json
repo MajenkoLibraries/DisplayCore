@@ -1,0 +1,16 @@
+{
+    "name": "BD663474",
+    "keywords": "displaycore, tft",
+    "description": "BD663474 driver for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Drivers/BD663474"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

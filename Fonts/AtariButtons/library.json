@@ -1,0 +1,16 @@
+{
+    "name": "AtariButtons",
+    "keywords": "displaycore, tft",
+    "description": "Atari 8-bit font in Buttons",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/AtariButtons"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

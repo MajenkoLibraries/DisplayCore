@@ -1,0 +1,16 @@
+{
+    "name": "Doorly",
+    "keywords": "displaycore, tft",
+    "description": "Doorly font for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/Doorly"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

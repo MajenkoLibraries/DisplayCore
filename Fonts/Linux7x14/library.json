@@ -1,0 +1,16 @@
+{
+    "name": "Linux7x14",
+    "keywords": "displaycore, tft",
+    "description": "Linux7x14 font for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/Linux7x14"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

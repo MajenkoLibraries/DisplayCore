@@ -1,0 +1,16 @@
+{
+    "name": "Icon8",
+    "keywords": "displaycore, tft",
+    "description": "Icon8 mini icons",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/Icon8"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

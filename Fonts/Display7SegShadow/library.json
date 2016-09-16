@@ -1,0 +1,16 @@
+{
+    "name": "Display7SegShadow",
+    "keywords": "displaycore, tft",
+    "description": "Display7SegShadow library",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/Display7SegShadow"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

@@ -1,0 +1,16 @@
+{
+    "name": "RawGold",
+    "keywords": "displaycore, tft",
+    "description": "RawGold library",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/RawGold"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

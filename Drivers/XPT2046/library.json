@@ -1,0 +1,16 @@
+{
+    "name": "XPT2046",
+    "keywords": "displaycore, tft",
+    "description": "XPT2046 touchscreen driver",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Drivers/XPT2046"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

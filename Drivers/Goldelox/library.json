@@ -1,0 +1,16 @@
+{
+    "name": "Goldelox",
+    "keywords": "displaycore, tft",
+    "description": "4D Goldelox driver for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Drivers/Goldelox"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

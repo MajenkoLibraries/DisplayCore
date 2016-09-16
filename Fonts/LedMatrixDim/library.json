@@ -1,0 +1,16 @@
+{
+    "name": "LedMatrixDim",
+    "keywords": "displaycore, tft",
+    "description": "LedMatrixDim library",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/LedMatrixDim"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

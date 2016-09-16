@@ -1,0 +1,16 @@
+{
+    "name": "Iconic",
+    "keywords": "displaycore, tft",
+    "description": "Iconic library",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Icons/Iconic"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

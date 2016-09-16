@@ -1,0 +1,72 @@
+#!/usr/bin/perl
+
+use strict;
+use Data::Dumper;
+use File::Basename;
+
+open (CTRL, "<debian/control");
+
+my $data;
+
+my $pkg = "";
+while (my $line = <CTRL>) {
+    chomp($line);
+    if ($line =~ /^Package: (.*)$/) {
+        $pkg = $1;
+    }
+
+    if ($line =~ /^Description: (.*)/) {
+        $data->{$pkg}->{desc} = $1;
+    }
+}
+
+close(CTRL);
+
+open(CL, "<debian/changelog");
+my $cl = <CL>;
+close(CL);
+
+my $ver = "1.0.0";
+
+if ($cl =~ /libdisplaycore \((.*)\) uecide; urgency=low/) {
+    $ver = $1;
+}
+
+
+foreach my $lib (keys %{$data}) {
+    open (INST, "<debian/$lib.install");
+    my $i = <INST>;
+    chomp($i);
+    my @bits = split(/ /, $i);
+    $i = $bits[0];
+    if ( ! -d $i) {
+        $i = dirname($i);
+    }
+    $data->{$lib}->{root} = $i;
+    $data->{$lib}->{name} = basename($i);
+    close(INST);
+}
+
+foreach my $lib (keys %{$data}) {
+
+    open(JSON, ">" . $data->{$lib}->{root} . "/library.json");
+
+    print JSON "{\n";
+    print JSON "    \"name\": \"" . $data->{$lib}->{name} . "\",\n";
+    print JSON "    \"keywords\": \"displaycore, tft\",\n";
+    print JSON "    \"description\": \"" . $data->{$lib}->{desc}. "\",\n";
+    print JSON "    \"repository\":\n";
+    print JSON "    {\n";
+    print JSON "      \"type\": \"git\",\n";
+    print JSON "      \"url\": \"https://github.com/MajenkoLibraries/DisplayCore.git\"\n";
+    print JSON "    },\n";
+    print JSON "    \"export\": {\n";
+    print JSON "        \"include\": \"" . $data->{$lib}->{root} . "\"\n";
+    print JSON "    },\n";
+    print JSON "    \"version\": \"$ver\",\n";
+    print JSON "    \"frameworks\": \"arduino\",\n";
+    print JSON "    \"platforms\": \"microchippic32\"\n";
+    print JSON "}\n";
+    close(JSON);
+}
+

@@ -1,0 +1,16 @@
+{
+    "name": "ILI9342",
+    "keywords": "displaycore, tft",
+    "description": "ILI9342 library for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Drivers/ILI9342"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

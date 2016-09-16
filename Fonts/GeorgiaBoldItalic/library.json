@@ -1,0 +1,16 @@
+{
+    "name": "GeorgiaBoldItalic",
+    "keywords": "displaycore, tft",
+    "description": "Georgia Bold Italic font for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/GeorgiaBoldItalic"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

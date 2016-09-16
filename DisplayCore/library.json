@@ -1,0 +1,16 @@
+{
+    "name": "DisplayCore",
+    "keywords": "displaycore, tft",
+    "description": "DisplayCore core files",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "DisplayCore"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

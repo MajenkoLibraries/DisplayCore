@@ -1,0 +1,16 @@
+{
+    "name": "Filters",
+    "keywords": "displaycore, tft",
+    "description": "DisplayCore Image Filters",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Filters"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

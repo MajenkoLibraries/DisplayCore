@@ -1,0 +1,16 @@
+{
+    "name": "CP864",
+    "keywords": "displaycore, tft",
+    "description": "CP864 font for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/CP864"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

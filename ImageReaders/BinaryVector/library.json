@@ -1,0 +1,16 @@
+{
+    "name": "BinaryVector",
+    "keywords": "displaycore, tft",
+    "description": "Binary Vector drawing image class",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "ImageReaders/BinaryVector"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

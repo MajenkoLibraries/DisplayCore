@@ -1,0 +1,16 @@
+{
+    "name": "OCRAExtended",
+    "keywords": "displaycore, tft",
+    "description": "OCR A Extended font for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Fonts/OCRAExtended"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}

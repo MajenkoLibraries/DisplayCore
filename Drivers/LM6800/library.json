@@ -1,0 +1,16 @@
+{
+    "name": "LM6800",
+    "keywords": "displaycore, tft",
+    "description": "LM6800 driver for DisplayCore",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
+    },
+    "export": {
+        "include": "Drivers/LM6800"
+    },
+    "version": "1.18.8",
+    "frameworks": "arduino",
+    "platforms": "microchippic32"
+}
