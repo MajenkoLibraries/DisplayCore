@@ -1,5 +1,5 @@
 {
-    "name": "examples",
+    "name": "gciWidget",
     "keywords": "displaycore, tft",
     "description": "gciWidget DisplayCore toolkit library",
     "repository":
@@ -8,7 +8,7 @@
       "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
     },
     "export": {
-        "include": "Toolkits/gciWidget/examples/"
+        "include": "Toolkits/gciWidget"
     },
     "version": "1.18.8",
     "frameworks": "arduino",
