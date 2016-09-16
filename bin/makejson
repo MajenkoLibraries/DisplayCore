@@ -60,6 +60,9 @@ foreach my $lib (keys %{$data}) {
     print JSON "      \"type\": \"git\",\n";
     print JSON "      \"url\": \"https://github.com/MajenkoLibraries/DisplayCore.git\"\n";
     print JSON "    },\n";
+    if ($lib ne "libdisplaycore-core") {
+        print JSON "    \"dependencies\": [ { \"name\": \"DisplayCore\" } ],\n";
+    }
     print JSON "    \"export\": {\n";
     print JSON "        \"include\": \"" . $data->{$lib}->{root} . "\"\n";
     print JSON "    },\n";
