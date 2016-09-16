@@ -1,13 +1,13 @@
 {
     "name": "XPT2046",
-    "keywords": "displaycore, tft, display",
+    "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "XPT2046 touchscreen driver",
     "repository":
     {
       "type": "git",
       "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
     },
-    "dependencies": [ { "name": "DisplayCore" } ],
+    "dependencies": [ { "name": "DisplayCore", "version": "1.18.8" } ],
     "export": {
         "include": "Drivers/XPT2046"
     },

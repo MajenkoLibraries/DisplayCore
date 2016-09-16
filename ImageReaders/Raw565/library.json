@@ -1,13 +1,13 @@
 {
     "name": "Raw565",
-    "keywords": "displaycore, tft, display",
+    "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics, image, jpeg, bmp",
     "description": "DisplayCore RGB565 Flash renderer",
     "repository":
     {
       "type": "git",
       "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
     },
-    "dependencies": [ { "name": "DisplayCore" } ],
+    "dependencies": [ { "name": "DisplayCore", "version": "1.18.8" } ],
     "export": {
         "include": "ImageReaders/Raw565"
     },

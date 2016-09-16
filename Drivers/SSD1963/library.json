@@ -1,13 +1,13 @@
 {
     "name": "SSD1963",
-    "keywords": "displaycore, tft, display",
+    "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "SSD1963 7 inch TFT",
     "repository":
     {
       "type": "git",
       "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
     },
-    "dependencies": [ { "name": "DisplayCore" } ],
+    "dependencies": [ { "name": "DisplayCore", "version": "1.18.8" } ],
     "export": {
         "include": "Drivers/SSD1963"
     },

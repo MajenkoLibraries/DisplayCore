@@ -1,13 +1,13 @@
 {
     "name": "VGA8x8",
-    "keywords": "displaycore, tft, display",
+    "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics, font",
     "description": "VGA8x8 font for DisplayCore",
     "repository":
     {
       "type": "git",
       "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
     },
-    "dependencies": [ { "name": "DisplayCore" } ],
+    "dependencies": [ { "name": "DisplayCore", "version": "1.18.8" } ],
     "export": {
         "include": "Fonts/VGA8x8"
     },

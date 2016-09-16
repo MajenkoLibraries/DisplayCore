@@ -1,13 +1,13 @@
 {
     "name": "HX8347D",
-    "keywords": "displaycore, tft, display",
+    "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "HX8347D library",
     "repository":
     {
       "type": "git",
       "url": "https://github.com/MajenkoLibraries/DisplayCore.git"
     },
-    "dependencies": [ { "name": "DisplayCore" } ],
+    "dependencies": [ { "name": "DisplayCore", "version": "1.18.8" } ],
     "export": {
         "include": "Drivers/HX8347D"
     },

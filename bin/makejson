@@ -8,6 +8,16 @@ open (CTRL, "<debian/control");
 
 my $data;
 
+my $keywords;
+
+$keywords->{Drivers} = "display, displaycore, tft, lcd, glcd, oled, graphics";
+$keywords->{Filters} = "display, displaycore, tft, lcd, glcd, oled, graphics, image, effects, filter";
+$keywords->{Fonts} = "display, displaycore, tft, lcd, glcd, oled, graphics, font";
+$keywords->{Icons} = "display, displaycore, tft, lcd, glcd, oled, graphics, icons";
+$keywords->{Image} = "display, displaycore, tft, lcd, glcd, oled, graphics, image, jpeg, bmp";
+$keywords->{Toolkits} = "display, displaycore, tft, lcd, glcd, oled, graphics, widgets, toolkits, buttons";
+$keywords->{Widgets} = "display, displaycore, tft, lcd, glcd, oled, graphics, widgets, toolkits, buttons";
+
 my $pkg = "";
 while (my $line = <CTRL>) {
     chomp($line);
@@ -17,6 +27,10 @@ while (my $line = <CTRL>) {
 
     if ($line =~ /^Description: (.*)/) {
         $data->{$pkg}->{desc} = $1;
+    }
+
+    if ($line =~ /^XBSC-Subgroup: (.*)/) {
+        $data->{$pkg}->{group} = $1;
     }
 }
 
@@ -53,7 +67,7 @@ foreach my $lib (keys %{$data}) {
 
     print JSON "{\n";
     print JSON "    \"name\": \"" . $data->{$lib}->{name} . "\",\n";
-    print JSON "    \"keywords\": \"displaycore, tft, display\",\n";
+    print JSON "    \"keywords\": \"" . $keywords->{$data->{$lib}->{group}} . "\",\n";
     print JSON "    \"description\": \"" . $data->{$lib}->{desc}. "\",\n";
     print JSON "    \"repository\":\n";
     print JSON "    {\n";
@@ -61,7 +75,7 @@ foreach my $lib (keys %{$data}) {
     print JSON "      \"url\": \"https://github.com/MajenkoLibraries/DisplayCore.git\"\n";
     print JSON "    },\n";
     if ($lib ne "libdisplaycore-core") {
-        print JSON "    \"dependencies\": [ { \"name\": \"DisplayCore\" } ],\n";
+        print JSON "    \"dependencies\": [ { \"name\": \"DisplayCore\", \"version\": \"$ver\" } ],\n";
     }
     print JSON "    \"export\": {\n";
     print JSON "        \"include\": \"" . $data->{$lib}->{root} . "\"\n";
