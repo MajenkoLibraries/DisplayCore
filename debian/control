@@ -132,7 +132,7 @@ XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
 Provides: SSD1289.h
-Description: SSD1289 3.2" TFT
+Description: SSD1289 3.2 inchTFT
  Generic SSD1289 based TFT screen (240x320) such as the
  SainSmart TFT_320QVT or the iTead ITDB02-3.2S. Supports
  both direct port manipulation driver and PMP driver for
@@ -157,7 +157,7 @@ XBSC-Group: DisplayCore
 XBSC-Subgroup: Drivers
 Depends: libdisplaycore-core
 Provides: SSD1963.h
-Description: SSD1963 7" TFT
+Description: SSD1963 7 inch TFT
  Generic Chinese SSD1963 based TFT screen (800x480)
 
 Package: libdisplaycore-driver-bd663474
