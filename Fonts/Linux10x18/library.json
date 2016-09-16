@@ -10,6 +10,7 @@
     "export": {
         "include": "Fonts/Linux10x18"
     },
+    "authors": { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"
