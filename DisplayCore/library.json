@@ -10,7 +10,10 @@
     "export": {
         "include": "DisplayCore"
     },
-    "authors": { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
+    "authors": [
+        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
+        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=DisplayCore"}
+    ],
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"
