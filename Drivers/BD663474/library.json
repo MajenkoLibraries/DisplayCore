@@ -2,6 +2,7 @@
     "name": "BD663474",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "BD663474 driver for DisplayCore",
+    "homepage": "http://displaycore.org/wiki/index.php?title=BD663474",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Drivers/BD663474"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=BD663474"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

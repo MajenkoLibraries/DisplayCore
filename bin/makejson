@@ -69,6 +69,7 @@ foreach my $lib (keys %{$data}) {
     print JSON "    \"name\": \"" . $data->{$lib}->{name} . "\",\n";
     print JSON "    \"keywords\": \"" . $keywords->{$data->{$lib}->{group}} . "\",\n";
     print JSON "    \"description\": \"" . $data->{$lib}->{desc}. "\",\n";
+    print JSON "    \"homepage\": \"http://displaycore.org/wiki/index.php?title=" . $data->{$lib}->{name} . "\",\n";
     print JSON "    \"repository\":\n";
     print JSON "    {\n";
     print JSON "      \"type\": \"git\",\n";
@@ -80,10 +81,9 @@ foreach my $lib (keys %{$data}) {
     print JSON "    \"export\": {\n";
     print JSON "        \"include\": \"" . $data->{$lib}->{root} . "\"\n";
     print JSON "    },\n";
-    print JSON "    \"authors\": [\n";
-    print JSON "        { \"name\": \"Majenko Technologies\", \"url\": \"http://majenko.co.uk\"},\n";
-    print JSON "        { \"name\": \"DisplayCore\", \"url\": \"http://displaycore.org/wiki/index.php?title=" . $data->{$lib}->{name} . "\"}\n";
-    print JSON "    ],\n";
+    print JSON "    \"authors\": {\n";
+    print JSON "        \"name\": \"Majenko Technologies\", \"url\": \"http://majenko.co.uk\"\n";
+    print JSON "    },\n";
     print JSON "    \"version\": \"$ver\",\n";
     print JSON "    \"frameworks\": \"arduino\",\n";
     print JSON "    \"platforms\": \"microchippic32\"\n";

@@ -2,6 +2,7 @@
     "name": "DejaVuSansMono",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics, font",
     "description": "Monospaced DejaVuSans font for DisplayCore",
+    "homepage": "http://displaycore.org/wiki/index.php?title=DejaVuSansMono",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Fonts/DejaVuSansMono"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=DejaVuSansMono"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

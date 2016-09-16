@@ -2,6 +2,7 @@
     "name": "ILI9342",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "ILI9342 library for DisplayCore",
+    "homepage": "http://displaycore.org/wiki/index.php?title=ILI9342",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Drivers/ILI9342"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=ILI9342"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

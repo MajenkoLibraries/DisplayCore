@@ -2,6 +2,7 @@
     "name": "AnalogTouch",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "Analog Resistive Touchscreen driver for DisplayCore",
+    "homepage": "http://displaycore.org/wiki/index.php?title=AnalogTouch",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Drivers/AnalogTouch"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=AnalogTouch"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

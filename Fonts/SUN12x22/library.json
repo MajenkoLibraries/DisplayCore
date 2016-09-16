@@ -2,6 +2,7 @@
     "name": "SUN12x22",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics, font",
     "description": "SUN12x22 font for DisplayCore",
+    "homepage": "http://displaycore.org/wiki/index.php?title=SUN12x22",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Fonts/SUN12x22"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=SUN12x22"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

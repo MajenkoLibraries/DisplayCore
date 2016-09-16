@@ -2,6 +2,7 @@
     "name": "KS0108",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "KS0108 GLCD Driver for DisplayCore",
+    "homepage": "http://displaycore.org/wiki/index.php?title=KS0108",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Drivers/KS0108"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=KS0108"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

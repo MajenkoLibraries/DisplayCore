@@ -2,6 +2,7 @@
     "name": "SSD1306",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "SSD1306 library (Basic IO Shield)",
+    "homepage": "http://displaycore.org/wiki/index.php?title=SSD1306",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Drivers/SSD1306"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=SSD1306"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

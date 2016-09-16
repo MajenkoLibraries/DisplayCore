@@ -2,6 +2,7 @@
     "name": "SSD1289",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "SSD1289 3.2 inchTFT",
+    "homepage": "http://displaycore.org/wiki/index.php?title=SSD1289",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Drivers/SSD1289"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=SSD1289"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

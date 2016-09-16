@@ -2,6 +2,7 @@
     "name": "CP881",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics, font",
     "description": "CP881 font for DisplayCore",
+    "homepage": "http://displaycore.org/wiki/index.php?title=CP881",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Fonts/CP881"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=CP881"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

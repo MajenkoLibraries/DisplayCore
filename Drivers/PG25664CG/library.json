@@ -2,6 +2,7 @@
     "name": "PG25664CG",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "PG25664CG OLED Driver for DisplayCore",
+    "homepage": "http://displaycore.org/wiki/index.php?title=PG25664CG",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Drivers/PG25664CG"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=PG25664CG"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

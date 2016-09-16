@@ -2,6 +2,7 @@
     "name": "AVOP",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics, font",
     "description": "AVOP Japanese Font",
+    "homepage": "http://displaycore.org/wiki/index.php?title=AVOP",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Fonts/AVOP"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=AVOP"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

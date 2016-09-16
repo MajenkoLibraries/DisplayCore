@@ -2,6 +2,7 @@
     "name": "Diablo16",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "Diablo16 library",
+    "homepage": "http://displaycore.org/wiki/index.php?title=Diablo16",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Drivers/Diablo16"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=Diablo16"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

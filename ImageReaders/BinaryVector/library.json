@@ -2,6 +2,7 @@
     "name": "BinaryVector",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics, image, jpeg, bmp",
     "description": "Binary Vector drawing image class",
+    "homepage": "http://displaycore.org/wiki/index.php?title=BinaryVector",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "ImageReaders/BinaryVector"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=BinaryVector"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

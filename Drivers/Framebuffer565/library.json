@@ -2,6 +2,7 @@
     "name": "Framebuffer565",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "DisplayCore RGB565 Framebuffer",
+    "homepage": "http://displaycore.org/wiki/index.php?title=Framebuffer565",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Drivers/Framebuffer565"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=Framebuffer565"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

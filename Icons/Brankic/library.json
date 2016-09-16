@@ -2,6 +2,7 @@
     "name": "Brankic",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics, icons",
     "description": "Brankic Mono Icon library for Display Core",
+    "homepage": "http://displaycore.org/wiki/index.php?title=Brankic",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Icons/Brankic"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=Brankic"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"

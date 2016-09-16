@@ -2,6 +2,7 @@
     "name": "Goldelox",
     "keywords": "display, displaycore, tft, lcd, glcd, oled, graphics",
     "description": "4D Goldelox driver for DisplayCore",
+    "homepage": "http://displaycore.org/wiki/index.php?title=Goldelox",
     "repository":
     {
       "type": "git",
@@ -11,10 +12,9 @@
     "export": {
         "include": "Drivers/Goldelox"
     },
-    "authors": [
-        { "name": "Majenko Technologies", "url": "http://majenko.co.uk"},
-        { "name": "DisplayCore", "url": "http://displaycore.org/wiki/index.php?title=Goldelox"}
-    ],
+    "authors": {
+        "name": "Majenko Technologies", "url": "http://majenko.co.uk"
+    },
     "version": "1.18.8",
     "frameworks": "arduino",
     "platforms": "microchippic32"
