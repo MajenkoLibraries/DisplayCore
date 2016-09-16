@@ -1,6 +1,6 @@
 {
     "name": "NativeFB",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "Native Framebuffer (Linux) Driver",
     "repository":
     {

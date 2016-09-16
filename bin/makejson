@@ -53,7 +53,7 @@ foreach my $lib (keys %{$data}) {
 
     print JSON "{\n";
     print JSON "    \"name\": \"" . $data->{$lib}->{name} . "\",\n";
-    print JSON "    \"keywords\": \"displaycore, tft\",\n";
+    print JSON "    \"keywords\": \"displaycore, tft, display\",\n";
     print JSON "    \"description\": \"" . $data->{$lib}->{desc}. "\",\n";
     print JSON "    \"repository\":\n";
     print JSON "    {\n";

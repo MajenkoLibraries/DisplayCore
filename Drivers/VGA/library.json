@@ -1,6 +1,6 @@
 {
     "name": "VGA",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "VGA Driver for DisplayCore",
     "repository":
     {

@@ -1,6 +1,6 @@
 {
     "name": "ILI9341",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "ILI9341 library for DisplayCore",
     "repository":
     {

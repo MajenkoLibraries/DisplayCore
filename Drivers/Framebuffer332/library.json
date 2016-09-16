@@ -1,6 +1,6 @@
 {
     "name": "Framebuffer332",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "DisplayCore RGB332 Framebuffer",
     "repository":
     {

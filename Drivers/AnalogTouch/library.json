@@ -1,6 +1,6 @@
 {
     "name": "AnalogTouch",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "Analog Resistive Touchscreen driver for DisplayCore",
     "repository":
     {

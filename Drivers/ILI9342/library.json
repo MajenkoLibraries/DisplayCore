@@ -1,6 +1,6 @@
 {
     "name": "ILI9342",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "ILI9342 library for DisplayCore",
     "repository":
     {

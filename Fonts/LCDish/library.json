@@ -1,6 +1,6 @@
 {
     "name": "LCDish",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "HD44780 LCD font for DisplayCore",
     "repository":
     {

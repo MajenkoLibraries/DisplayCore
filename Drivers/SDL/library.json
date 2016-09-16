@@ -1,6 +1,6 @@
 {
     "name": "SDL",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "SDL driver for DisplayCore",
     "repository":
     {

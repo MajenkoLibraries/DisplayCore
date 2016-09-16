@@ -1,6 +1,6 @@
 {
     "name": "LinuxEvent",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "Linux Event driver",
     "repository":
     {

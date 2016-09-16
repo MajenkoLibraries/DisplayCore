@@ -1,6 +1,6 @@
 {
     "name": "XPT2046",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "XPT2046 touchscreen driver",
     "repository":
     {

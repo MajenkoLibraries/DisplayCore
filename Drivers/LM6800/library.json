@@ -1,6 +1,6 @@
 {
     "name": "LM6800",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "LM6800 driver for DisplayCore",
     "repository":
     {

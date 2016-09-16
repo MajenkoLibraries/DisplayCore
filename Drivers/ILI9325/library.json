@@ -1,6 +1,6 @@
 {
     "name": "ILI9325",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "ILI9325 library for DisplayCore",
     "repository":
     {

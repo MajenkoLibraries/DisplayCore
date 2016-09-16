@@ -1,6 +1,6 @@
 {
     "name": "ST7735",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "ST7735 driver for DisplayCore",
     "repository":
     {

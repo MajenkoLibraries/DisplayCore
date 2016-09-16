@@ -1,6 +1,6 @@
 {
     "name": "BMP",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "DisplayCore BMP Flash renderer",
     "repository":
     {

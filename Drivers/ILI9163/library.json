@@ -1,6 +1,6 @@
 {
     "name": "ILI9163",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "ILI9163 driver for DisplayCore",
     "repository":
     {

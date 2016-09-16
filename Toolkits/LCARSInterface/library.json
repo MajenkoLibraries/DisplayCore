@@ -1,6 +1,6 @@
 {
     "name": "LCARSInterface",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "LCARS-like interface widgets",
     "repository":
     {

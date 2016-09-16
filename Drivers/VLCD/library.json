@@ -1,6 +1,6 @@
 {
     "name": "VLCD",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "VirtualLCD Driver for DisplayCore",
     "repository":
     {

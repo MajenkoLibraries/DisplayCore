@@ -1,6 +1,6 @@
 {
     "name": "KS0108",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "KS0108 GLCD Driver for DisplayCore",
     "repository":
     {

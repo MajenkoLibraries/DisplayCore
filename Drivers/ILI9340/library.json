@@ -1,6 +1,6 @@
 {
     "name": "ILI9340",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "ILI9340 driver for DisplayCore",
     "repository":
     {

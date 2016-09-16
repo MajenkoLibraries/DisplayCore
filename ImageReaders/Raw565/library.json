@@ -1,6 +1,6 @@
 {
     "name": "Raw565",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "DisplayCore RGB565 Flash renderer",
     "repository":
     {

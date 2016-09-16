@@ -1,6 +1,6 @@
 {
     "name": "SSD1306",
-    "keywords": "displaycore, tft",
+    "keywords": "displaycore, tft, display",
     "description": "SSD1306 library (Basic IO Shield)",
     "repository":
     {
