@@ -63,6 +63,7 @@ foreach my $lib (keys %{$data}) {
     print JSON "    \"export\": {\n";
     print JSON "        \"include\": \"" . $data->{$lib}->{root} . "\"\n";
     print JSON "    },\n";
+    print JSON "    \"authors\": { \"name\": \"Majenko Technologies\", \"url\": \"http://majenko.co.uk\"},\n";
     print JSON "    \"version\": \"$ver\",\n";
     print JSON "    \"frameworks\": \"arduino\",\n";
     print JSON "    \"platforms\": \"microchippic32\"\n";
