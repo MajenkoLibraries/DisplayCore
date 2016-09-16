@@ -1,7 +1,7 @@
 {
     "name": "SSD1289",
     "keywords": "displaycore, tft",
-    "description": "SSD1289 3.2" TFT",
+    "description": "SSD1289 3.2 inchTFT",
     "repository":
     {
       "type": "git",
