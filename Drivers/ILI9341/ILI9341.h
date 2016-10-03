@@ -7,36 +7,36 @@
 class ILI9341 : public DisplayCore {
     private:
 
-        const uint8_t ILI9341_SOFTRESET        = 0x01;
-        const uint8_t ILI9341_SLEEPIN          = 0x10;
-        const uint8_t ILI9341_SLEEPOUT         = 0x11;
-        const uint8_t ILI9341_NORMALDISP       = 0x13;
-        const uint8_t ILI9341_INVERTOFF        = 0x20;
-        const uint8_t ILI9341_INVERTON         = 0x21;
-        const uint8_t ILI9341_GAMMASET         = 0x26;
-        const uint8_t ILI9341_DISPLAYOFF       = 0x28;
-        const uint8_t ILI9341_DISPLAYON        = 0x29;
-        const uint8_t ILI9341_COLADDRSET       = 0x2A;
-        const uint8_t ILI9341_PAGEADDRSET      = 0x2B;
-        const uint8_t ILI9341_MEMORYWRITE      = 0x2C;
-        const uint8_t ILI9341_PIXELFORMAT      = 0x3A;
-        const uint8_t ILI9341_FRAMECONTROL     = 0xB1;
-        const uint8_t ILI9341_DISPLAYFUNC      = 0xB6;
-        const uint8_t ILI9341_ENTRYMODE        = 0xB7;
-        const uint8_t ILI9341_POWERCONTROL1    = 0xC0;
-        const uint8_t ILI9341_POWERCONTROL2    = 0xC1;
-        const uint8_t ILI9341_VCOMCONTROL1     = 0xC5;
-        const uint8_t ILI9341_VCOMCONTROL2     = 0xC7;
-        const uint8_t ILI9341_MEMCONTROL       = 0x36;
-        const uint8_t ILI9341_MADCTL           = 0x36;
+        static const uint8_t ILI9341_SOFTRESET        = 0x01;
+        static const uint8_t ILI9341_SLEEPIN          = 0x10;
+        static const uint8_t ILI9341_SLEEPOUT         = 0x11;
+        static const uint8_t ILI9341_NORMALDISP       = 0x13;
+        static const uint8_t ILI9341_INVERTOFF        = 0x20;
+        static const uint8_t ILI9341_INVERTON         = 0x21;
+        static const uint8_t ILI9341_GAMMASET         = 0x26;
+        static const uint8_t ILI9341_DISPLAYOFF       = 0x28;
+        static const uint8_t ILI9341_DISPLAYON        = 0x29;
+        static const uint8_t ILI9341_COLADDRSET       = 0x2A;
+        static const uint8_t ILI9341_PAGEADDRSET      = 0x2B;
+        static const uint8_t ILI9341_MEMORYWRITE      = 0x2C;
+        static const uint8_t ILI9341_PIXELFORMAT      = 0x3A;
+        static const uint8_t ILI9341_FRAMECONTROL     = 0xB1;
+        static const uint8_t ILI9341_DISPLAYFUNC      = 0xB6;
+        static const uint8_t ILI9341_ENTRYMODE        = 0xB7;
+        static const uint8_t ILI9341_POWERCONTROL1    = 0xC0;
+        static const uint8_t ILI9341_POWERCONTROL2    = 0xC1;
+        static const uint8_t ILI9341_VCOMCONTROL1     = 0xC5;
+        static const uint8_t ILI9341_VCOMCONTROL2     = 0xC7;
+        static const uint8_t ILI9341_MEMCONTROL       = 0x36;
+        static const uint8_t ILI9341_MADCTL           = 0x36;
 
-        const uint8_t ILI9341_MADCTL_MY        = 0x80;
-        const uint8_t ILI9341_MADCTL_MX        = 0x40;
-        const uint8_t ILI9341_MADCTL_MV        = 0x20;
-        const uint8_t ILI9341_MADCTL_ML        = 0x10;
-        const uint8_t ILI9341_MADCTL_RGB       = 0x00;
-        const uint8_t ILI9341_MADCTL_BGR       = 0x08;
-        const uint8_t ILI9341_MADCTL_MH        = 0x04;
+        static const uint8_t ILI9341_MADCTL_MY        = 0x80;
+        static const uint8_t ILI9341_MADCTL_MX        = 0x40;
+        static const uint8_t ILI9341_MADCTL_MV        = 0x20;
+        static const uint8_t ILI9341_MADCTL_ML        = 0x10;
+        static const uint8_t ILI9341_MADCTL_RGB       = 0x00;
+        static const uint8_t ILI9341_MADCTL_BGR       = 0x08;
+        static const uint8_t ILI9341_MADCTL_MH        = 0x04;
 
         p32_ioport *_d0_port;
         p32_ioport *_d1_port;
