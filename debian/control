@@ -202,6 +202,17 @@ Description: ILI9481 driver for DisplayCore
  The ILI9481 is used by a number of generic 3.2"
  320x480 TFT screens.  It's a 16-bit parallel interface.
 
+Package: libdisplaycore-driver-ili9488
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Drivers
+Depends: libdisplaycore-core
+Provides: ILI9488.h
+Description: ILI9488 driver for DisplayCore
+ The ILI9488 is used by a number of generic 3.5"
+ 320x480 TFT screens.  It's an 8-bit parallel interface normally.
+
 Package: libdisplaycore-driver-goldelox
 Section: libraries
 Architecture: all
