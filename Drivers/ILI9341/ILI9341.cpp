@@ -94,7 +94,10 @@ void ILI9341::initializeDevice() {
     delay(100);
     digitalWrite(_reset_pin, HIGH);
     delay(100);
+    initChip();
+}
 
+void ILI9341::initChip() {
     command(ILI9341_SOFTRESET);
     delay(50);
     command(ILI9341_DISPLAYOFF);
@@ -241,3 +244,35 @@ void ILI9341::setBacklight(int b) {
     command(0x51);
     data(b);
 }
+
+void ILI9341_DSPI::initializeDevice() {
+    pinMode(_cs_pin, OUTPUT);
+    pinMode(_rs_pin, OUTPUT);
+    digitalWrite(_cs_pin, HIGH);
+    digitalWrite(_rs_pin, LOW);
+
+    _width  = ILI9341::Width;
+    _height = ILI9341::Height;
+
+    _cs_port = getPortInformation(_cs_pin, &_cs_mask);
+    _rs_port = getPortInformation(_rs_pin, &_rs_mask);
+
+    _spi->begin();
+    initChip();
+}
+
+void ILI9341_DSPI::command(uint8_t c) {
+    _rs_port->lat.clr = _rs_mask;
+    _cs_port->lat.clr = _cs_mask;
+    _spi->transfer(c);
+    _cs_port->lat.set = _cs_mask;
+
+}
+
+void ILI9341_DSPI::data(uint8_t d) {
+    _rs_port->lat.set = _rs_mask;
+    _cs_port->lat.clr = _cs_mask;
+    _spi->transfer(d);
+    _cs_port->lat.set = _cs_mask;
+}
+

@@ -5,7 +5,7 @@
 #include <DSPI.h>
 
 class ILI9341 : public DisplayCore {
-    private:
+    protected:
 
         static const uint8_t ILI9341_SOFTRESET        = 0x01;
         static const uint8_t ILI9341_SLEEPIN          = 0x10;
@@ -80,6 +80,7 @@ class ILI9341 : public DisplayCore {
         uint8_t _d6_pin;
         uint8_t _d7_pin;
 
+        ILI9341() {}
 
 	public:
         static const int Width      = 240;
@@ -109,10 +110,31 @@ class ILI9341 : public DisplayCore {
 
         void setBacklight(int b);
 
-        void initializeDevice();
+        virtual void initializeDevice();
 
-        void data(uint8_t);
-        void command(uint8_t);
+        virtual void data(uint8_t);
+        virtual void command(uint8_t);
+        void initChip();
+
+};
+
+class ILI9341_DSPI : public ILI9341 {
+    private:
+        DSPI *_spi;
+        p32_ioport *_cs_port;
+        p32_ioport *_rs_port;
+        uint32_t _cs_mask;
+        uint32_t _rs_mask;
+        uint8_t _cs_pin;
+        uint8_t _rs_pin;
+
+    public:
+        ILI9341_DSPI(DSPI *spi, uint8_t cs, uint8_t rs) : _spi(spi), _cs_pin(cs), _rs_pin(rs) {}
+        ILI9341_DSPI(DSPI &spi, uint8_t cs, uint8_t rs) : _spi(&spi), _cs_pin(cs), _rs_pin(rs) {}
+
+        void initializeDevice();
+        void command(uint8_t c);
+        void data(uint8_t d);
 
 };
 
