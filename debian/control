@@ -1296,3 +1296,21 @@ Description: Icon8 mini icons
  A selection of useful 8x8 icons in 1-bit depth. Ideal for small
  OLED and LCD screens.
 
+Package: libdisplaycore-font-clive
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Provides: Clive.h
+Description: Clive library
+
+Package: libdisplaycore-font-pipes
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Fonts
+Provides: Pipes.h
+Description: Pipes library
+
+
+
