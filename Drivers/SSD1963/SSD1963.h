@@ -203,7 +203,7 @@ class SSD1963 : public DisplayCore {
         static const uint8_t TFT7         = 0x01; // 7" TFT Screen
         static const uint8_t VGA640       = 0x02; // 640x480 VGA
         static const uint8_t VGA720       = 0x03; // 720x400 9x16 text mode
-
+        static const uint8_t MIKROMEDIA   = 0x04; // MikroElektronika MikroMedia MX7
 
         SSD1963(
             uint8_t rs, uint8_t wr, uint8_t rd, uint8_t cs, uint8_t reset,
@@ -243,6 +243,7 @@ class SSD1963 : public DisplayCore {
         }
 
         virtual void windowData(color_t d);
+        virtual void windowData(const color_t *d, int num);
         virtual void openWindow(int, int, int, int);
 
         void enableBacklight();

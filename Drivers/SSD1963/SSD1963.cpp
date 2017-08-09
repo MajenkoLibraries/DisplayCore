@@ -323,6 +323,44 @@ void SSD1963::initializeDevice() {
         command(SSD1963_SetAddressMode); //rotation
         data(0x0000); // RGB
 
+    } else if (_profile == MIKROMEDIA) {
+        _width  = 480;
+        _height = 272;
+
+        // Continues on from previous SetLCDMode command
+        data((479>>8)&0X00FF);  //Set HDP
+        data(479&0X00FF);
+        data((271>>8)&0X00FF);  //Set VDP
+        data(271&0X00FF);
+        data(0x0000);
+
+        command(SSD1963_SetHoriPeriod);
+        data((531>>8)&0X00FF);  //Set HT
+        data(531&0X00FF);
+        data((43>>8)&0X00FF);  //Set HPS
+        data(43&0X00FF);
+        data(10);              //Set HPW
+        data((8>>8)&0X00FF);  //Set HPS
+        data(8&0X00FF);
+        data(0x0000);
+
+        command(SSD1963_SetVertPeriod);
+        data((288>>8)&0X00FF);   //Set VT
+        data(288&0X00FF);
+        data((12>>8)&0X00FF);  //Set VPS
+        data(12&0X00FF);
+        data(10);              //Set VPW
+        data((4>>8)&0X00FF);  //Set FPS
+        data(4&0X00FF);
+
+        command(SSD1963_SetLShiftFreq); //PLL setting for PCLK, depends on resolution
+        data(0x0003);
+        data(0x00ff);
+        data(0x00ff);
+
+        command(SSD1963_SetAddressMode); //rotation
+        data(0x0000); // RGB
+
     } else if (_profile == VGA640) {
         _width  = 640;
         _height = 480;
@@ -685,6 +723,12 @@ void SSD1963::displayOff() {
 
 void SSD1963::windowData(color_t d) {
     data(d);
+}
+
+void SSD1963::windowData(const color_t *d, int l) {
+    for (int i = 0; i < l; i++) {
+        data(d[i]);
+    }
 }
 
 void SSD1963::openWindow(int x0, int y0, int x1, int y1) {
