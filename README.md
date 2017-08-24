@@ -1,3 +1,21 @@
+----
+----
+----
+
+# IMPORTANT NEWS
+
+----
+----
+----
+
+# DISPLAYCORE HAS MOVED TO A NEW SET OF REPOSITORIES
+
+# https://github.com/DisplayCore
+
+----
+----
+----
+
 # DisplayCore
 
 http://DisplayCore.org
